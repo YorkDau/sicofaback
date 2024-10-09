@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace sicf_Models.Dto.PruebaSolicitud
+{
+    public class DecisionJuezDTO
+    {
+
+        public long idTarea { get; set; }
+
+        public long idSolicitud { get; set; }
+
+        public bool aceptaRecurso { get; set; }
+
+        public bool declaraNulidad { get; set; }
+
+        public int? idActividad { get; set; }
+    }
+}
