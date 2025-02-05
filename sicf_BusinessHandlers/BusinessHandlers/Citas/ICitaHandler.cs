@@ -50,6 +50,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Cita
         /// <param name="reservarCitaDto"></param>
         /// <returns></returns>
         public ResponseListaPaginada ReservarObtenerDisponibilidadCita(long idCita);
+        public ResponseListaPaginada ObtenerCitaComisaria(int id_comisaria);
 
         /// <summary>
         /// 

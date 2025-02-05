@@ -484,7 +484,22 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 
         }
 
-		public SolicitudServicioDetalleDTO ObtenerSolicitudServiciosCiudadanoDetalle(int id) 
+        public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int idComisaria)
+        {
+            try
+            {
+
+                return _solicitudesRepository.ObtenerSolicitudServiciosCiudadano(idComisaria);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message);
+            }
+
+        }
+
+        public SolicitudServicioDetalleDTO ObtenerSolicitudServiciosCiudadanoDetalle(int id) 
 		{
 
 			try {

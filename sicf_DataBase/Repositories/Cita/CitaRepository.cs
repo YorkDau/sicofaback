@@ -11,6 +11,7 @@ using sicf_Models.Core;
 using Microsoft.EntityFrameworkCore;
 using static sicf_Models.Constants.Constants;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using sicf_Models.Dto.Ciudadano;
 
 namespace sicf_DataBase.Repositories.Cita
 {
@@ -410,6 +411,63 @@ namespace sicf_DataBase.Repositories.Cita
 
                 return responseListaPaginada;
 
+            }
+            catch (ControledException ex)
+            {
+                //loggerManager.EscribirLogger(this.GetType().Name, MethodBase.GetCurrentMethod().Name, "Se lanza una excepción en el metodo consultarVehiculos del controlador RutaSeleccionadaController, se lanza la excepción: " + ex.Message, listarVehiculosDtoParam);
+                throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
+            }
+            catch (Exception ex)
+            {
+                //loggerManager.EscribirLogger(this.GetType().Name, MethodBase.GetCurrentMethod().Name, "Se lanza una excepción en el metodo consultarVehiculos del controlador RutaSeleccionadaController, se lanza la excepción: " + ex.Message, listarVehiculosDtoParam);
+                throw new ControledException(ex.HResult);
+            }
+        }
+
+        
+         public ResponseListaPaginada ObtenerCitaComisaria(int id_comisaria)
+        {
+            try
+            {
+                string? mensaje;
+                List<CitaDto> citas = new List<CitaDto>();
+
+                using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+                {
+                    string query = "PR_CONSULTAR_CITAS_PUBLICAS";
+                    using (_command = new SqlCommand(query))
+                    {
+                        _command.CommandType = CommandType.StoredProcedure;
+                        _command.Parameters.AddWithValue("@id_comisaria", BdValidation.ToDBNull(id_comisaria));
+
+                        _command.Connection = _connectionDb;
+                        _connectionDb.Open();
+
+                        using SqlDataReader reader = _command.ExecuteReader();
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                if (reader.FieldCount > 1)
+                                {
+                                    CitaDto cita = new CitaDto();
+
+                                    cita.Estado = ConvertFDBVal.ConvertFromDBVal<int>(reader["estado"]);
+                                    //cita.Activo = ConvertFDBVal.ConvertFromDBVal<int>(reader["activo"]);
+                                    //cita.idCita = ConvertFDBVal.ConvertFromDBVal<int>(reader["id_cita"]);
+                                    citas.Add(cita);
+                                }
+                            }
+
+                            _connectionDb.Close();
+                            ResponseListaPaginada responseListaPaginada = new ResponseListaPaginada();
+                            responseListaPaginada.DatosPaginados = citas;
+                            responseListaPaginada.TotalRegistros = citas.Count;
+                            return responseListaPaginada;
+                        }
+                        throw new Exception("no existen datos");
+                    }
+                }
             }
             catch (ControledException ex)
             {

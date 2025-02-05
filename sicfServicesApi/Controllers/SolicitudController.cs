@@ -352,6 +352,24 @@ namespace sicfServicesApi.Controllers
             }
         }
 
+        [HttpGet("ObtenerSolicitudes/{idComisaria?}")]
+
+        public IActionResult ObtenerSolicitudServiciosCiudadano([FromRoute] int idComisaria)
+        {
+            try
+            {
+                var response = _solicitudesHandler.ObtenerSolicitudServiciosCiudadano(idComisaria);
+
+                return CustomResult(Message.Ok, response, HttpStatusCode.OK);
+
+            }
+
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorInterno, ex.Message, HttpStatusCode.OK);
+            }
+        }
+
         [HttpGet("ObtenerSolicitudDetalle/{id?}")]
 
         public IActionResult ObtenerSolicitudServicioDetalle([FromRoute] int id) {

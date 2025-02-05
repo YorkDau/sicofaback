@@ -111,6 +111,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         /// <returns></returns>
         /// 
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int id, int idComisaria);
+        public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int idComisaria);
         /// <summary>
         /// 
         /// </summary>

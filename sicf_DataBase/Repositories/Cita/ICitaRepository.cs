@@ -68,7 +68,8 @@ namespace sicf_DataBase.Repositories.Cita
         /// <param name="reservarCitaDto"></param>
         /// <returns></returns>
         public ResponseListaPaginada ReservarObtenerDisponibilidadCita(long idCita);
-
+        
+        public ResponseListaPaginada ObtenerCitaComisaria(int id_comisaria);
         /// <summary>
         /// 
         /// </summary>

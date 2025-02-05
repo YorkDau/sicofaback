@@ -12,7 +12,9 @@ namespace sicf_Models.Dto.Cita
         public long idComisaria { get; set; }
         public string fechaCita { get; set; }
         public string horaCita { get; set; }
-       
+        public long Estado { get; set; }
+        public long Activo { get; set; }
+
         public CitaDto()
         {
             fechaCita = "";

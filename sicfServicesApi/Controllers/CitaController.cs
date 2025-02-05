@@ -31,6 +31,25 @@ namespace sicfServicesApi.Controllers
             this.usuarioHandler = usuarioHandler;   
         }
 
+
+        [HttpGet("ObtenerCitas/{idComisaria?}")]
+
+        public IActionResult ObtenerCitaComisaria([FromRoute] int idComisaria)
+        {
+            try
+            {
+                var response = _citaHandler.ObtenerCitaComisaria(idComisaria);
+
+                return CustomResult(Message.Ok, response, HttpStatusCode.OK);
+
+            }
+
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorInterno, ex.Message, HttpStatusCode.OK);
+            }
+        }
+
         #region Joel Vila Bringuez 
         [HttpGet]
         [Route("consultarDepartamentos")]

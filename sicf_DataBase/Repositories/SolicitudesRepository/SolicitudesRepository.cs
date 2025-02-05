@@ -20,6 +20,7 @@ using sicf_DataBase.Data;
 using sicf_Models.Core;
 using Microsoft.EntityFrameworkCore;
 using sicf_Models.Constants;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace sicf_DataBase.Repositories.SolicitudesRepository
 {
@@ -856,6 +857,51 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 }
             }
         }
+
+        public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int idComisaria)
+        {
+            string? mensaje = "";
+            List<SolicitudServicioDTO> solicitudes = new List<SolicitudServicioDTO>();
+
+            using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+            {
+                string query = "PR_CONSULTAR_SOLICTUDES_POR_COMISARIA";
+                using (_command = new SqlCommand(query))
+                {
+                    _command.CommandType = CommandType.StoredProcedure;
+                    _command.Parameters.AddWithValue("@id_comisaria", BdValidation.ToDBNull(idComisaria));
+
+                    _command.Connection = _connectionDb;
+                    _connectionDb.Open();
+
+                    using SqlDataReader reader = _command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader.FieldCount > 1)
+                            {
+                                SolicitudServicioDTO solicitud = new SolicitudServicioDTO();
+                             
+                                solicitud.estado_de_la_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_solicitud"]);
+                                solicitud.codigo_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_solicitud"]);
+                                solicitudes.Add(solicitud);
+                            }
+                        }
+
+                        _connectionDb.Close();
+                        ResponseListaPaginada responseListaPaginada = new ResponseListaPaginada();
+                        responseListaPaginada.DatosPaginados = solicitudes;
+                        responseListaPaginada.TotalRegistros = solicitudes.Count;
+                        return responseListaPaginada;
+                    }
+                    throw new Exception("no existen datos");
+                }
+            }
+
+     
+        }
+        
 
 
         public SolicitudServicioDetalleDTO ObtenerSolicitudServiciosCiudadanoDetalle(int id)

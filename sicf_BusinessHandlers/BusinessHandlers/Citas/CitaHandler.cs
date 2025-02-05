@@ -96,8 +96,28 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Cita
 			}
 		}
 
+        public ResponseListaPaginada ObtenerCitaComisaria(int id_comisaria)
+        {
 
-		public ResponseListaPaginada CrearCita(RequestCitaDto requestCitaDto)
+            //// se realiza insercion en bitacora
+            try
+            {
+                return _citaRepository.ObtenerCitaComisaria(id_comisaria);
+            }
+            catch (ControledException ex)
+            {
+                //loggerManager.EscribirLogger(this.GetType().Name, MethodBase.GetCurrentMethod().Name, "Se lanza una excepción en el metodo consultarVehiculos del controlador RutaSeleccionadaController, se lanza la excepción: " + ex.Message, listarVehiculosDtoParam);
+                throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
+            }
+            catch (Exception ex)
+            {
+                //loggerManager.EscribirLogger(this.GetType().Name, MethodBase.GetCurrentMethod().Name, "Se lanza una excepción en el metodo consultarVehiculos del controlador RutaSeleccionadaController, se lanza la excepción: " + ex.Message, listarVehiculosDtoParam);
+                throw new ControledException(ex.HResult);
+            }
+        }
+
+
+        public ResponseListaPaginada CrearCita(RequestCitaDto requestCitaDto)
 		{
 			
 			//// se realiza insercion en bitacora
