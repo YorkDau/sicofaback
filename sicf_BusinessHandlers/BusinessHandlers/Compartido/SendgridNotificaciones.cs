@@ -112,8 +112,21 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Compartido
             {
                 email.From.Add(MailboxAddress.Parse(Configuration.GetSection("Email:UserName").Value));
                 email.To.Add(MailboxAddress.Parse(correo));
-                email.Body = new TextPart(TextFormat.Html) {Text = "tu contraseña Sicofa es: " + passs + " por favor cambiarla "};
-
+                email.Subject = "CONTRASEÑA SICOFA";
+                email.Body = new TextPart(TextFormat.Html)
+                {
+                    Text = @"
+                    <html>
+                        <body style='font-family: Arial, sans-serif; color: #333;'>
+                            <h2 style='color: #0066cc;'>Nueva contraseña Sicofa</h2>
+                            <p>Estimado usuario,</p>
+                            <p>Tu nueva contraseña para acceder a Sicofa es: <strong>" + passs + @"</strong></p>
+                            <p>Por razones de seguridad, te recomendamos cambiar esta contraseña después de tu próximo inicio de sesión.</p>
+                            <p>Si no has solicitado este cambio, por favor contacta con nuestro equipo de soporte inmediatamente.</p>
+                            <p>Saludos cordiales,<br>El equipo de Sicofa</p>
+                        </body>
+                    </html>"
+                };
                 var smtp = new SmtpClient();
 
                 var host = Configuration.GetSection("Email:Host").Value;

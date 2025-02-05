@@ -88,7 +88,7 @@ namespace sicf_DataBase.Repositories.Comisaria
             {
                 email.From.Add(MailboxAddress.Parse(Configuration.GetSection("Email:UserName").Value));
                 email.To.Add(MailboxAddress.Parse(correo));
-                email.Subject = "Nueva contraseña Sicofa";
+                email.Subject = "CONTRASEÑA SICOFA";
                 email.Body = new TextPart(TextFormat.Html) {Text = @"
                     <html>
                         <body style='font-family: Arial, sans-serif; color: #333;'>
