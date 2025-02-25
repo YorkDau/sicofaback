@@ -164,20 +164,29 @@ namespace sicf_DataBase.Repositories.ReporteSolicitud
                     cmdParametros.Parameters.AddWithValue("@fechaSolicitudDesde", BdValidation.ToDBNull(prm_solicitud.fechaSolicitudDesde));
                 if (!Equals(prm_solicitud.fechaSolicitudHasta, null))
                     cmdParametros.Parameters.AddWithValue("@fechaSolicitudHasta", BdValidation.ToDBNull(prm_solicitud.fechaSolicitudHasta));
-                
-                    cmdParametros.Parameters.AddWithValue("@idComisaria",null);
+                if (!String.IsNullOrEmpty(prm_solicitud.NombreCompletoVictima))
+                    cmdParametros.Parameters.AddWithValue("@NombreCompletoVictima", BdValidation.ToDBNull(prm_solicitud.NombreCompletoVictima));
+                if (!String.IsNullOrEmpty(prm_solicitud.NombreCompletoVictimario))
+                    cmdParametros.Parameters.AddWithValue("@NombreCompletoVictimario", BdValidation.ToDBNull(prm_solicitud.NombreCompletoVictimario));
+                if (!String.IsNullOrEmpty(prm_solicitud.SexoVictima))
+                    cmdParametros.Parameters.AddWithValue("@SexoVictima", BdValidation.ToDBNull(prm_solicitud.SexoVictima));
+                if (!String.IsNullOrEmpty(prm_solicitud.IdentidadGeneroVictima))
+                    cmdParametros.Parameters.AddWithValue("@IdentidadGéneroVictima", BdValidation.ToDBNull(prm_solicitud.IdentidadGeneroVictima));
+                if (!Equals(prm_solicitud.FechaHechoViolento, null))
+                    cmdParametros.Parameters.AddWithValue("@FechaHechoViolento", BdValidation.ToDBNull(prm_solicitud.FechaHechoViolento));
+                if (!Equals(prm_solicitud.HoraHechoViolento, null))
+                    cmdParametros.Parameters.AddWithValue("@HoraHechoViolento", BdValidation.ToDBNull(prm_solicitud.HoraHechoViolento));
+
+                cmdParametros.Parameters.AddWithValue("@idComisaria", null);
             }
             catch (ControledException ex)
             {
-                //loggerManager.EscribirLogger(this.GetType().Name, MethodBase.GetCurrentMethod().Name, "Se lanza una excepción en el metodo consultarVehiculos del controlador RutaSeleccionadaController, se lanza la excepción: " + ex.Message, listarVehiculosDtoParam);
                 throw new ControledException(Message.ErrorRequest);
             }
             catch (Exception ex)
             {
-                //loggerManager.EscribirLogger(this.GetType().Name, MethodBase.GetCurrentMethod().Name, "Se lanza una excepción en el metodo consultarVehiculos del controlador RutaSeleccionadaController, se lanza la excepción: " + ex.Message, listarVehiculosDtoParam);
-                throw new ControledException(Message.ErrorRequest,ex.HResult);
+                throw new ControledException(Message.ErrorRequest, ex.HResult);
             }
-
         }
     }
 }
