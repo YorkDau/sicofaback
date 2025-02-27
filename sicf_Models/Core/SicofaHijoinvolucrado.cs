@@ -12,5 +12,6 @@ namespace sicf_Models.Core
         public int? IdSexo { get; set; }
 
         public long? IdSolicitudServicio { get; set; }
+        public int IdRelacionParental{ get; set; }
     }
 }

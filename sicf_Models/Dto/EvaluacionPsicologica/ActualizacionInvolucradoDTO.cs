@@ -88,6 +88,10 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
         public int? sexo { get; set; }
 
         public int? custodia { get; set; }
-    
+
+        public int relacionParental { get; set; }
+
+
+
     }
 }

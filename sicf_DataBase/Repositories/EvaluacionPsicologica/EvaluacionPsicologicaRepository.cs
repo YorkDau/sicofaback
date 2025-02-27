@@ -149,6 +149,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             hijoSalida.edad = hijo.Edad;
                             hijoSalida.sexo = hijo.IdSexo;
                             hijoSalida.custodia = hijo.Custodia;
+                            hijoSalida.relacionParental = (int) hijo.IdRelacionParental;
 
                             salida.hijos.Add(hijoSalida);
                         }
@@ -336,6 +337,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                                 hijo.Edad = (int)datahijo.edad;
                                 hijo.Custodia = datahijo.custodia;
                                 hijo.IdSexo = datahijo.sexo;
+                                hijo.IdRelacionParental = (int)datahijo.relacionParental;
                                 hijo.IdSolicitudServicio = involucrado.IdSolicitudServicio.FirstOrDefault() != null ? involucrado.IdSolicitudServicio.First().IdSolicitudServicio : null;
                                 context.SicofaHijoinvolucrado.Add(hijo);
                             }

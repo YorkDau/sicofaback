@@ -1004,6 +1004,7 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.IdInvolucrado).HasColumnName("id_involucrado");
 
                 entity.Property(e => e.IdSexo).HasColumnName("id_sexo");
+                entity.Property(e => e.IdRelacionParental).HasColumnName("id_relacion_parental");
 
                 entity.Property(e => e.IdSolicitudServicio).HasColumnName("id_solicitud_servicio");
             });
