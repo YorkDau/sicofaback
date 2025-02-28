@@ -171,7 +171,7 @@ namespace sicf_DataBase.Repositories.ReporteSolicitud
                 if (!String.IsNullOrEmpty(prm_solicitud.SexoVictima))
                     cmdParametros.Parameters.AddWithValue("@SexoVictima", BdValidation.ToDBNull(prm_solicitud.SexoVictima));
                 if (!String.IsNullOrEmpty(prm_solicitud.IdentidadGeneroVictima))
-                    cmdParametros.Parameters.AddWithValue("@IdentidadGéneroVictima", BdValidation.ToDBNull(prm_solicitud.IdentidadGeneroVictima));
+                    cmdParametros.Parameters.AddWithValue("@IdentidadGeneroVictima", BdValidation.ToDBNull(prm_solicitud.IdentidadGeneroVictima));
                 if (!Equals(prm_solicitud.FechaHechoViolento, null))
                     cmdParametros.Parameters.AddWithValue("@FechaHechoViolento", BdValidation.ToDBNull(prm_solicitud.FechaHechoViolento));
                 if (!Equals(prm_solicitud.HoraHechoViolento, null))
