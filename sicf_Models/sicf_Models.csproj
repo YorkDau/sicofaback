@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Enums\**" />
+    <EmbeddedResource Remove="Enums\**" />
+    <None Remove="Enums\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Dto\Presolicitud\PresolicitudOUT - Copia.cs" />
   </ItemGroup>
 
@@ -19,10 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\sicf_Security\sicf_Security.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Enums\" />
   </ItemGroup>
 
 </Project>

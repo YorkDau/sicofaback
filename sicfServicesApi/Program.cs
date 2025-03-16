@@ -77,6 +77,7 @@ using sicf_BusinessHandlers.BusinessHandlers.ReporteSolicitud;
 using sicf_DataBase.Repositories.ReporteSolicitud;
 using sicf_BusinessHandlers.BusinessHandlers.PruebasPARD;
 using sicf_BusinessHandlers.BusinessHandlers.AzureBlogStorage;
+using sicf_BusinessHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -237,7 +238,8 @@ builder.Services.AddScoped<IReporteSolicitudRepository, ReporteSolicitudReposito
 builder.Services.AddTransient<IPruebasPardService, PruebasPardService>();
 builder.Services.AddTransient<IPruebasPardRepository, PruebasPardRepository>();
 
-
+// Layer dependencies
+builder.Services.AgregarBussinessDependencias(builder.Configuration);
 
 
 // Adding Authentication
