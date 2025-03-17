@@ -35,7 +35,14 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Conversor.Fachadas
                 return Error.Failure(description: estrategia.FirstError.Description);
             }
 
-            var tempFileName = Path.ChangeExtension(Path.GetTempFileName(), request.From);
+            var workingDirectory = "C:\\DocumentosSicofaLocal\\Conversor";
+            if (!Directory.Exists(workingDirectory))
+            {
+                Directory.CreateDirectory(workingDirectory);
+            }
+
+            var tempFileAbsolutePath = Path.Combine(workingDirectory, Guid.NewGuid().ToString());
+            var tempFileName = Path.ChangeExtension(tempFileAbsolutePath, request.From);
 
             byte[] bytes = Convert.FromBase64String(request.Base64);
             using (MemoryStream ms = new(bytes))
@@ -50,7 +57,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Conversor.Fachadas
 
             Stream converted = null!;
             var retryTimes = 3;
-            var retryMilisecondsDelay = 10000;
+            var retryMilisecondsDelay = 5000;
             do
             {
                 await Task.Delay(retryMilisecondsDelay);
@@ -64,7 +71,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Conversor.Fachadas
 
             if (converted is null)
             {
-                return Error.Failure(description: $"El archivo no se ha posido convertir o ha superado el tiempo fuera configurado, ruta: {Path.GetTempFileName()}");
+                return Error.Failure(description: $"El archivo no se ha posido convertir o ha superado el tiempo fuera configurado (temp: {tempFileAbsolutePath})");
             }
 
             var msConverted = new MemoryStream();
