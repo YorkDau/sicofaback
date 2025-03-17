@@ -388,16 +388,25 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
         {
             if (archivoDTO == null)
             {
-
-                throw new ArgumentNullException(nameof(archivoDTO.entrada));
-
+                throw new ArgumentNullException(nameof(archivoDTO));
             }
+
+            if (string.IsNullOrEmpty(archivoDTO.entrada))
+            {
+                throw new ArgumentException("El campo 'entrada' no puede ser nulo o vacío.", nameof(archivoDTO.entrada));
+            }
+
             FileModel file = new FileModel();
 
             string fileName = archivoDTO.Nombrearchivo!;
             byte[] archivoBits = Convert.FromBase64String(archivoDTO.entrada);
             MemoryStream stream = new MemoryStream(archivoBits);
-            IFormFile archivo = new FormFile(stream, 0, archivoBits.Length, fileName, fileName);
+            IFormFile archivo = new FormFile(stream, 0, archivoBits.Length, fileName, fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/pdf",
+                ContentDisposition = $"inline; filename={fileName}"
+            };
 
             file.PdfFile = archivo;
 

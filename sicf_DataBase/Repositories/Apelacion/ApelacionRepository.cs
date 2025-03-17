@@ -101,7 +101,7 @@ namespace sicf_DataBase.Repositories.Apelacion
                                                       estadoMedida = m.estadoMedida,
                                                       nombreMedida = m.nombreMedida,
                                                       excluir = ""
-                                                  }).First();
+                                                  }).FirstOrDefault(); //modificacion del metodo
 
                     if (medida != null)
                     {
