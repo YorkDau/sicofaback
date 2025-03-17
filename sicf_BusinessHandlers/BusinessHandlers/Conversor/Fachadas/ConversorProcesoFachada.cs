@@ -50,7 +50,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Conversor.Fachadas
 
             Stream converted = null!;
             var retryTimes = 3;
-            var retryMilisecondsDelay = 5000;
+            var retryMilisecondsDelay = 10000;
             do
             {
                 await Task.Delay(retryMilisecondsDelay);
@@ -64,7 +64,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Conversor.Fachadas
 
             if (converted is null)
             {
-                return Error.Failure(description: "El archivo no se ha posido convertir o ha superado el tiempo fuera configurado");
+                return Error.Failure(description: $"El archivo no se ha posido convertir o ha superado el tiempo fuera configurado, ruta: {Path.GetTempFileName()}");
             }
 
             var msConverted = new MemoryStream();
