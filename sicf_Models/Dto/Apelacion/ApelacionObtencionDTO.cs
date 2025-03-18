@@ -11,4 +11,17 @@ namespace sicf_Models.Dto.Apelacion
         public long idTarea { get; set; }
         public long idSolicitudServicio { get; set; }
     }
+
+    public class ConsultarApelacionObtencionDTO
+    {
+        public string? nombres { get; set; }
+        public string? primerApellido { get; set; }
+        public string? segundoApellido { get; set; }
+        public string? numeroDocumento { get; set; }
+        public string? codSolicitud { get; set; }
+        public string? fecha { get; set; }
+        public string? estado { get; set; }
+        public int userID { get; set; }
+        public string? codPerfil { get; set; }
+    }
 }

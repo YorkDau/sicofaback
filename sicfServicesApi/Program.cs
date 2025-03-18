@@ -205,6 +205,9 @@ builder.Services.AddTransient<IEvaluacionPsicologicaRepository, EvaluacionPsicol
 builder.Services.AddTransient<ISeguimientosServicioRepository, SeguimientosServicioRepository>();
 builder.Services.AddTransient<ISeguimientosService, SeguimientosService>();
 
+builder.Services.AddTransient<IApelacion_Repository, Apelacion_Repository>();
+builder.Services.AddTransient<IApelacion_Service, Apelacion_Service>();
+
 
 builder.Services.AddTransient<IArchivosRepository, ArchivosRepository>();
 

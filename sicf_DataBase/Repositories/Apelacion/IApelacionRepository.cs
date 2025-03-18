@@ -15,6 +15,7 @@ namespace sicf_DataBase.Repositories.Apelacion
         public bool CrearTareaNulidad(long idTarea, int idFlujo, long idSolicitudServicio);
         public Task<bool> CerrarApelacion(long idTarea);
         public Task<SicofaApelacion> ObtenerApelacion(ApelacionObtencionDTO apelacion);
+        public List<SicofaApelacion> ConsultarApelaciones(ConsultarApelacionObtencionDTO apelacion);
         public Task<bool> ActualizarApelacion(ApelacionDTO apelacion);
         public bool ActualizarMedidas(ApelacionDTO apelacion);
         public bool AplicarEstadoMedidas(long idSolicitudServicio);
@@ -22,5 +23,11 @@ namespace sicf_DataBase.Repositories.Apelacion
         public List<ApelacionTareasDTO> ConsultarTareasApelacion(long idSolicitudServicio);
         public int ConsultarMedidasSeguimiento(long idSolicitudServicio);
         public bool ActualizarSolicitudServicio(long idSolicitudServicio, string estado, string subestado);
+    }
+
+    public interface IApelacion_Repository
+    {
+        public List<ApelacioneReponseDTO> ConsultarApelaciones(ConsultarApelacionObtencionDTO apelacion);
+
     }
 }

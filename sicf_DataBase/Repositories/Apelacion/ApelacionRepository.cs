@@ -1,18 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using sicf_DataBase.BDConnection;
 using sicf_DataBase.Data;
 using sicf_Models.Constants;
 using sicf_Models.Core;
 using sicf_Models.Dto.Apelacion;
+using sicf_Models.Dto.ReporteSolicitud; 
+using System.Data.SqlClient;
+using sicf_Models.Dto.Cita;
+
 
 namespace sicf_DataBase.Repositories.Apelacion
 {
-    public class ApelacionRepository : IApelacionRepository
+    public class ApelacionRepository : SicofaApelacion, IApelacionRepository
     {
         private readonly SICOFAContext _context;
+
+        private IConfiguration? configuration { get; set; }
         public ApelacionRepository(SICOFAContext context)
         {
             _context = context;
@@ -20,9 +27,9 @@ namespace sicf_DataBase.Repositories.Apelacion
 
         public Task<SicofaApelacion> ConsultarApelacion(long idTarea)
         {
-            #pragma warning disable CS8619 // La nulabilidad de los tipos de referencia del valor no coincide con el tipo de destino
+#pragma warning disable CS8619 // La nulabilidad de los tipos de referencia del valor no coincide con el tipo de destino
             return Task.FromResult(_context.SicofaApelacions.Where(a => a.IdTarea == idTarea).FirstOrDefault());
-            #pragma warning restore CS8619 // La nulabilidad de los tipos de referencia del valor no coincide con el tipo de destino
+#pragma warning restore CS8619 // La nulabilidad de los tipos de referencia del valor no coincide con el tipo de destino
         }
 
         public async Task<SicofaApelacion> ObtenerApelacion(ApelacionObtencionDTO apelacion)
@@ -34,9 +41,9 @@ namespace sicf_DataBase.Repositories.Apelacion
                 if (eApelacion == null)
                 {
                     eApelacion = new SicofaApelacion();
-                    #pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
+#pragma warning disable CS8602 // Desreferencia de una referencia posiblemente NULL.
                     eApelacion.IdSolicitudServicio = apelacion.idSolicitudServicio;
-                    #pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
+#pragma warning restore CS8602 // Desreferencia de una referencia posiblemente NULL.
 
                     eApelacion.IdTarea = apelacion.idTarea;
                     eApelacion.AceptaRecurso = false;
@@ -115,7 +122,7 @@ namespace sicf_DataBase.Repositories.Apelacion
                                           where sm.IdSolicitudServicio == apelacion.idSolicitudServicio
                                           select sm.IdMedida).ToList().Contains(nmed.idMedida)
                                   select new SicofaSolicitudServicioMedidas
-                                  { 
+                                  {
                                       IdMedida = nmed.idMedida,
                                       IdSolicitudServicio = apelacion.idSolicitudServicio,
                                       Estado = null,
@@ -144,9 +151,9 @@ namespace sicf_DataBase.Repositories.Apelacion
         {
             bool response = true;
 
-            #pragma warning disable CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
+#pragma warning disable CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
             SicofaTarea tarea = _context.SicofaTarea.Where(a => a.IdTarea == idTarea).FirstOrDefault();
-            #pragma warning restore CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
+#pragma warning restore CS8600 // Se va a convertir un literal nulo o un posible valor nulo en un tipo que no acepta valores NULL
 
             if (tarea == null)
             {
@@ -246,17 +253,17 @@ namespace sicf_DataBase.Repositories.Apelacion
                                  join f in _context.SicofaFlujoV2 on t.IdFlujo equals f.IdFlujo
                                  where t.IdSolicitudServicio == idSolicitudServicio && t.Estado != Constants.TareaEstados.TERMINADO
                                  select f.IdProceso).FirstOrDefault();
-                
+
                 var query = (from m in _context.SicofaMedidas
                              join p in _context.SicofaMedidasProcesos on m.IdMedida equals p.IdMedida
                              join sm in _context.SicofaSolicitudServicioMedidas on new { m.IdMedida, idSol = idSolicitudServicio } equals new { sm.IdMedida, idSol = sm.IdSolicitudServicio } into meds
                              from sm in meds.DefaultIfEmpty()
                              where sm.Estado != Constants.Medidas.Estados.revocada && p.IdProceso == idProceso
                              select new ApelacionMedidasDTO
-                               { idMedida = m.IdMedida,
+                             { idMedida = m.IdMedida,
                                  tipoMedida = m.TipoMedida,
-                                 nombreMedida = m.NomMedida, 
-                                 estadoMedida = sm.IdSolicitudServicio == null? Constants.Medidas.Estados.noAplica : sm.EstadoTmp == null ? sm.Estado : sm.EstadoTmp,
+                                 nombreMedida = m.NomMedida,
+                                 estadoMedida = sm.IdSolicitudServicio == null ? Constants.Medidas.Estados.noAplica : sm.EstadoTmp == null ? sm.Estado : sm.EstadoTmp,
                                  excluir = sm.IdSolicitudServicio == null ? Constants.Medidas.Estados.revocada : sm.Estado == null ? Constants.Medidas.Estados.revocada : Constants.Medidas.Estados.noAplica
                              }).ToList();
                 return query;
@@ -279,7 +286,7 @@ namespace sicf_DataBase.Repositories.Apelacion
                                         select new { idProceso = fp.IdProceso }) on f.IdProceso equals p.idProceso
                              where t.IdSolicitudServicio == idSolicitudServicio & t.Estado == Constants.TareaEstados.TERMINADO & a.AplicaNulidad == true
                              orderby t.IdTarea descending
-                             select new ApelacionTareasDTO {idFlujo = f.IdFlujo, nombreTarea = f.Etiqueta + " - " + a.NombreActividad }).Distinct().ToList();
+                             select new ApelacionTareasDTO { idFlujo = f.IdFlujo, nombreTarea = f.Etiqueta + " - " + a.NombreActividad }).Distinct().ToList();
                 return query;
             }
             catch (Exception ex)
@@ -294,13 +301,13 @@ namespace sicf_DataBase.Repositories.Apelacion
             {
                 var query = (from m in _context.SicofaSolicitudServicioMedidas
                              where m.IdSolicitudServicio == idSolicitudServicio & m.Estado == Constants.Medidas.Estados.seguimiento
-                             select new SicofaSolicitudServicioMedidas 
-                             { IdMedida = m.IdMedida, 
-                               IdSolicitudServicio = m.IdSolicitudServicio,
-                               TipoMedida = m.TipoMedida,
-                               Estado = m.Estado,
-                               EstadoTmp = m.EstadoTmp,
-                               Observacion = m.Observacion }).ToList();
+                             select new SicofaSolicitudServicioMedidas
+                             { IdMedida = m.IdMedida,
+                                 IdSolicitudServicio = m.IdSolicitudServicio,
+                                 TipoMedida = m.TipoMedida,
+                                 Estado = m.Estado,
+                                 EstadoTmp = m.EstadoTmp,
+                                 Observacion = m.Observacion }).ToList();
                 return query.Count;
             }
             catch (Exception ex)
@@ -322,6 +329,87 @@ namespace sicf_DataBase.Repositories.Apelacion
             }
 
             return response;
+        }
+
+        public List<SicofaApelacion> ConsultarApelaciones(ConsultarApelacionObtencionDTO apelacion)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class Apelacion_Repository : BdConnection, IApelacion_Repository
+    {
+        private readonly SICOFAContext _context;
+
+        private IConfiguration? configuration { get; set; }
+        public Apelacion_Repository(SICOFAContext context, IConfiguration configuration) : base(configuration)
+        {
+            _context = context;
+        }
+        public List<ApelacioneReponseDTO> ConsultarApelaciones(ConsultarApelacionObtencionDTO request)
+        {
+            try
+            {
+                List<ApelacioneReponseDTO> listApelaciones = new List<ApelacioneReponseDTO>();
+
+                /*
+                int userId = request.userID;
+                string? nom = request.nombres != null && request.nombres != string.Empty ? request.nombres : string.Empty;
+                string? ape1 = request.primerApellido != null && request.primerApellido != string.Empty ? ' ' + request.primerApellido : string.Empty;
+                string? ape2 = request.segundoApellido != null && request.segundoApellido != string.Empty ? ' ' + request.segundoApellido : string.Empty;
+                string? estado = request.estado != null && request.estado != String.Empty ? request.estado : null;
+                string? fechaCreacion = null;
+                string? codPerfil = request.codPerfil != null && request.codPerfil != String.Empty ? request.codPerfil : null;
+                string? nombreApellidos = nom + ape1 + ape2;
+                nombreApellidos = nombreApellidos != null && nombreApellidos != string.Empty ? nombreApellidos : null;
+                
+                if (request.fecha != null && request.fecha != String.Empty)
+                {
+                    request.fecha = (request.fecha == null) ? "" : request.fecha;
+                    DateTime fecha = (string.IsNullOrEmpty(request.fecha)) ? new DateTime(1900, 1, 1) : DateTime.ParseExact(request.fecha, Constants.FormatoFecha, CultureInfo.InvariantCulture);
+                    fechaCreacion = fecha.Year.ToString() + "-" + fecha.Month.ToString() + "-" + fecha.Day.ToString();
+                }
+                */
+                string ? numeroDocumento = request.numeroDocumento != null && request.numeroDocumento != String.Empty ? request.numeroDocumento : null;
+                string? codigoSolicitud = request.codSolicitud != null && request.codSolicitud != String.Empty ? request.codSolicitud : null;
+                using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+                {
+                    string query = "ObtenerSolicitudesApeladasTerminado";
+                    _command.CommandType = CommandType.StoredProcedure;
+                    _command.CommandText = query;
+                    _command.Parameters.AddWithValue("@numero_documento", BdValidation.ToDBNull(numeroDocumento));
+                    _command.Parameters.AddWithValue("@codigo_solicitud", BdValidation.ToDBNull(numeroDocumento));
+                    _command.Connection = _connectionDb;
+                    _connectionDb.Open();
+                    using SqlDataReader reader = _command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        DataTable schemaTable = reader.GetSchemaTable();
+                        while (reader.Read())
+                        {
+                            if (reader.FieldCount >= 1)
+                            {
+                                ApelacioneReponseDTO apelacion = new ApelacioneReponseDTO();
+                                apelacion.nombre_ciudadano = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_ciudadano"]);
+                                apelacion.estado_apelacion = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_apelacion"]);
+                                apelacion.subestado_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["subestado_solicitud"]);
+                                apelacion.estado_apelacion_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_apelacion_solicitud"]);
+                                listApelaciones.Add(apelacion);
+                            }
+                        }
+                    }
+                    _connectionDb.Close();
+                }
+
+                return listApelaciones;
+            }
+            catch (Exception ex)
+            {
+                _connectionDb.Close();
+                throw;
+            }
         }
     }
 }

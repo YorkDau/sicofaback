@@ -17,4 +17,9 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Apelacion
         public List<ApelacionMedidasDTO> ConsultarMedidasApelacion(long idSolicitudServicio);
         public List<ApelacionTareasDTO> ConsultarTareasApelacion(long idSolicitudServicio);
     }
+
+    public interface IApelacion_Service
+    {
+        public List<ApelacioneReponseDTO> ConsultarApelaciones(ConsultarApelacionObtencionDTO apelacion);
+    }
 }
