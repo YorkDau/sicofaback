@@ -55,5 +55,6 @@ namespace sicf_Models.Core
         public virtual ICollection<SicofaTarea> SicofaTarea { get; set; }
 
         public virtual ICollection<SicofaInvolucrado> IdInvolucrado { get; set; }
+        public ICollection<SicofaObservacionSolicitudApelacion> Observaciones { get; set; }
     }
 }

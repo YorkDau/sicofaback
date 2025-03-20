@@ -379,7 +379,7 @@ namespace sicf_DataBase.Repositories.Apelacion
                     _command.CommandType = CommandType.StoredProcedure;
                     _command.CommandText = query;
                     _command.Parameters.AddWithValue("@numero_documento", BdValidation.ToDBNull(numeroDocumento));
-                    _command.Parameters.AddWithValue("@codigo_solicitud", BdValidation.ToDBNull(numeroDocumento));
+                    _command.Parameters.AddWithValue("@codigo_solicitud", BdValidation.ToDBNull(codigoSolicitud));
                     _command.Connection = _connectionDb;
                     _connectionDb.Open();
                     using SqlDataReader reader = _command.ExecuteReader();
@@ -393,9 +393,17 @@ namespace sicf_DataBase.Repositories.Apelacion
                             {
                                 ApelacioneReponseDTO apelacion = new ApelacioneReponseDTO();
                                 apelacion.nombre_ciudadano = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_ciudadano"]);
+                                apelacion.primer_apellido = ConvertFDBVal.ConvertFromDBVal<string>(reader["primer_apellido"]);
+                                apelacion.segundo_apellido = ConvertFDBVal.ConvertFromDBVal<string>(reader["segundo_apellido"]);
+
+                                apelacion.id_solicitud_servicio = ConvertFDBVal.ConvertFromDBVal<long>(reader["id_solicitud_servicio"]);
+                                apelacion.numero_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento"]);
+                                apelacion.codigo_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_solicitud"]);
                                 apelacion.estado_apelacion = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_apelacion"]);
+                                apelacion.tipo_tramite = ConvertFDBVal.ConvertFromDBVal<string>(reader["tipo_tramite"]);
                                 apelacion.subestado_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["subestado_solicitud"]);
                                 apelacion.estado_apelacion_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_apelacion_solicitud"]);
+                                apelacion.fecha_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_solicitud"]);
                                 listApelaciones.Add(apelacion);
                             }
                         }
@@ -411,5 +419,51 @@ namespace sicf_DataBase.Repositories.Apelacion
                 throw;
             }
         }
+
+        public List<SicofaObservacionSolicitudApelacion> ConsultarObservacionesApelaciones(int id_solicitud_servicio)
+        {
+            List<SicofaObservacionSolicitudApelacion> list = new List<SicofaObservacionSolicitudApelacion>();
+            try
+            {
+                var listaObservaciones = _context.Observaciones.Where(m => m.Id_solicitud_servicio == id_solicitud_servicio).ToList();
+
+                foreach (var item in listaObservaciones)
+                {
+                    SicofaObservacionSolicitudApelacion response = new SicofaObservacionSolicitudApelacion();
+                    response.Observacion = item.Observacion;
+                    response.Id_solicitud_servicio = item.Id_solicitud_servicio;
+                    response.Fecha_observacion = item.Fecha_observacion;
+                    list.Add(response);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return list;
+        }
+
+        public SicofaObservacionSolicitudApelacion GuardarObservacionesApelaciones(ObservacionSolicitudApelacionRequest request)
+        {
+            SicofaObservacionSolicitudApelacion sicofaObservacionSolicitudApelacion = new SicofaObservacionSolicitudApelacion();
+            sicofaObservacionSolicitudApelacion.Id_solicitud_servicio = request.Id_solicitud_servicio;
+            sicofaObservacionSolicitudApelacion.Observacion = request.Observacion;
+            sicofaObservacionSolicitudApelacion.Fecha_observacion = DateTime.Now;
+
+            try
+            {
+                var response = _context.Observaciones.AddAsync(sicofaObservacionSolicitudApelacion);
+                _context.SaveChanges();
+                sicofaObservacionSolicitudApelacion =  response.Result.Entity;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return sicofaObservacionSolicitudApelacion;
+        }
+
+        
     }
 }

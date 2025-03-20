@@ -198,5 +198,30 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Apelacion
 
         }
 
+        public List<SicofaObservacionSolicitudApelacion> ConsultarObservacionesApelaciones(int id_solicitud_servicio)
+        {
+            try
+            {
+                return apelacionRepository.ConsultarObservacionesApelaciones(id_solicitud_servicio);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+        }
+
+        public SicofaObservacionSolicitudApelacion GuardarObservacionesApelaciones(ObservacionSolicitudApelacionRequest request)
+        {
+            try
+            {
+                return apelacionRepository.GuardarObservacionesApelaciones(request);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+        }
+
+        
     }
 }

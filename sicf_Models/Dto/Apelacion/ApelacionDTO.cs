@@ -31,7 +31,7 @@ namespace sicf_Models.Dto.Apelacion
         }
         public long id_solicitud_servicio { get; set; }
         public string codigo_solicitud { get; set; }
-        public string fecha_solicitud { get; set; }
+        public DateTime fecha_solicitud { get; set; }
         public string subestado_solicitud { get; set; }
         public long id_solicitud_apelacion { get; set; }
         public string estado_apelacion_solicitud { get; set; }
@@ -41,10 +41,20 @@ namespace sicf_Models.Dto.Apelacion
         public string nombre_ciudadano { get; set; }
         public string primer_apellido { get; set; }
         public string segundo_apellido { get; set; }
-        public long numero_documento { get; set; }
+        public string numero_documento { get; set; }
         public string nombre_usuario { get; set; }
         public string apellido_usuario { get; set; }
         public string tipo_tramite { get; set; }
         public string tipo_documento { get; set; }
+    }
+
+    public class ObservacionSolicitudApelacionRequest
+    {
+        public ObservacionSolicitudApelacionRequest()
+        {
+
+        }
+        public long Id_solicitud_servicio { get; set; }
+        public string Observacion { get; set; }
     }
 }

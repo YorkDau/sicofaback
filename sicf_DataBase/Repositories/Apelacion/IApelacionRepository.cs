@@ -28,6 +28,8 @@ namespace sicf_DataBase.Repositories.Apelacion
     public interface IApelacion_Repository
     {
         public List<ApelacioneReponseDTO> ConsultarApelaciones(ConsultarApelacionObtencionDTO apelacion);
+        public List<SicofaObservacionSolicitudApelacion> ConsultarObservacionesApelaciones(int id_solicitud_servicio);
+        public SicofaObservacionSolicitudApelacion GuardarObservacionesApelaciones(ObservacionSolicitudApelacionRequest request);
 
     }
 }

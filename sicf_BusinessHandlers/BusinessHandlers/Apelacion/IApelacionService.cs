@@ -21,5 +21,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Apelacion
     public interface IApelacion_Service
     {
         public List<ApelacioneReponseDTO> ConsultarApelaciones(ConsultarApelacionObtencionDTO apelacion);
+        public List<SicofaObservacionSolicitudApelacion> ConsultarObservacionesApelaciones(int id_solicitud_servicio);
+        public SicofaObservacionSolicitudApelacion GuardarObservacionesApelaciones(ObservacionSolicitudApelacionRequest request);
     }
 }

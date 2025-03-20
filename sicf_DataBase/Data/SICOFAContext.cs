@@ -94,6 +94,8 @@ namespace sicf_DataBase.Data
 
         public virtual DbSet<SicofaHistorialContrasena> SicofaHistorialContrasena { get; set; } = null!;
 
+        public virtual DbSet<SicofaObservacionSolicitudApelacion> Observaciones { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -104,6 +106,32 @@ namespace sicf_DataBase.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseCollation("Modern_Spanish_CI_AS");
+
+            modelBuilder.Entity<SicofaObservacionSolicitudApelacion>(entity =>
+            {
+                entity.HasKey(e => e.Id_observacion_solicitud_apelacion)
+                    .HasName("PK_SICOFA_ObservacionSolicitudApelacion");
+
+                entity.ToTable("SICOFA_ObervacionSolicitudApelacion");
+
+                entity.Property(e => e.Id_observacion_solicitud_apelacion)
+                    .HasColumnName("id_observacion_solicitud_apelacion");
+
+                entity.Property(e => e.Id_solicitud_servicio)
+                    .HasColumnName("id_solicitud_servicio");
+
+                entity.Property(e => e.Observacion)
+                    .IsUnicode(false)
+                    .HasColumnName("observacion");
+
+           
+
+                entity.HasOne(d => d.SicofaSolicitudServicio)
+                    .WithMany(p => p.Observaciones)
+                    .HasForeignKey(d => d.Id_solicitud_servicio)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_SICOFA_ObservacionSolicitudApelacion_SolicitudServicio");
+            });
 
             modelBuilder.Entity<SicofaActividad>(entity =>
             {
