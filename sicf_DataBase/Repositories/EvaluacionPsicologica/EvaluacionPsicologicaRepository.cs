@@ -252,6 +252,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 involucrado.Eps = data.eps;
                 involucrado.Ips = data.ips;
                 involucrado.VictimaConflictoArmado = data.victimaConflicto;
+                involucrado.VictimaDesplazamiento = data.victimaDesplazamiento;
                 involucrado.IdGenero = data.idIdentidadGenero;
                 involucrado.IdTipoRelacion = data.RelacionAgresor;
                 involucrado.IdNivelAcademico = data.Escolidad;

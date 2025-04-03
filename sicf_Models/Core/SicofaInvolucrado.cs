@@ -42,6 +42,7 @@ namespace sicf_Models.Core
         public bool? NinoNinaAdolecente { get; set; }
         public bool? Migrante { get; set; }
         public bool? VictimaConflictoArmado { get; set; }
+        public bool? VictimaDesplazamiento { get; set; }
         public bool? PersonaLiderDefensorDh { get; set; }
         public bool? PersonaHabitalidadCalle { get; set; }
         public string? PuebloIndigena { get; set; }

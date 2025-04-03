@@ -35,6 +35,8 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
 
         public bool victimaConflicto { get; set; } // aplica cuando es victima  true, si es agresor enviar false
 
+        public bool victimaDesplazamiento { get; set; } // aplica cuando es victima  true, si es agresor enviar false
+
         public string eps { get; set; } // aplica cuando es victima , si es agresor enviar "";
 
         public string ips { get; set; } // aplica cuando es victima , si es agresor enviar "";

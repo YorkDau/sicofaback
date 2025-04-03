@@ -1245,6 +1245,9 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.TipoDocumento).HasColumnName("tipo_documento");
 
                 entity.Property(e => e.VictimaConflictoArmado).HasColumnName("victima_conflicto_armado");
+                entity.Property(e => e.VictimaDesplazamiento)
+                    .HasColumnName("victima_desplazamiento")
+                    .HasDefaultValue(false);
             });
 
             modelBuilder.Entity<SicofaInvolucradoComplementaria>(entity =>
