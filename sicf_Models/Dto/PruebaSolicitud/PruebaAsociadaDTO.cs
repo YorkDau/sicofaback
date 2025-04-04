@@ -22,6 +22,13 @@ namespace sicf_Models.Dto.PruebaSolicitud
         public long? idPrueba { get; set; }
 
         public DateTime? fecha { get; set; }
+        public string nombreCompletoInvolucrado { get; set; } = string.Empty;
+        public string documentoInvolucrado { get; set; } = string.Empty;
+        public string tipoDocumentoInvolucrado { get; set; } = string.Empty;
+        public long? idPruebaPericial { get; set; }
+        public string? nombrePruebaPericial { get; set; }
+        public long idUsuario { get; set; }
+        public string nombreUsuario { get; set; }
 
 
 
