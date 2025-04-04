@@ -423,6 +423,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
                 carga.Nombrearchivo = data.Nombrearchivo;
                 carga.tipoDocumento = data.tipoDocumento;
                 carga.idUsuario = data.idUsuario;
+                carga.idPruebaPericial = data.idPruebaPericial ?? 1;
 
                 return carga;
             }
@@ -436,18 +437,16 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
         {
             try
             {
-                CargaArchivoDTO carga= CargaFormatoBlop(data);
+                CargaArchivoDTO carga = CargaFormatoBlop(data);
 
                 var respuestaCarga = await Carga(carga);
 
-                await pruebaSolicitudServicioRepository.RegistrarPruebaSolicitud(data.idSolicitudServicio, data.idTarea, data.tipoDocumento, respuestaCarga, data.idInvolucrado, data.Nombrearchivo);
+                await pruebaSolicitudServicioRepository.RegistrarPruebaSolicitud(data.idSolicitudServicio, data.idTarea, data.tipoDocumento, respuestaCarga, data.idInvolucrado, data.Nombrearchivo,  data.idPruebaPericial ?? 1 );
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
-
+                throw new Exception(ex.Message); 
             }
-
         }
 
         public async Task EliminarPruebaSolicitud(EliminarPruebaDTO data)

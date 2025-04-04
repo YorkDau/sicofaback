@@ -28,21 +28,40 @@ namespace sicf_DataBase.Repositories.PruebaSolicitud
         {
             try
             {
-                var Lista = await (from pruebas in context.SicofaSolicitudPrueba
-                                  join anexo in context.SicofaSolicitudServicioAnexo on pruebas.IdAnexo equals anexo.IdSolicitudAnexo
-                                  join usua in context.SicofaUsuarioSistema on anexo.IdUsuario equals usua.IdUsuarioSistema
-                                  where pruebas.IdSolicitudServicio == idSolicitud & pruebas.TipoPrueba == tipoPrueba
-                                  select new PruebaAsociadaDTO
-                                  {
-                                      idInvolucrado = usua.IdUsuarioSistema,
-                                      tipoPrueba = pruebas.TipoPrueba,
-                                      nombrePrueba = pruebas.NombreArchivo,
-                                      idAnexo = anexo.IdSolicitudAnexo,
-                                      idPrueba = pruebas.IdSolicitudPrueba,
-                                      nombreInvolucrado = $"{usua.Nombres} {usua.Apellidos}",
-                                      fecha = (DateTime)anexo.FechaCreacion!
-                                  }
-                                                   ).ToListAsync();
+                var Lista = await (
+                    from pruebas in context.SicofaSolicitudPrueba
+                    join anexo in context.SicofaSolicitudServicioAnexo on pruebas.IdAnexo equals anexo.IdSolicitudAnexo
+                    join usua in context.SicofaUsuarioSistema on anexo.IdUsuario equals usua.IdUsuarioSistema
+                    join involucrado in context.SicofaInvolucrado on pruebas.IdInvolucrado equals involucrado.IdInvolucrado into inv
+                    from i in inv.DefaultIfEmpty() // LEFT JOIN para involucrado
+                    join dominio in context.SicofaDominio on pruebas.IdPruebaPericial equals dominio.IdDominio into dominioJoin
+                    from d in dominioJoin.DefaultIfEmpty() // LEFT JOIN para dominio
+                    where pruebas.IdSolicitudServicio == idSolicitud && pruebas.TipoPrueba == tipoPrueba
+                    select new PruebaAsociadaDTO
+                    {
+                        // Datos básicos de la prueba
+                        idPrueba = pruebas.IdSolicitudPrueba,
+                        tipoPrueba = pruebas.TipoPrueba,
+                        nombrePrueba = pruebas.NombreArchivo,
+                        idAnexo = anexo.IdSolicitudAnexo,
+                        fecha = anexo.FechaCreacion,
+
+                        // Información del usuario del sistema
+                        idUsuario = usua.IdUsuarioSistema,
+                        nombreUsuario = $"{usua.Nombres} {usua.Apellidos}",
+
+                        // Información del involucrado (si existe)
+                        nombreInvolucrado = i != null ?
+                            $"{(i.PrimerNombre ?? "")} {(i.SegundoNombre ?? "")} {(i.PrimerApellido ?? "")} {(i.SegundoApellido ?? "")}".Trim()
+                            : (d != null ? d.NombreDominio : "Sin prueba pericial"),
+                        documentoInvolucrado = i != null ? i.NumeroDocumento : null,
+                        tipoDocumentoInvolucrado = i != null ? i.TipoDocumento.ToString() : null,
+
+                        // Información de la prueba pericial (mejorada)
+                        idPruebaPericial = pruebas.IdPruebaPericial ?? 1,
+                        nombrePruebaPericial = pruebas.IdPruebaPericial == null ? "Sin tipo definido" :
+                                             (d != null ? d.NombreDominio : "Tipo no encontrado")
+                    }).ToListAsync();
 
                 return Lista;
 
@@ -62,7 +81,9 @@ namespace sicf_DataBase.Repositories.PruebaSolicitud
                 var accioanteAccionado = await ListaPruebaAsociadas(idSolitiudServicio, cPruebaSolicitud.pruebaAccionanteAccionado);
 
 
-                var salida = periciales.Concat(accioanteAccionado);
+                var salida = periciales.Concat(accioanteAccionado)
+                       .OrderByDescending(x => x.fecha)
+                       .ToList();
 
                 return salida;
 
@@ -77,13 +98,13 @@ namespace sicf_DataBase.Repositories.PruebaSolicitud
 
         }
 
-        public async Task RegistrarPruebaSolicitud(long idsolicitudServicio, long idTarea, string tipoPrueba, long idAnexo, long? idinvolucrado, string nombre)
+        public async Task RegistrarPruebaSolicitud(long idsolicitudServicio, long idTarea, string tipoPrueba, long idAnexo, long? idinvolucrado, string nombre, int IdPruebaPericial)
         {
             try
             {
 
                 SicofaSolicitudPrueba entrada = new SicofaSolicitudPrueba()
-                { IdSolicitudServicio = idsolicitudServicio, IdTarea = idTarea, TipoPrueba = tipoPrueba, IdAnexo = idAnexo, IdInvolucrado = idinvolucrado, NombreArchivo = nombre };
+                { IdSolicitudServicio = idsolicitudServicio, IdTarea = idTarea, TipoPrueba = tipoPrueba, IdAnexo = idAnexo, IdInvolucrado = idinvolucrado, NombreArchivo = nombre,IdPruebaPericial = IdPruebaPericial  };
 
                 context.SicofaSolicitudPrueba.Add(entrada);
 

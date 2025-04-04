@@ -2282,20 +2282,15 @@ namespace sicf_DataBase.Data
                 entity.ToTable("SICOFA_SolicitudPrueba");
 
                 entity.Property(e => e.IdSolicitudPrueba).HasColumnName("id_solicitud_prueba");
-
                 entity.Property(e => e.IdAnexo).HasColumnName("id_anexo");
-
                 entity.Property(e => e.IdInvolucrado).HasColumnName("id_involucrado");
-
+                entity.Property(e => e.IdPruebaPericial).HasColumnName("id_prueba_pericial");
                 entity.Property(e => e.IdSolicitudServicio).HasColumnName("id_solicitud_servicio");
-
                 entity.Property(e => e.IdTarea).HasColumnName("id_tarea");
-
                 entity.Property(e => e.NombreArchivo)
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("nombre_archivo");
-
                 entity.Property(e => e.TipoPrueba)
                     .HasMaxLength(50)
                     .IsUnicode(false)
@@ -2317,7 +2312,14 @@ namespace sicf_DataBase.Data
                     .HasForeignKey(d => d.IdTarea)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__SICOFA_So__id_ta__3F073C79");
+
+                entity.HasOne(d => d.IdPruebaPericialNavigation)
+                    .WithMany()
+                    .HasForeignKey(d => d.IdPruebaPericial)
+                    .IsRequired(false) 
+                    .HasConstraintName("FK__SICOFA_So__id_pr__40EF7E0B");
             });
+
 
             modelBuilder.Entity<SicofaSolicitudServicio>(entity =>
             {
