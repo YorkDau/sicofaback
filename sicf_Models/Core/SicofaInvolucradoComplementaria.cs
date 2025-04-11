@@ -39,6 +39,7 @@ namespace sicf_Models.Core
         public bool? FamiliaExtensa { get; set; }
         public string? OtraInformacionFamiliaExtensa { get; set; }
         public long? IdAnexo { get; set; }
+        public bool? NoInformacion { get; set; }
 
         public string? OtrotipoViviendaCual { get; set; }
         public virtual SicofaInvolucrado IdInvolucradoNavigation { get; set; } = null!;

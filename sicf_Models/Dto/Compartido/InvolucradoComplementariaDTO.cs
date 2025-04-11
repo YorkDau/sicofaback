@@ -45,5 +45,6 @@ namespace sicf_Models.Dto.Compartido
         public string? OtraInformacionFamiliaExtensa { get; set; }
         public long? IdAnexoSolicitud { get; set; }
         public string? Entrada { get; set; }
+        public bool? NoInformacion { get; set; }
     }
 }

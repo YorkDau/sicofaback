@@ -577,6 +577,7 @@ namespace sicf_DataBase.Compartido
                 deta.ActividadesExtracurriculares = involucrado.ActividadesExtracurriculares;
                 deta.FamiliaExtensa = involucrado.FamiliaExtensa;
                 deta.OtraInformacionFamiliaExtensa = involucrado.OtraInformacionFamiliaExtensa;
+                deta.NoInformacion = involucrado.NoInformacion;
 
                 context.SicofaInvolucradoComplementaria.Add(deta);
                 await context.SaveChangesAsync();
