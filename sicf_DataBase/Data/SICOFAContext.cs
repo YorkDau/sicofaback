@@ -1975,6 +1975,9 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.IdTipoViolencia).HasColumnName("id_tipo_violencia");
 
                 entity.Property(e => e.Puntuacion).HasColumnName("puntuacion");
+                entity.Property(e => e.Nullable)
+                    .IsRequired(false)
+                    .HasColumnName("nullable");
             });
 
             modelBuilder.Entity<SicofaQuorum>(entity =>

@@ -492,6 +492,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     previo.Puntuacion = pregunta.Puntuacion;
                     previo.EsCerrada = pregunta.EsCerrada;
                     previo.Descripcion = pregunta.Descripcion;
+                    previo.Nullable = pregunta.Nullable;
 
                     if (respuestas.Count() == preguntas.Count())
                     {
