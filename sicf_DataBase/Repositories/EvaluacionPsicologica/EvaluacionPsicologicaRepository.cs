@@ -9,6 +9,7 @@ using sicf_Models.Dto;
 using sicf_Models.Dto.EvaluacionPsicologica;
 using sicf_Models.Dto.Solicitudes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -479,7 +480,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             var respuestas = (from res in context.SicofaRespuestaQuestionarioTipoViolencia
                               join quesionario in context.SicofaQuestionarioTipoViolencia on res.IdQuestionario equals quesionario.IdQuestionario
                               where res.IdEvaluacionPsicologica == evaluacion.IdEvaluacion & quesionario.IdTipoViolencia == tipoViolencia
-                              select Tuple.Create(res.IdQuestionario, res.Mes, res.Puntuacion)
+                              select Tuple.Create(res.IdQuestionario, res.Mes, res.Puntuacion, res.Nullable)
                               ).ToList();
 
             List<QuestionarioRespuestaPreviaDTO> salida = new List<QuestionarioRespuestaPreviaDTO>();
@@ -497,7 +498,13 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     if (respuestas.Count() == preguntas.Count())
                     {
                         var respuesta = respuestas.Where(s => s.Item1 == pregunta.IdQuestionario).First();
-                        previo.PuntuacionPrevio = respuesta.Item3;
+
+                        int? puntuacionPrevia = respuesta.Item3;
+                        if (respuesta.Item4 is not null)
+                        {
+                            puntuacionPrevia = null;
+                        }
+                        previo.PuntuacionPrevio = puntuacionPrevia;
                         previo.mesPrevio = respuesta.Item2;
                     }
                     salida.Add(previo);
@@ -530,6 +537,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 {
                     SicofaRespuestaQuestionarioTipoViolencia entrada = new SicofaRespuestaQuestionarioTipoViolencia();
                     entrada.Puntuacion = 0;
+                    entrada.Nullable = null;
                     entrada.IdQuestionario = respuesta.IdCuestionario;
                     entrada.IdSolicitudServicio = data.idSolicitudServicio;
                  
@@ -540,15 +548,17 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     entrada.Mes = respuesta.mes;
                     entrada.IdEvaluacionPsicologica = evaluacion.IdEvaluacion;
 
-                    if (respuesta.puntuacion)
+                    if (respuesta is { puntuacion: true })
                     {
-
                         entrada.Puntuacion = (int)violencia.Puntuacion;
                     }
 
-                  
-                    insercion.Add(entrada);
+                    if (respuesta is { puntuacion: null })
+                    {
+                        entrada.Nullable = (int)violencia.Puntuacion;
+                    }
 
+                    insercion.Add(entrada);
                 }
 
                 context.SicofaRespuestaQuestionarioTipoViolencia.AddRange(insercion);
@@ -564,30 +574,28 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                         context.SicofaRespuestaQuestionarioTipoViolencia.Where(s => s.IdQuestionario == lista.IdCuestionario & s.IdSolicitudServicio == data.idSolicitudServicio & s.IdEvaluacionPsicologica == evaluacion.IdEvaluacion).FirstOrDefault()!;
                    
                     previa.Puntuacion = 0;
+                    previa.Nullable = null;
                     previa.Mes = lista.mes;
 
-                    if (lista.puntuacion)
+                    if (lista is { puntuacion: true })
                     {
-
-                        previa.Puntuacion = (int)violencia.Puntuacion!;
-                        
+                        previa.Puntuacion = (int)violencia.Puntuacion!;                        
                     }
-
+                    
+                    if (lista is { puntuacion: null })
+                    {
+                        previa.Nullable = (int)violencia.Puntuacion;
+                    }
 
                     // TODO : correcion de bug donde por no se debe guardar mes en circunstancia agrevantes ni persecipcion victima, luego de probado se borra y se certifique el bug se elimina este comentario
                     if (data.IdTipoViolencia == Cuestionario.circunstanciaAgrevantes || data.IdTipoViolencia == Cuestionario.persepcionVictima) 
                     {
                         previa.Mes = null;
                     }
+
                     context.SaveChanges();
-
                 }
-
-
             }
-
-
-
         }
 
         public async Task<EvaluacionRiegoDTO> EvaluacionRiesgosPorSolicitud(long idSolicitud , long? Idtarea)

@@ -20,10 +20,7 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
     public class RespuestaPorPreguntaDTO 
     {
         public int IdCuestionario { get; set; }
-        public bool mes { get; set; }
-
-        public bool puntuacion { get; set; }
-
-
+        public bool? mes { get; set; }
+        public bool? puntuacion { get; set; }
     }
 }

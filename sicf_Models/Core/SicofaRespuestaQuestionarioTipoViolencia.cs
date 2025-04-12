@@ -10,9 +10,8 @@ namespace sicf_Models.Core
         public int IdQuestionario { get; set; }
         public bool? Mes { get; set; }
         public int Puntuacion { get; set; }
-
+        public int? Nullable { get; set; }
         public long? IdEvaluacionPsicologica { get; set; }
-
         public virtual SicofaQuestionarioTipoViolencia IdQuestionarioNavigation { get; set; } = null!;
     }
 }

@@ -2089,6 +2089,10 @@ namespace sicf_DataBase.Data
 
                 entity.Property(e => e.Puntuacion).HasColumnName("puntuacion");
 
+                entity.Property(e => e.Nullable)
+                    .IsRequired(false)
+                    .HasColumnName("nullable");
+
                 entity.HasOne(d => d.IdQuestionarioNavigation)
                     .WithMany(p => p.SicofaRespuestaQuestionarioTipoViolencia)
                     .HasForeignKey(d => d.IdQuestionario)
