@@ -21,6 +21,7 @@ namespace sicf_Models.Core
         public int? IdPaisNacimiento { get; set; }
         public long? IdCiudMunNacimiento { get; set; }
         public int? IdNivelAcademico { get; set; }
+        public int? IdEstadoAcademico { get; set; } //agregado
         public int? IdLocalidad { get; set; }
         public string? Barrio { get; set; }
         public string NombreCiudadano { get; set; } = null!;

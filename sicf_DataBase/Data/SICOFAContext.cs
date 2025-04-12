@@ -385,6 +385,7 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
 
                 entity.Property(e => e.IdNivelAcademico).HasColumnName("id_nivel_academico");
+                entity.Property(e => e.IdEstadoAcademico).HasColumnName("id_estado_academico");
 
                 entity.Property(e => e.IdOrientacionSexual).HasColumnName("id_orientacion_sexual");
 

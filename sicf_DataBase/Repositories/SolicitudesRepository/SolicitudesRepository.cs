@@ -249,6 +249,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@idIdentidadGenero", BdValidation.ToDBNull((requestRegistrarCiudadano.idIdentidadGenero == 0) ? null : requestRegistrarCiudadano.idIdentidadGenero));
                         _command.Parameters.AddWithValue("@idOrientacionSexual", BdValidation.ToDBNull((requestRegistrarCiudadano.idOrientacionSexual == 0) ? null : requestRegistrarCiudadano.idOrientacionSexual));
                         _command.Parameters.AddWithValue("@idNivelAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idNivelAcademico == 0) ? null : requestRegistrarCiudadano.idNivelAcademico));
+                        _command.Parameters.AddWithValue("@idEstadoAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idEstadoAcademico == 0) ? null : requestRegistrarCiudadano.idEstadoAcademico)); //agregado
                         _command.Parameters.AddWithValue("@direccionResidencia", BdValidation.ToDBNull(requestRegistrarCiudadano.direccionResidencia));
 
                         _command.Parameters.AddWithValue("@idLocalidad", BdValidation.ToDBNull((requestRegistrarCiudadano.idLocalidad == 0) ? null : requestRegistrarCiudadano.idLocalidad));
@@ -340,6 +341,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@idIdentidadGenero", BdValidation.ToDBNull((requestRegistrarCiudadano.idIdentidadGenero == 0) ? null : requestRegistrarCiudadano.idIdentidadGenero));
                         _command.Parameters.AddWithValue("@idOrientacionSexual", BdValidation.ToDBNull((requestRegistrarCiudadano.idOrientacionSexual == 0) ? null : requestRegistrarCiudadano.idOrientacionSexual));
                         _command.Parameters.AddWithValue("@idNivelAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idNivelAcademico == 0) ? null : requestRegistrarCiudadano.idNivelAcademico));
+                        _command.Parameters.AddWithValue("@idEstadoAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idEstadoAcademico == 0) ? null : requestRegistrarCiudadano.idEstadoAcademico)); //agregado
                         _command.Parameters.AddWithValue("@direccionResidencia", BdValidation.ToDBNull(requestRegistrarCiudadano.direccionResidencia));
 
                         _command.Parameters.AddWithValue("@idLocalidad", BdValidation.ToDBNull((requestRegistrarCiudadano.idLocalidad == 0) ? null : requestRegistrarCiudadano.idLocalidad));
@@ -640,6 +642,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 responseEditar.idIdentidadGenero = ConvertFDBVal.ConvertFromDBVal<int>(reader["idIdentidadGenero"]);
                                 responseEditar.idOrientacionSexual = ConvertFDBVal.ConvertFromDBVal<int>(reader["idOrientacionSexual"]);
                                 responseEditar.idNivelAcademico = ConvertFDBVal.ConvertFromDBVal<int>(reader["idNivelAcademico"]);
+                                responseEditar.idNivelAcademico = ConvertFDBVal.ConvertFromDBVal<int>(reader["idEstadoAcademico"]); //agregado
                                 responseEditar.direccionResidencia = ConvertFDBVal.ConvertFromDBVal<string>(reader["direccionResidencia"]);
                                 responseEditar.barrio = ConvertFDBVal.ConvertFromDBVal<string>(reader["barrio"]);
                                 responseEditar.telefono = ConvertFDBVal.ConvertFromDBVal<string>(reader["telefono"]);
