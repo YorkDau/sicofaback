@@ -231,10 +231,17 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@idTipoDocumento", BdValidation.ToDBNull(requestRegistrarCiudadano.idTipoDocumento));
                         _command.Parameters.AddWithValue("@numeroDocumento", BdValidation.ToDBNull(requestRegistrarCiudadano.numeroDocumento));
                         _command.Parameters.AddWithValue("@fechaExpedicion", BdValidation.ToDBNull((string.IsNullOrEmpty(requestRegistrarCiudadano.fechaExpedicion)) ? null : DateTime.ParseExact(requestRegistrarCiudadano.fechaExpedicion, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
-                        _command.Parameters.AddWithValue("@idlugarExpedicion", BdValidation.ToDBNull(requestRegistrarCiudadano.idlugarExpedicion));
+                        //_command.Parameters.AddWithValue("@idlugarExpedicion", BdValidation.ToDBNull(requestRegistrarCiudadano.idlugarExpedicion));
                         _command.Parameters.AddWithValue("@fechaNacimiento", BdValidation.ToDBNull((string.IsNullOrEmpty(requestRegistrarCiudadano.fechaNacimiento)) ? null : DateTime.ParseExact(requestRegistrarCiudadano.fechaNacimiento, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture))); ;
-
                         _command.Parameters.AddWithValue("@edad", BdValidation.ToDBNull(requestRegistrarCiudadano.edad));
+                        /*
+                         *  @idPaisExpedicion int,
+                            @idDepartamentoExpedicion bigint,
+                            @idMunicipioExpedicion bigint,
+                         * */
+                        _command.Parameters.AddWithValue("@idPaisExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisExpedicion == 0) ? null : requestRegistrarCiudadano.idPaisExpedicion));
+                        _command.Parameters.AddWithValue("@idDepartamentoExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idDepartamentoExpedicion == 0) ? null : requestRegistrarCiudadano.idDepartamentoExpedicion));
+                        _command.Parameters.AddWithValue("@idMunicipioExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idMunicipioExpedicion == 0) ? null : requestRegistrarCiudadano.idMunicipioExpedicion));
                         _command.Parameters.AddWithValue("@idPaisNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisNacimiento == 0) ? null : requestRegistrarCiudadano.idPaisNacimiento));
                         _command.Parameters.AddWithValue("@idDepartamentoNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idDepartamentoNacimiento == 0) ? null : requestRegistrarCiudadano.idDepartamentoNacimiento));
                         _command.Parameters.AddWithValue("@idMunicipioNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idMunicipioNacimiento == 0) ? null : requestRegistrarCiudadano.idMunicipioNacimiento));
@@ -315,10 +322,17 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@idTipoDocumento", BdValidation.ToDBNull(requestRegistrarCiudadano.idTipoDocumento));
                         _command.Parameters.AddWithValue("@numeroDocumento", BdValidation.ToDBNull(requestRegistrarCiudadano.numeroDocumento));
                         _command.Parameters.AddWithValue("@fechaExpedicion", BdValidation.ToDBNull((string.IsNullOrEmpty(requestRegistrarCiudadano.fechaExpedicion)) ? null : DateTime.ParseExact(requestRegistrarCiudadano.fechaExpedicion, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
-                        _command.Parameters.AddWithValue("@idlugarExpedicion", BdValidation.ToDBNull(requestRegistrarCiudadano.idlugarExpedicion));
+                        //_command.Parameters.AddWithValue("@idlugarExpedicion", BdValidation.ToDBNull(requestRegistrarCiudadano.idlugarExpedicion));
                         _command.Parameters.AddWithValue("@fechaNacimiento", BdValidation.ToDBNull((string.IsNullOrEmpty(requestRegistrarCiudadano.fechaNacimiento)) ? null : DateTime.ParseExact(requestRegistrarCiudadano.fechaNacimiento, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture))); ;
-
                         _command.Parameters.AddWithValue("@edad", BdValidation.ToDBNull(requestRegistrarCiudadano.edad));
+                        /*
+                         *  @idPaisExpedicion int,
+                            @idDepartamentoExpedicion bigint,
+                            @idMunicipioExpedicion bigint,
+                         * */
+                        _command.Parameters.AddWithValue("@idPaisExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisExpedicion == 0) ? null : requestRegistrarCiudadano.idPaisExpedicion));
+                        _command.Parameters.AddWithValue("@idDepartamentoExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idDepartamentoExpedicion == 0) ? null : requestRegistrarCiudadano.idDepartamentoExpedicion));
+                        _command.Parameters.AddWithValue("@idMunicipioExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idMunicipioExpedicion == 0) ? null : requestRegistrarCiudadano.idMunicipioExpedicion));
                         _command.Parameters.AddWithValue("@idPaisNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisNacimiento == 0) ? null : requestRegistrarCiudadano.idPaisNacimiento));
                         _command.Parameters.AddWithValue("@idDepartamentoNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idDepartamentoNacimiento == 0) ? null : requestRegistrarCiudadano.idDepartamentoNacimiento));
                         _command.Parameters.AddWithValue("@idMunicipioNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idMunicipioNacimiento == 0) ? null : requestRegistrarCiudadano.idMunicipioNacimiento));

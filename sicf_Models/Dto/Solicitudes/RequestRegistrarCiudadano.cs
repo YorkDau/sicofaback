@@ -17,9 +17,11 @@ namespace sicf_Models.Dto.Solicitudes
         public int idTipoDocumento { get; set; }
         public string numeroDocumento { get; set; }
         public string? fechaExpedicion { get; set; }
-        public int idlugarExpedicion { get; set; }
         public string? fechaNacimiento { get; set; }
         public int edad { get; set; }
+        public int idPaisExpedicion { get; set; }
+        public int idDepartamentoExpedicion { get; set; }
+        public int idMunicipioExpedicion { get; set; }
         public int idPaisNacimiento { get; set; }
         public int idDepartamentoNacimiento { get; set; }
         public int idMunicipioNacimiento { get; set; }
