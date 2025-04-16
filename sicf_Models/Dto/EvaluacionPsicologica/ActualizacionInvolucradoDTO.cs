@@ -85,15 +85,11 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
 
     public class informacionHijo
     {
+        public string? nombres { get; set; }
         public int? edad { get; set; }
-
+        public int? edadEn { get; set; }
         public int? sexo { get; set; }
-
         public int? custodia { get; set; }
-
         public int relacionParental { get; set; }
-
-
-
     }
 }

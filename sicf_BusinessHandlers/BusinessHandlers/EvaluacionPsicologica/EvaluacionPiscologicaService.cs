@@ -91,17 +91,13 @@ namespace sicf_BusinessHandlers.BusinessHandlers.EvaluacionPsicologica
             {
                 EvaluacionPsicologicaRepository.ActualizarInvolucrado(data);
                 // Cerrar tarea y crear la nueva con identificacion de riesgo
-                var involucrado = EvaluacionPsicologicaRepository.ConsultarInvolucrado(data.IdInvolucrado);
-
+                //var involucrado = EvaluacionPsicologicaRepository.ConsultarInvolucrado(data.IdInvolucrado);
             }
             catch (Exception ex) {
 
                 throw new Exception(ex.Message);
             
             }
-
-            
-
         }
         #endregion HU2
 

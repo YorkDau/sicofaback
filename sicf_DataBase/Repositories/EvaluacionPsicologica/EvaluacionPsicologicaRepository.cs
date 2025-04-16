@@ -147,7 +147,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                         {
 
                             informacionHijo hijoSalida = new informacionHijo();
+                            hijoSalida.nombres = hijo.Nombres;
                             hijoSalida.edad = hijo.Edad;
+                            hijoSalida.edadEn = hijo.EdadEn;
                             hijoSalida.sexo = hijo.IdSexo;
                             hijoSalida.custodia = hijo.Custodia;
                             hijoSalida.relacionParental = (int) hijo.IdRelacionParental;
@@ -196,7 +198,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                         {
 
                             informacionHijo hijoSalida = new informacionHijo();
+                            hijoSalida.nombres = hijo.Nombres;
                             hijoSalida.edad = hijo.Edad;
+                            hijoSalida.edadEn = hijo.EdadEn;
                             hijoSalida.sexo = hijo.IdSexo;
                             hijoSalida.custodia = hijo.Custodia;
                             hijoSalida.relacionParental = hijo.IdRelacionParental;
@@ -220,10 +224,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             }
             catch (Exception ex) {
 
-                throw new Exception(ex.Message);
-            
+                throw new Exception(ex.Message);            
             }
-            }
+        }
             
 
 
@@ -292,7 +295,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             {
 
                                 SicofaHijoinvolucrado hijoSalida = new SicofaHijoinvolucrado();
+                                hijoSalida.Nombres = hijo.nombres;
                                 hijoSalida.Edad = (int)hijo.edad!;
+                                hijoSalida.EdadEn = hijo.edadEn;
                                 hijoSalida.IdSexo = (int)hijo.sexo!;
                                 hijoSalida.Custodia = hijo.custodia;
                                 hijoSalida.IdInvolucrado = involucrado.IdInvolucrado;
@@ -337,7 +342,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             {
                                 SicofaHijoinvolucrado hijo = new SicofaHijoinvolucrado();
                                 hijo.IdInvolucrado = data.IdInvolucrado;
+                                hijo.Nombres = datahijo.nombres;
                                 hijo.Edad = (int)datahijo.edad;
+                                hijo.EdadEn = datahijo.edadEn;
                                 hijo.Custodia = datahijo.custodia;
                                 hijo.IdSexo = datahijo.sexo;
                                 hijo.IdRelacionParental = (int)datahijo.relacionParental;
@@ -409,7 +416,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             {
                                 SicofaHijoinvolucrado hijo = new SicofaHijoinvolucrado();
                                 hijo.IdInvolucrado = data.IdInvolucrado;
+                                hijo.Nombres = hijodata.nombres;
                                 hijo.Edad = (int)hijodata.edad!;
+                                hijo.EdadEn = hijodata.edadEn;
                                 hijo.Custodia = hijodata.custodia;
                                 hijo.IdSexo = hijodata.sexo;
                                 hijo.IdRelacionParental = hijodata.relacionParental;
@@ -444,7 +453,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             {
                                 SicofaHijoinvolucrado hijo = new SicofaHijoinvolucrado();
                                 hijo.IdInvolucrado = data.IdInvolucrado;
+                                hijo.Nombres = hijodata.nombres;
                                 hijo.Edad = (int)hijodata.edad!;
+                                hijo.EdadEn = hijodata.edadEn;
                                 hijo.Custodia = hijodata.custodia;
                                 hijo.IdSexo = hijodata.sexo;
                                 hijo.IdRelacionParental = hijodata.relacionParental;
@@ -1187,7 +1198,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 var tipodocumentoAgresor = context.SicofaDominio.Where(s => s.IdDominio == agresor.TipoDocumento).FirstOrDefault();
 
                 var ciudadano =  context.SicofaCiudadano.Where(c => c.NumeroDocumento == victima.NumeroDocumento).FirstOrDefault();
-                var LugarExpedicionVictima =  context.SicofaCiudadMunicipio.Where(s => s.IdCiudadMunicipio == ciudadano.IdLugarExpedicion).FirstOrDefault();
+                var LugarExpedicionVictima =  context.SicofaCiudadMunicipio.Where(s => s.IdCiudadMunicipio == ciudadano!.IdMunicipioExpedicion).FirstOrDefault();
 
                 salida.nombreVictima = $"{victima.PrimerNombre} {victima.SegundoNombre} {victima.PrimerApellido} {victima.SegundoApellido}";
                 salida.documentoVictima = victima.NumeroDocumento;

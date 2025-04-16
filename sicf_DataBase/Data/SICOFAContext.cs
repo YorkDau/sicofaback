@@ -382,7 +382,6 @@ namespace sicf_DataBase.Data
 
                 entity.Property(e => e.IdLocalidad).HasColumnName("id_localidad");
 
-                entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
 
                 entity.Property(e => e.IdNivelAcademico).HasColumnName("id_nivel_academico");
                 entity.Property(e => e.IdEstadoAcademico).HasColumnName("id_estado_academico");
@@ -473,6 +472,17 @@ namespace sicf_DataBase.Data
                     .WithMany(p => p.SicofaCiudadano)
                     .HasForeignKey(d => d.IdPaisNacimiento)
                     .HasConstraintName("FK_SICOFA_Ciudadano_SICOFA_Pais");
+
+                //entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
+                entity.Property(e => e.IdPaisExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_pais_expedicion");
+                entity.Property(e => e.IdDepartamentoExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_departamento_expedicion");
+                entity.Property(e => e.IdMunicipioExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_ciud_mun_expedicion");
             });
 
             modelBuilder.Entity<SicofaCiudadanoPobEspcProte>(entity =>
@@ -1024,11 +1034,20 @@ namespace sicf_DataBase.Data
 
                 entity.ToTable("SICOFA_Hijoinvolucrado");
 
+                entity.Property(e => e.Nombres)
+                    .IsRequired(false)
+                    .HasDefaultValue("Sin ingresar")
+                    .HasColumnName("nombres");
+
                 entity.Property(e => e.IdHijo).HasColumnName("id_hijo");
 
                 entity.Property(e => e.Custodia).HasColumnName("custodia");
 
                 entity.Property(e => e.Edad).HasColumnName("edad");
+                entity.Property(e => e.EdadEn)
+                    .IsRequired(false)
+                    .HasDefaultValue(0)
+                    .HasColumnName("edadEn");
 
                 entity.Property(e => e.IdInvolucrado).HasColumnName("id_involucrado");
 

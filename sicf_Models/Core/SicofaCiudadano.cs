@@ -17,7 +17,10 @@ namespace sicf_Models.Core
         public string NumeroDocumento { get; set; } = null!;
         public int IdTipoDocumento { get; set; }
         public long? IdDepartamento { get; set; }
-        public long? IdLugarExpedicion { get; set; }
+        //public long? IdLugarExpedicion { get; set; }
+        public int? IdPaisExpedicion { get; set; }
+        public int? IdDepartamentoExpedicion { get; set; }
+        public int? IdMunicipioExpedicion { get; set; }
         public int? IdPaisNacimiento { get; set; }
         public long? IdCiudMunNacimiento { get; set; }
         public int? IdNivelAcademico { get; set; }
