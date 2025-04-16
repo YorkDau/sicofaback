@@ -133,7 +133,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.edadAproximadaAgresor = involucrado.Edad;
                     salida.DireccionRecidencia = involucrado.DireccionRecidencia;
                     salida.Telefono = involucrado.Telefono;
-                    salida.lugarExpedicion = involucrado.IdLugarExpedicion;
+                    //salida.lugarExpedicion = involucrado.IdLugarExpedicion;
 
 
                     salida.relacionAgresor = involucrado.IdTipoRelacion;
@@ -190,7 +190,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.edadAproximadaAgresor = complementario != null ? complementario.EdadAproximadaAgresor : involucrado.Edad;
                     var hijos = context.SicofaHijoinvolucrado.Where(s => s.IdInvolucrado == involucrado.IdInvolucrado).ToList();
                     salida.numeroHijos = hijos.Count();
-                    salida.lugarExpedicion = involucrado.IdLugarExpedicion;
+                    //salida.lugarExpedicion = involucrado.IdLugarExpedicion;
 
                     if (hijos.Count >= 1)
                     {
@@ -1198,14 +1198,14 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 var tipodocumentoAgresor = context.SicofaDominio.Where(s => s.IdDominio == agresor.TipoDocumento).FirstOrDefault();
 
                 var ciudadano =  context.SicofaCiudadano.Where(c => c.NumeroDocumento == victima.NumeroDocumento).FirstOrDefault();
-                var LugarExpedicionVictima =  context.SicofaCiudadMunicipio.Where(s => s.IdCiudadMunicipio == ciudadano!.IdMunicipioExpedicion).FirstOrDefault();
+                //var LugarExpedicionVictima =  context.SicofaCiudadMunicipio.Where(s => s.IdCiudadMunicipio == ciudadano.IdLugarExpedicion).FirstOrDefault();
 
                 salida.nombreVictima = $"{victima.PrimerNombre} {victima.SegundoNombre} {victima.PrimerApellido} {victima.SegundoApellido}";
                 salida.documentoVictima = victima.NumeroDocumento;
 
                 //TODO :se debe hacer una revision en el registro el ciudadano ese dato esta intermitente.
                 // luego de realizada la verificacion de ciudadano se elimina esto.
-                salida.lugarExpedicionVictima = LugarExpedicionVictima != null ? LugarExpedicionVictima.Nombre : "Bogota";
+                //salida.lugarExpedicionVictima = LugarExpedicionVictima != null ? LugarExpedicionVictima.Nombre : "Bogota";
                 salida.nombreAgresor = $"{agresor.PrimerNombre} {agresor.SegundoNombre} {agresor.PrimerApellido} {agresor.SegundoApellido}";
                 salida.documentoAgresor = agresor.NumeroDocumento;
                 salida.tipoDocumentoVictima = tipodocumentoVictima != null ? tipodocumentoVictima.Codigo : String.Empty;

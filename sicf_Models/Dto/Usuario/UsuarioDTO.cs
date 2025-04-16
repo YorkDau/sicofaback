@@ -34,6 +34,8 @@ namespace sicf_Models.Dto.Usuario
         public bool? Activo { get; set; }
 
         public List<int>? perfiles { get; set; }
+        public string numeroTarjetaProfesional { get; set; } = string.Empty;
+
 
     }
     public class UsuarioSPDTO
@@ -58,6 +60,7 @@ namespace sicf_Models.Dto.Usuario
         public int idComisaria { get; set; }
 
         public string Cargo { get; set; } = string.Empty;
+        public string NumeroTarjetaProfesional { get; set; }
 
         public bool? Activo { get; set; }
 

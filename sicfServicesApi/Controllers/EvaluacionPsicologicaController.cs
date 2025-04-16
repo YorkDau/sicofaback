@@ -412,7 +412,12 @@ namespace sicfServicesApi.Controllers
                 
 
                 retorno.nombre_psicologo = $"{informacionFuncionario.nombre} {informacionFuncionario.apellido}";
+                if (informacionFuncionario == null)
+                {
+                    return CustomResult(Message.Ok, "No se encontraron datos del funcionario.", HttpStatusCode.NotFound);
+                }
                 retorno.cargo_psicolo = informacionFuncionario.perfil;
+                retorno.numeroTarjetaProfesional = informacionFuncionario.numeroTarjetaProfesional;
 
 
 

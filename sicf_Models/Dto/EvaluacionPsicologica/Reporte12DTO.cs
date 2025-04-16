@@ -17,6 +17,7 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
 
         public string? nombre_psicologo { get; set; }
         public string? cargo_psicolo { get; set; }
+        public string? numeroTarjetaProfesional { get; set; }
 
         public string idEscolaridad { get; set; } = string.Empty;
 
