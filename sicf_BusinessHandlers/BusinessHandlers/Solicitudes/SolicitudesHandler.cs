@@ -393,8 +393,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
                 if (requestRegistrarCiudadano.edad == 0)
                     errors.Add("Edad debe ser diligenciado, campo obligatorio");
 
-                if (requestRegistrarCiudadano.idNivelAcademico == 0)
-                    errors.Add("Nivel académico debe ser diligenciado, campo obligatorio");
+                //if (requestRegistrarCiudadano.idNivelAcademico == 0)
+                  //  errors.Add("Nivel académico debe ser diligenciado, campo obligatorio");
 
 				try
 				{
