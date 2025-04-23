@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace sicf_Models.Dto.Compartido
+﻿namespace sicf_Models.Dto.Compartido
 {
     public class InvolucradoDTO
     {
@@ -21,7 +15,10 @@ namespace sicf_Models.Dto.Compartido
         public string? CorreoElectronico { get; set; }
         public bool? EsVictima { get; set; }
         public bool? EsPrincipal { get; set; }
-        public long? IdLugarExpedicion { get; set; }
+        //public long? IdLugarExpedicion { get; set; }
+        public int? PaisExp { get; set; }
+        public int? DepartamentoExp { get; set; }
+        public int? MunicipioExp { get; set; }
         public string? Eps { get; set; }
         public InvolucradoComplementariaDTO? InfoAdicional { get; set; }
     }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace sicf_Models.Dto.Compartido
+﻿namespace sicf_Models.Dto.Compartido
 {
     public class InvolucradoComplementariaDTO
     {
@@ -46,5 +40,9 @@ namespace sicf_Models.Dto.Compartido
         public long? IdAnexoSolicitud { get; set; }
         public string? Entrada { get; set; }
         public bool? NoInformacion { get; set; }
+
+        public string? ObservacionesSalud { get; set; }
+        public string? ObservacionesPsicologia { get; set; }
+        public string? ObservacionesTrabajoSocial { get; set; }
     }
 }

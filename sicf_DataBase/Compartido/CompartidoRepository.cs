@@ -666,8 +666,12 @@ namespace sicf_DataBase.Compartido
                 invo.CorreoElectronico = involucrado.CorreoElectronico == "" ? invo.CorreoElectronico : involucrado.CorreoElectronico;
                 invo.EsVictima = involucrado.EsVictima is null ? invo.EsVictima : involucrado.EsVictima.Value;
                 invo.EsPrincipal = involucrado.EsPrincipal == null ? invo.EsPrincipal : involucrado.EsPrincipal;
-                invo.IdLugarExpedicion = involucrado.IdLugarExpedicion == 0 ? invo.IdLugarExpedicion : involucrado.IdLugarExpedicion;
                 invo.Eps = involucrado.Eps == "" ? invo.Eps : involucrado.Eps;
+
+                //invo.IdLugarExpedicion = involucrado.IdLugarExpedicion == 0 ? invo.IdLugarExpedicion : involucrado.IdLugarExpedicion;
+                invo.IdPaisExpedicion = involucrado.PaisExp == 0 ? invo.IdPaisExpedicion : involucrado.PaisExp;
+                invo.IdDepartamentoExpedicion = involucrado.DepartamentoExp == 0 ? invo.IdDepartamentoExpedicion : involucrado.DepartamentoExp;
+                invo.IdMunicipioExpedicion = involucrado.MunicipioExp == 0 ? invo.IdMunicipioExpedicion : involucrado.MunicipioExp;
 
                 await context.SaveChangesAsync();
 
@@ -730,6 +734,10 @@ namespace sicf_DataBase.Compartido
                     deta.OtraInformacionFamiliaExtensa = involucrado.OtraInformacionFamiliaExtensa;
                     deta.OtrotipoViviendaCual = involucrado.OtroTipoViviendaCual;
 
+                    deta.ObservacionesSalud = involucrado.ObservacionesSalud;
+                    deta.ObservacionesPsicologia = involucrado.ObservacionesPsicologia;
+                    deta.ObservacionesTrabajoSocial = involucrado.ObservacionesTrabajoSocial;
+
                     context.SicofaInvolucradoComplementaria.Add(deta);
 
                     await context.SaveChangesAsync();
@@ -774,7 +782,10 @@ namespace sicf_DataBase.Compartido
                     deta.OtraInformacionFamiliaExtensa = involucrado.OtraInformacionFamiliaExtensa;
                     deta.OtrotipoViviendaCual = involucrado.OtroTipoViviendaCual;
 
-                   
+                    deta.ObservacionesSalud = involucrado.ObservacionesSalud;
+                    deta.ObservacionesPsicologia = involucrado.ObservacionesPsicologia;
+                    deta.ObservacionesTrabajoSocial = involucrado.ObservacionesTrabajoSocial;
+
 
                     await context.SaveChangesAsync();
                     return true;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace sicf_Models.Core
+﻿namespace sicf_Models.Core
 {
     public partial class SicofaInvolucrado
     {
@@ -57,7 +54,10 @@ namespace sicf_Models.Core
         public string? NombreContactoConfianza { get; set; }
         public string? TelefonoContactoConfianza { get; set; }
         public string? DireccionContactoConfianza { get; set; }
-        public long? IdLugarExpedicion { get; set; }
+        //public long? IdLugarExpedicion { get; set; }
+        public int? IdPaisExpedicion { get; set; }
+        public int? IdDepartamentoExpedicion { get; set; }
+        public int? IdMunicipioExpedicion { get; set; }
         public DateTime? FechaExpedicion { get; set; }
         public string? DatosAdicionales { get; set; }
 

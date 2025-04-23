@@ -1176,8 +1176,6 @@ namespace sicf_DataBase.Data
 
                 entity.Property(e => e.IdGenero).HasColumnName("id_genero");
 
-                entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
-
                 entity.Property(e => e.IdNivelAcademico).HasColumnName("id_nivel_academico");
 
                 entity.Property(e => e.IdOrientacionSexual).HasColumnName("id_orientacion_sexual");
@@ -1268,6 +1266,17 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.VictimaDesplazamiento)
                     .HasColumnName("victima_desplazamiento")
                     .HasDefaultValue(false);
+
+                //entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
+                entity.Property(e => e.IdPaisExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_pais_expedicion");
+                entity.Property(e => e.IdDepartamentoExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_departamento_expedicion");
+                entity.Property(e => e.IdMunicipioExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_ciud_mun_expedicion");
             });
 
             modelBuilder.Entity<SicofaInvolucradoComplementaria>(entity =>
@@ -1408,6 +1417,18 @@ namespace sicf_DataBase.Data
                     .HasForeignKey<SicofaInvolucradoComplementaria>(d => d.IdInvolucrado)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SICOFA_Involucrado_Complementaria");
+
+                entity.Property(e => e.ObservacionesSalud)
+                    .IsRequired(false)
+                    .HasColumnName("Observaciones_Salud");
+
+                entity.Property(e => e.ObservacionesPsicologia)
+                    .IsRequired(false)
+                    .HasColumnName("Observaciones_Psicologia");
+
+                entity.Property(e => e.ObservacionesTrabajoSocial)
+                    .IsRequired(false)
+                    .HasColumnName("Observaciones_TrabajoSocial");
             });
 
 
