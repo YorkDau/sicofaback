@@ -382,6 +382,7 @@ namespace sicf_DataBase.Data
 
                 entity.Property(e => e.IdLocalidad).HasColumnName("id_localidad");
 
+                //entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
 
                 entity.Property(e => e.IdNivelAcademico).HasColumnName("id_nivel_academico");
                 entity.Property(e => e.IdEstadoAcademico).HasColumnName("id_estado_academico");
@@ -2936,7 +2937,14 @@ namespace sicf_DataBase.Data
                     .HasColumnName("numero_documento");
 
                 entity.Property(e => e.TelefonoFijo).HasColumnName("telefono_fijo");
+
+                // ——— Aquí agregamos el mapeo de la nueva columna ———
+                entity.Property(e => e.NumeroTarjetaProfesional)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("numero_tarjeta_profesional");
             });
+
 
             modelBuilder.Entity<SicofaUsuarioSistemaPerfil>(entity =>
             {

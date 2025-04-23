@@ -340,7 +340,7 @@ namespace sicfServicesApi.Controllers
         public IActionResult ObtenerSolicitudServiciosCiudadano([FromRoute] int id, int idComisaria) 
         {
             try {
-                var response = _solicitudesHandler.ObtenerSolicitudServiciosCiudadano(id, idComisaria);
+                 var response = _solicitudesHandler.ObtenerSolicitudServiciosCiudadano(id, idComisaria);
 
                 return CustomResult(Message.Ok, response, HttpStatusCode.OK);
 

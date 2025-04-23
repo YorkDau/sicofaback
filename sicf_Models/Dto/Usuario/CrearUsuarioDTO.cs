@@ -19,6 +19,7 @@ namespace sicf_Models.Dto.Usuario
         public string telefonoFijo { get; set; } = string.Empty;
 
         public string celular { get; set; } = String.Empty;
+        public string numeroTarjetaProfesional { get; set; } 
 
         public string numeroDocumento { get; set; } = string.Empty;
 

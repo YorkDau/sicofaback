@@ -160,7 +160,7 @@ namespace sicf_DataBase.Repositories.Usuario
                 usuario.Cargo = "as";
                 usuario.Activo = true;
                 usuario.cambioPass = true;
-
+                usuario.NumeroTarjetaProfesional = data.numeroTarjetaProfesional;
                 string claveAsignada = GetUniqueKey();
                 usuario.EncriptPassw = CreateMD5(claveAsignada);
               
@@ -211,6 +211,7 @@ namespace sicf_DataBase.Repositories.Usuario
                         usuario.IdTipoDocumento = data.tipoDocumento == 0 ? usuario.IdTipoDocumento : data.tipoDocumento;
                         usuario.Nombres = data.nombres == "" ? usuario.Nombres : data.nombres;
                         usuario.Apellidos = data.apellidos == "" ? usuario.Apellidos : data.apellidos;
+                        usuario.NumeroTarjetaProfesional = data.numeroTarjetaProfesional == "" ? usuario.NumeroTarjetaProfesional : data.numeroTarjetaProfesional;
                         usuario.CorreoElectronico = data.correoElectronico == "" ? usuario.CorreoElectronico : data.correoElectronico;
                         usuario.Cargo = data.Cargo == "" ? usuario.Cargo : data.Cargo;
                         usuario.TelefonoFijo = data.telefonoFijo == 0 ? usuario.TelefonoFijo : data.telefonoFijo;
@@ -295,6 +296,7 @@ namespace sicf_DataBase.Repositories.Usuario
                                          celular = usu.Celular,
                                          Cargo = usu.Cargo,
                                          Activo = usu.Activo,
+                                         numeroTarjetaProfesional =usu.NumeroTarjetaProfesional,
                                          idComisaria = usucomi.IdComisaria
                                      }
                                     ).FirstOrDefaultAsync();
@@ -333,6 +335,7 @@ namespace sicf_DataBase.Repositories.Usuario
                                          celular = usu.Celular,
                                          Cargo = usu.Cargo,
                                          Activo = usu.Activo,
+                                         numeroTarjetaProfesional =usu.NumeroTarjetaProfesional,
                                          idComisaria = usucomi.IdComisaria
                                      }
                                     ).FirstOrDefaultAsync();
@@ -365,14 +368,15 @@ namespace sicf_DataBase.Repositories.Usuario
                     tipoDocumento = s.tipoDocumento,
                     numeroDocumento = s.numeroDocumento,
                     nombres = s.nombres,
-                    apellidos = s.apellidos
-                ,
+                    apellidos = s.apellidos,
                     correoElectronico = s.correoElectronico,
                     telefonoFijo = s.telefonoFijo,
                     celular = s.celular,
                     Cargo = s.Cargo,
                     Activo = s.Activo,
-                    idComisaria = s.idComisaria
+                    idComisaria = s.idComisaria,
+                    NumeroTarjetaProfesional=s.NumeroTarjetaProfesional
+                    
                 }).ToList();
 
 

@@ -832,15 +832,25 @@ namespace sicf_DataBase.Compartido
                                          }
                                           ).First();
 
-                var datosComisaria = await (from usuario in context.SicofaUsuarioSistema
-                                    join comisaria in context.SicofaUsuarioComisaria on usuario.IdUsuarioSistema equals comisaria.IdUsuario
-                                    join comi in context.SicofaComisaria on comisaria.IdComisaria equals comi.IdComisaria
-                                    where usuario.CorreoElectronico == salida.email
-                                    select Tuple.Create(comi.Nombre , comi.Direccion)).FirstAsync();
+                                    
+                var datosComisaria = await (
+                                        from usuario in context.SicofaUsuarioSistema
+                                        join comisaria in context.SicofaUsuarioComisaria on usuario.IdUsuarioSistema equals comisaria.IdUsuario
+                                        join comi in context.SicofaComisaria on comisaria.IdComisaria equals comi.IdComisaria
+                                        where usuario.CorreoElectronico == salida.email
+                                        select Tuple.Create(
+                                            comi.Nombre,
+                                            comi.Direccion,
+                                            usuario.NumeroTarjetaProfesional
+                                        )
+                                    ).FirstAsync();
 
+                                    salida.direccionComisaria = datosComisaria.Item2;
+                                    salida.nombreComisaria = datosComisaria.Item1;
+                                    salida.numeroTarjetaProfesional = string.IsNullOrWhiteSpace(datosComisaria.Item3)
+                                        ? "No tiene Tarjeta profesional"
+                                        : datosComisaria.Item3;
 
-                salida.direccionComisaria = datosComisaria.Item2;
-                salida.nombreComisaria = datosComisaria.Item1;
 
 
                 return salida;

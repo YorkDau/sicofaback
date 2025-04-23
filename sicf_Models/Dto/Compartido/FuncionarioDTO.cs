@@ -14,6 +14,7 @@ namespace sicf_Models.Dto.Compartido
         public string apellido { get; set; } = string.Empty;
 
         public string perfil { get; set; } = string.Empty;
+        public string numeroTarjetaProfesional { get; set; }
 
         public string nombreComisaria { get; set; } = string.Empty;
 
