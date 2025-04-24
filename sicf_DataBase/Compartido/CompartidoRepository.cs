@@ -741,7 +741,7 @@ namespace sicf_DataBase.Compartido
                     deta.FamiliaExtensa = involucrado.FamiliaExtensa;
                     deta.OtraInformacionFamiliaExtensa = involucrado.OtraInformacionFamiliaExtensa;
                     deta.OtrotipoViviendaCual = involucrado.OtroTipoViviendaCual;
-
+                    deta.NoInformacion = involucrado.NoInformacion;
                     deta.ObservacionesSalud = involucrado.ObservacionesSalud;
                     deta.ObservacionesPsicologia = involucrado.ObservacionesPsicologia;
                     deta.ObservacionesTrabajoSocial = involucrado.ObservacionesTrabajoSocial;

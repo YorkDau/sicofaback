@@ -1426,6 +1426,8 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.ObservacionesPsicologia)
                     .IsRequired(false)
                     .HasColumnName("Observaciones_Psicologia");
+
+                //agregamos la columna faltante ....
                 entity.Property(e => e.NoInformacion)
                     .HasColumnName("No_Informacion")
                     .HasDefaultValueSql("((0))");
