@@ -56,8 +56,8 @@
         public string? DireccionContactoConfianza { get; set; }
         //public long? IdLugarExpedicion { get; set; }
         public int? IdPaisExpedicion { get; set; }
-        public int? IdDepartamentoExpedicion { get; set; }
-        public int? IdMunicipioExpedicion { get; set; }
+        public long? IdDepartamentoExpedicion { get; set; }
+        public long? IdMunicipioExpedicion { get; set; }
         public DateTime? FechaExpedicion { get; set; }
         public string? DatosAdicionales { get; set; }
 

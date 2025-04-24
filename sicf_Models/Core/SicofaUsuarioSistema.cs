@@ -28,7 +28,7 @@ namespace sicf_Models.Core
         public string? IdKeycloak { get; set; }
         public bool? Activo { get; set; }
         public DateTime? FechaCreacion { get; set; }
-        public string ? NumeroTarjetaProfesional { get; set; }
+        public string? NumeroTarjetaProfesional { get; set; }
 
         public bool? cambioPass { get; set; } 
 

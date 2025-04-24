@@ -508,10 +508,14 @@ namespace sicf_DataBase.Compartido
                 }
 
 
-              
-               // invo.EsPrincipal = involucrado.EsPrincipal.Value;
-                invo.IdLugarExpedicion = involucrado.IdLugarExpedicion;
+
+                // invo.EsPrincipal = involucrado.EsPrincipal.Value;
                 invo.Eps = involucrado.Eps;
+
+                //invo.IdLugarExpedicion = involucrado.IdLugarExpedicion == 0 ? invo.IdLugarExpedicion : involucrado.IdLugarExpedicion;
+                invo.IdPaisExpedicion = involucrado.PaisExp == 0 ? invo.IdPaisExpedicion : involucrado.PaisExp;
+                invo.IdDepartamentoExpedicion = involucrado.DepartamentoExp == 0 ? invo.IdDepartamentoExpedicion : involucrado.DepartamentoExp;
+                invo.IdMunicipioExpedicion = involucrado.MunicipioExp == 0 ? invo.IdMunicipioExpedicion : involucrado.MunicipioExp;
 
                 context.SicofaInvolucrado.Add(invo);
                 await context.SaveChangesAsync();
@@ -578,6 +582,10 @@ namespace sicf_DataBase.Compartido
                 deta.FamiliaExtensa = involucrado.FamiliaExtensa;
                 deta.OtraInformacionFamiliaExtensa = involucrado.OtraInformacionFamiliaExtensa;
                 deta.NoInformacion = involucrado.NoInformacion;
+
+                deta.ObservacionesSalud = involucrado.ObservacionesSalud;
+                deta.ObservacionesPsicologia = involucrado.ObservacionesPsicologia;
+                deta.ObservacionesTrabajoSocial = involucrado.ObservacionesTrabajoSocial;
 
                 context.SicofaInvolucradoComplementaria.Add(deta);
                 await context.SaveChangesAsync();

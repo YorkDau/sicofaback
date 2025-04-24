@@ -166,7 +166,7 @@ namespace sicf_DataBase.Repositories.Seguimientos
             try
             {
                 var salida = await (from invo in context.SicofaInvolucrado
-                                    join municipio in context.SicofaCiudadMunicipio on invo.IdLugarExpedicion equals municipio.IdCiudadMunicipio
+                                    join municipio in context.SicofaCiudadMunicipio on invo.IdMunicipioExpedicion equals municipio.IdCiudadMunicipio
                                     into invoMunicipio
                                     from iMun in invoMunicipio.DefaultIfEmpty()
                                     join dominio in context.SicofaDominio on invo.TipoDocumento equals dominio.IdDominio

@@ -260,10 +260,12 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 involucrado.IdGenero = data.idIdentidadGenero;
                 involucrado.IdTipoRelacion = data.RelacionAgresor;
                 involucrado.IdNivelAcademico = data.Escolidad;
-                involucrado.IdLugarExpedicion = data.lugarExpedicion;
                 involucrado.FechaExpedicion = data.fechaExpedicion;
 
-
+                //involucrado.IdLugarExpedicion = data.lugarExpedicion;
+                involucrado.IdPaisExpedicion = data.paisExp;
+                involucrado.IdDepartamentoExpedicion = data.departamentoExp;
+                involucrado.IdMunicipioExpedicion = data.municipioExp;
 
                 var actualizacion = context.SicofaComplementoInvolucrado.Where(s => s.IdInvolucrado == data.IdInvolucrado).FirstOrDefault();
 
@@ -378,12 +380,14 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 involucrado.NumeroDocumento = data.numeroDocumento;              
                 involucrado.IdGenero = data.idIdentidadGenero;
                 involucrado.IdNivelAcademico = data.Escolidad;
-                involucrado.IdLugarExpedicion = data.lugarExpedicion;
                 involucrado.FechaExpedicion = data.fechaExpedicion;
 
+                //involucrado.IdLugarExpedicion = data.lugarExpedicion;
+                involucrado.IdPaisExpedicion = data.paisExp;
+                involucrado.IdDepartamentoExpedicion = data.departamentoExp;
+                involucrado.IdMunicipioExpedicion = data.municipioExp;
+
                 involucrado.Edad = data.edad != null ? data.edad : (data.edadAproximadaAgresor != null ? data.edadAproximadaAgresor : involucrado.Edad);
-
-
 
                 //
                 var actualizacion = context.SicofaComplementoInvolucrado.Where(s => s.IdInvolucrado == data.IdInvolucrado).FirstOrDefault();
@@ -400,12 +404,14 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     ingreso.IdCultura = data.Cultura;
                     ingreso.EdadAproximadaAgresor = data.edadAproximadaAgresor;
                     context.SicofaComplementoInvolucrado.Add(ingreso);
-                    involucrado.IdLugarExpedicion = data.lugarExpedicion;
 
+                    //involucrado.IdLugarExpedicion = data.lugarExpedicion;
+                    involucrado.IdPaisExpedicion = data.paisExp;
+                    involucrado.IdDepartamentoExpedicion = data.departamentoExp;
+                    involucrado.IdMunicipioExpedicion = data.municipioExp;
 
                     var remover=context.SicofaHijoinvolucrado.Where(s => s.IdInvolucrado == involucrado.IdInvolucrado).ToList();
                     context.SicofaHijoinvolucrado.RemoveRange(remover);
-
 
                     if (data.numeroHijos >= 1)
                     {

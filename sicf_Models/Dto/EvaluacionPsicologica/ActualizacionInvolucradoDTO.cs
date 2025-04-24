@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace sicf_Models.Dto.EvaluacionPsicologica
+﻿namespace sicf_Models.Dto.EvaluacionPsicologica
 {
     public class ActualizacionInvolucradoDTO
     {
@@ -45,7 +39,11 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
 
         public string descripcionOrganizacionCriminal { get; set; } // aplica cuando solo cuando es agresor , si es victima enviar ""
 
-        public int? lugarExpedicion { get; set; }
+        //public int? lugarExpedicion { get; set; }
+        public int? paisExp { get; set; }
+        public long? departamentoExp { get; set; }
+        public long? municipioExp { get; set; }
+
         public int? idSexo { get; set; }
 
         public int? idRelacionPareja { get; set; }
