@@ -1426,6 +1426,11 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.ObservacionesPsicologia)
                     .IsRequired(false)
                     .HasColumnName("Observaciones_Psicologia");
+                entity.Property(e => e.NoInformacion)
+                    .HasColumnName("No_Informacion")
+                    .HasDefaultValueSql("((0))");
+
+
 
                 entity.Property(e => e.ObservacionesTrabajoSocial)
                     .IsRequired(false)
