@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace sicf_Models.Core
+﻿namespace sicf_Models.Core
 {
     public partial class SicofaInvolucradoComplementaria
     {
@@ -20,9 +17,12 @@ namespace sicf_Models.Core
         public bool? NutricionalAdecuada { get; set; }
         public bool? PsicologicaAdecuada { get; set; }
         public bool? VacunacionCompleta { get; set; }
+
+        public bool? Escolarizado { get; set; }
         public string? MatriculadoEnElColegio { get; set; }
         public string? GradoCursa { get; set; }
         public string? JornadaEstudio { get; set; }
+
         public string? TipoVivienda { get; set; }
         public string? OtroTipoVivienda { get; set; }
         public int? NumeroHabitacionesVivienda { get; set; }

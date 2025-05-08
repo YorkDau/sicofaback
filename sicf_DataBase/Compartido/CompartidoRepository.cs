@@ -722,9 +722,13 @@ namespace sicf_DataBase.Compartido
                     deta.NutricionalAdecuada = involucrado.NutricionalAdecuada;
                     deta.PsicologicaAdecuada = involucrado.PsicologaAdecuada;
                     deta.VacunacionCompleta = involucrado.VacunacionCompleta;
-                    deta.MatriculadoEnElColegio = involucrado.MatriculadoEnElColegio;
-                    deta.GradoCursa = involucrado.GradoCursa;
-                    deta.JornadaEstudio = involucrado.JornadaEstudio;
+
+                    bool escolarizado = involucrado.Escolarizado ?? false;
+                    deta.Escolarizado = escolarizado;
+                    deta.MatriculadoEnElColegio = escolarizado ? involucrado.MatriculadoEnElColegio : "N/A";
+                    deta.GradoCursa = escolarizado ? involucrado.GradoCursa : "N/A";
+                    deta.JornadaEstudio = escolarizado ? involucrado.JornadaEstudio : "N/A";
+
                     deta.TipoVivienda = involucrado.TipoVivienda;
                     deta.OtroTipoVivienda = involucrado.OtroTipoVivienda;
                     deta.NumeroHabitacionesVivienda = involucrado.NumeroHabitacionesVivienda == string.Empty ? 0 : Convert.ToInt16(involucrado.NumeroHabitacionesVivienda);
@@ -770,9 +774,13 @@ namespace sicf_DataBase.Compartido
                     deta.NutricionalAdecuada = involucrado.NutricionalAdecuada;
                     deta.PsicologicaAdecuada = involucrado.PsicologaAdecuada;
                     deta.VacunacionCompleta = involucrado.VacunacionCompleta;
-                    deta.MatriculadoEnElColegio = involucrado.MatriculadoEnElColegio;
-                    deta.GradoCursa = involucrado.GradoCursa;
-                    deta.JornadaEstudio = involucrado.JornadaEstudio;
+
+                    bool escolarizado = involucrado.Escolarizado ?? false;
+                    deta.Escolarizado = escolarizado;
+                    deta.MatriculadoEnElColegio = escolarizado ? involucrado.MatriculadoEnElColegio : "N/A";
+                    deta.GradoCursa = escolarizado ? involucrado.GradoCursa : "N/A";
+                    deta.JornadaEstudio = escolarizado ? involucrado.JornadaEstudio : "N/A";
+
                     deta.TipoVivienda = involucrado.TipoVivienda;
                     deta.OtroTipoVivienda = involucrado.OtroTipoVivienda;
                     deta.NumeroHabitacionesVivienda = involucrado.NumeroHabitacionesVivienda == string.Empty ? 0 : Convert.ToInt16(involucrado.NumeroHabitacionesVivienda);

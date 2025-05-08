@@ -210,8 +210,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Compartido
         }
 
         public async Task<List<InvolucradoInfoListaDTO>> ListarInvolucradosComplementariaInfo(long IdSolicitudServicio)
-        {
-            
+        {            
             try
             {
                 var ListaInvolucrados = await this._compartidoRepository.ListarInvolucradosComplementariaInfo(IdSolicitudServicio);

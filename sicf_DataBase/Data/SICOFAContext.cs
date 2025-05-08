@@ -1317,6 +1317,10 @@ namespace sicf_DataBase.Data
                     .HasColumnName("Fisica_Adecuada")
                     .HasDefaultValueSql("((0))");
 
+                entity.Property(e => e.Escolarizado)
+                    .HasDefaultValue(false)
+                    .HasColumnName("Escolarizado");
+
                 entity.Property(e => e.GradoCursa)
                     .HasMaxLength(50)
                     .IsUnicode(false)
