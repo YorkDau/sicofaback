@@ -74,7 +74,7 @@ namespace sicf_DataBase.Repositories.ReporteSolicitud
                                     solicitud.tipoDocumentoInvolucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["tipo_documento_involucrado"]);
                                     solicitud.numeroDocumentoInvolucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento_involucrado"]);
                                     solicitud.fechaExpedicionDocInvolucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["fecha_expedicion_doc_involucrado"]);
-                                    solicitud.lugarExpedicionDocInvolucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["lugar_expedicion_doc_involucrado"]);
+                                    //solicitud.lugarExpedicionDocInvolucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["lugar_expedicion_doc_involucrado"]);
                                     solicitud.codigoPaisInvolucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_pais_involucrado"]);
                                     solicitud.paisInvolucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["pais_involucrado"]);
                                     solicitud.codigoDepartamentoInvolucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_departamento_involucrado"]);

@@ -31,7 +31,7 @@ namespace sicf_Models.Dto.ReporteSolicitud
         public string? tipoDocumentoInvolucrado { get; set; }
         public string? numeroDocumentoInvolucrado { get; set; }
         public string? fechaExpedicionDocInvolucrado { get; set; }
-        public string? lugarExpedicionDocInvolucrado { get; set; }
+        //public string? lugarExpedicionDocInvolucrado { get; set; }
         public string? codigoPaisInvolucrado { get; set; }
         public string? paisInvolucrado { get; set; }
         public string? codigoDepartamentoInvolucrado { get; set; }

@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using sicf_BusinessHandlers.BusinessHandlers.Tarea;
+using sicf_DataBase.Repositories.Apelacion;
 using sicf_DataBase.Repositories.SolicitudesRepository;
 using sicf_Models.Constants;
+using sicf_Models.Dto.Apelacion;
 using sicf_Models.Dto.Ciudadano;
 using sicf_Models.Dto.Solicitudes;
 using sicf_Models.Utility;
@@ -481,6 +483,32 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 
 				throw new Exception(e.Message);
 			}
+
+        }
+        
+
+        public ResponseListaPaginada ConsultarSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
+        {
+            try
+            {
+                return _solicitudesRepository.ConsultarSolicitudesGeneralesPorFiltros(solicitud);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+
+        }
+        public ResponseListaPaginada ConsultarPreSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
+        {
+            try
+            {
+                return _solicitudesRepository.ConsultarPreSolicitudesGeneralesPorFiltros(solicitud);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
 
         }
 

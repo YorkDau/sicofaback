@@ -429,6 +429,8 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.PersonaLiderDefensorDh).HasColumnName("persona_lider_defensor_DH");
 
                 entity.Property(e => e.PoblacionLgtbi).HasColumnName("poblacion_lgtbi");
+                entity.Property(e => e.AdultoMayor).HasColumnName("adulto_mayor");
+                entity.Property(e => e.MujerEmbarazada).HasColumnName("mujer_embarazada");
 
                 entity.Property(e => e.PrimerApellido)
                     .HasMaxLength(100)

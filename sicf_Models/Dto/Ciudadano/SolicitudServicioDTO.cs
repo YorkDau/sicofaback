@@ -15,6 +15,7 @@ namespace sicf_Models.Dto.Ciudadano
         public string descripcion_de_hechos { get; set; } = string.Empty;
         public string codigo_solicitud { get; set; } = string.Empty;
         public string proceso { get; set; } = string.Empty;
+        public string perfil { get; set; } = string.Empty;
         public bool retormar_solicitud { get; set; }
 
         public string? estado_de_la_solicitud { get; set; } = string.Empty;
