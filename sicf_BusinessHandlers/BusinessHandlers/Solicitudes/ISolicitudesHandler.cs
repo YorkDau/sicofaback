@@ -200,6 +200,10 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         public string ObtenerNumeroSolicitud(long idComisaria);
 
         public Task<SolicitudGeneralDTO> ConsultaGeneralSolicitud(long idSolicitudServicio);
+        ResponseListaPaginada ConsultarSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
+        ResponseListaPaginada ConsultarPreSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
+        
+
 
         public List<RemisionSolicitudServicioComisariaAnteriorDTO> ObtenerRemisionSolicitudServicio(int idSolicitudServicio);
     }

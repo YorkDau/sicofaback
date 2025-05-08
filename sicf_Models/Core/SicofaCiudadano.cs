@@ -46,6 +46,8 @@ namespace sicf_Models.Core
         public bool? RequiereModificacion { get; set; }
         public bool? EsVictima { get; set; }
         public bool? PoblacionLgtbi { get; set; }
+        public bool? AdultoMayor { get; set; }
+        public bool? MujerEmbarazada { get; set; }
         public bool? NinoNinaAdolecente { get; set; }
         public bool? Migrante { get; set; }
         public bool? VictimaConflictoArmado { get; set; }

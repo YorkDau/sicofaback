@@ -33,6 +33,8 @@
         public EstadoEmbarazoDto estadoEmbarazo { get; set; }
         public AfiliadoSeguridadSocialDto afiliadoSeguridadSocial { get; set; }
         public bool poblacionLgtbi { get; set; }
+        public bool adultoMayor { get; set; } //agregado
+        public bool mujerEmbarazada { get; set; } //agregado
         public bool ninoNinaAdolocente { get; set; }
         public bool migrante { get; set; }
         public bool victimaConflictoArmado { get; set; }

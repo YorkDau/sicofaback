@@ -100,6 +100,11 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int id, int idComisaria);
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int idComisaria);
 
+        List<ConsultaGeneralSolicitudDTO> ConsultaSolicitudGeneral(ConsultaGeneralSolicitudDTO solicitud);
+        public ResponseListaPaginada ConsultarSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
+        public ResponseListaPaginada ConsultarPreSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
+
+
         /// <summary>
         /// 
         /// </summary>
