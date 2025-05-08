@@ -75,7 +75,10 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
         public string? Telefono { get; set; }
         public string? Firma { get; set; }
 
-        public long? lugarExpedicion { get; set; }
+        //public long? lugarExpedicion { get; set; }
+        public long? paisExp { get; set; }
+        public long? departamentoExp { get; set; }
+        public long? municipioExp { get; set; }
 
         public List<informacionHijo> hijos { get; set; } = new List<informacionHijo>();
 

@@ -133,8 +133,11 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.edadAproximadaAgresor = involucrado.Edad;
                     salida.DireccionRecidencia = involucrado.DireccionRecidencia;
                     salida.Telefono = involucrado.Telefono;
-                    //salida.lugarExpedicion = involucrado.IdLugarExpedicion;
 
+                    //salida.lugarExpedicion = involucrado.IdLugarExpedicion;
+                    salida.paisExp = involucrado.IdPaisExpedicion;
+                    salida.departamentoExp = involucrado.IdDepartamentoExpedicion;
+                    salida.municipioExp = involucrado.IdMunicipioExpedicion;
 
                     salida.relacionAgresor = involucrado.IdTipoRelacion;
                     salida.relacionPareja = complementario != null ? complementario.RelacionPareja : null;
@@ -157,12 +160,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             salida.hijos.Add(hijoSalida);
                         }
                     }
-
-
                 }
                 else
                 {
-
                     // flujo para agresor
                     //TODO: Eliminar nombres y apellidos
                     var complementario = context.SicofaComplementoInvolucrado.Where(s => s.IdInvolucrado == involucrado.IdInvolucrado).FirstOrDefault();
@@ -190,7 +190,11 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.edadAproximadaAgresor = complementario != null ? complementario.EdadAproximadaAgresor : involucrado.Edad;
                     var hijos = context.SicofaHijoinvolucrado.Where(s => s.IdInvolucrado == involucrado.IdInvolucrado).ToList();
                     salida.numeroHijos = hijos.Count();
+
                     //salida.lugarExpedicion = involucrado.IdLugarExpedicion;
+                    salida.paisExp = involucrado.IdPaisExpedicion;
+                    salida.departamentoExp = involucrado.IdDepartamentoExpedicion;
+                    salida.municipioExp = involucrado.IdMunicipioExpedicion;
 
                     if (hijos.Count >= 1)
                     {
@@ -213,14 +217,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.agresorconflictoDescripcion = complementario != null ? complementario.DescripcionGrupoArmado : null;
 
                     context.SaveChanges();
-
-
-
                 }
 
-
                 return salida;
-
             }
             catch (Exception ex) {
 
