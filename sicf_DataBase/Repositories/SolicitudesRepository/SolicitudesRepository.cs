@@ -811,6 +811,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 ciudadano.nino_nina_adolecente = reader["nino_nina_adolecente"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["nino_nina_adolecente"]);
                                 ciudadano.victima_conflicto_armado = reader["victima_conflicto_armado"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["victima_conflicto_armado"]);
                                 ciudadano.persona_lider_defensor_DH = reader["persona_lider_defensor_DH"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["persona_lider_defensor_DH"]);
+                                ciudadano.persona_habitalidad_calle = reader["persona_habitalidad_calle"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["persona_habitalidad_calle"]);
                                 ciudadano.pueblo_indigena = reader["pueblo_indigena"].ToString() == String.Empty ? "No" : ConvertFDBVal.ConvertFromDBVal<string>(reader["pueblo_indigena"]);
                                 ciudadano.migrante = reader["migrante"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["migrante"]);
                             }
