@@ -965,6 +965,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 PrimerApellido = Convert.ToString(reader["primer_apellido"]),
                                 SegundoApellido = Convert.ToString(reader["segundo_apellido"]),
                                 CodigoDocumento = Convert.ToString(reader["CodigoDocumento"]),
+                                Perfil = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_perfil"]),
                                 NombreDocumento = Convert.ToString(reader["NombreDocumento"]),
                                 Proceso = Convert.ToString(reader["Proceso"])
                             };
@@ -998,6 +999,10 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 _command.Parameters.AddWithValue("@fechaSolicitud",
                     solicitud.FechaSolicitud.HasValue
                         ? solicitud.FechaSolicitud.Value
+                        : DBNull.Value);
+                _command.Parameters.AddWithValue("@fechaSolicitudFinal",
+                     solicitud.FechaSolicitudFinal.HasValue
+                        ? solicitud.FechaSolicitudFinal.Value
                         : DBNull.Value);
 
 

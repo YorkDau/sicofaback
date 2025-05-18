@@ -12,6 +12,7 @@ namespace sicf_Models.Dto.Solicitudes
         public string? NumeroDocumento { get; set; }
         public string? CodigoSolicitud { get; set; }
         public DateTime? FechaSolicitud { get; set; }
+        public DateTime? FechaSolicitudFinal { get; set; }
         public int? IdComisaria { get; set; }
     }
     public class ConsultaGeneralSolicitudDTO
@@ -26,6 +27,7 @@ namespace sicf_Models.Dto.Solicitudes
         public string PrimerApellido { get; set; }
         public string SegundoApellido { get; set; }
         public string CodigoDocumento { get; set; }
+        public string Perfil { get; set; }
         public string NombreDocumento { get; set; }
         public string Proceso { get; set; }
     }
