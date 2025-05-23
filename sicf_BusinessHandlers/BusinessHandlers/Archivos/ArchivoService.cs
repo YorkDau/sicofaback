@@ -227,8 +227,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
 
 
                 }
-
-                await fileManagerLogic.DeleteBLOBFile(comisariaCarpeta + "/" + archivo.NombreDocumento);
+                var fullPath = System.IO.Path.Combine(comisariaCarpeta, archivo.NombreDocumento);
+                await fileManagerLogic.DeleteBLOBFile(fullPath);
 
 
             }
