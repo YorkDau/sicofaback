@@ -39,6 +39,8 @@ namespace sicf_Models.Dto.Ciudadano
         public string noCompetenciaDescripcion { get; set; } = string.Empty;
 
         public string sexoAfectado { get; set; } = string.Empty;
+        public string? estado_solicitud { get; set; } = string.Empty;
+        public string? subestado_solicitud { get; set; } = string.Empty;
 
     }
 }

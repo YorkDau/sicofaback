@@ -589,24 +589,27 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     SicofaRespuestaQuestionarioTipoViolencia previa = 
                         context.SicofaRespuestaQuestionarioTipoViolencia.Where(s => s.IdQuestionario == lista.IdCuestionario & s.IdSolicitudServicio == data.idSolicitudServicio & s.IdEvaluacionPsicologica == evaluacion.IdEvaluacion).FirstOrDefault()!;
                    
-                    previa.Puntuacion = 0;
-                    previa.Nullable = null;
-                    previa.Mes = lista.mes;
+                    if (previa is not null)
+                    {
+                        previa.Puntuacion = 0;
+                        previa.Nullable = null;
+                        previa.Mes = lista.mes;
 
-                    if (lista is { puntuacion: true })
-                    {
-                        previa.Puntuacion = (int)violencia.Puntuacion!;                        
-                    }
-                    
-                    if (lista is { puntuacion: null })
-                    {
-                        previa.Nullable = (int)violencia.Puntuacion;
-                    }
+                        if (lista is { puntuacion: true })
+                        {
+                            previa.Puntuacion = (int)violencia.Puntuacion!;
+                        }
 
-                    // TODO : correcion de bug donde por no se debe guardar mes en circunstancia agrevantes ni persecipcion victima, luego de probado se borra y se certifique el bug se elimina este comentario
-                    if (data.IdTipoViolencia == Cuestionario.circunstanciaAgrevantes || data.IdTipoViolencia == Cuestionario.persepcionVictima) 
-                    {
-                        previa.Mes = null;
+                        if (lista is { puntuacion: null })
+                        {
+                            previa.Nullable = (int)violencia.Puntuacion;
+                        }
+
+                        // TODO : correcion de bug donde por no se debe guardar mes en circunstancia agrevantes ni persecipcion victima, luego de probado se borra y se certifique el bug se elimina este comentario
+                        if (data.IdTipoViolencia == Cuestionario.circunstanciaAgrevantes || data.IdTipoViolencia == Cuestionario.persepcionVictima)
+                        {
+                            previa.Mes = null;
+                        }
                     }
 
                     context.SaveChanges();
@@ -687,13 +690,14 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
 
             DescripcionHechosDTO salida = new DescripcionHechosDTO();
 
-            salida.fecha = solicitud.FechaHechoViolento.ToString();
-            var fechaparse = (DateTime)solicitud.FechaHechoViolento;
+            var fecha = solicitud.FechaHechoViolento ?? DateTime.Now;
+            salida.fecha = fecha.ToString("dd/MM/yyyy");
+            var fechaparse = fecha;
          
-            salida.hora = fechaparse.ToString("hh:mm:ss tt");
+            salida.hora = fechaparse.ToString("HH:mm");
             salida.descripcionHechos = solicitud.DescripcionDeHechos;
             salida.idSolicitudServicio = solicitud.IdSolicitudServicio;
-            salida.lugarHechos = solicitud.LugarHechoViolento;
+            salida.lugarHechos = solicitud.LugarHechoViolento ?? "No asignado";
 
 
             return salida;

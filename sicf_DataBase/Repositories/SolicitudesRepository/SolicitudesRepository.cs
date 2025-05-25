@@ -1115,7 +1115,9 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         idtipoTramite = solicitud.IdTipoTramite.ToString(),
                         idContextofamiliar = solicitud.IdContextoFamiliar.ToString(),
                         noCompetenciaDescripcion = solicitud.NoCompetenciaDescrip,
-                        sexoAfectado = solicitud.SexoAfectado
+                        sexoAfectado = solicitud.SexoAfectado,
+                        estado_solicitud = solicitud.EstadoSolicitud,
+                        subestado_solicitud = solicitud.SubestadoSolicitud
                     }).FirstOrDefault()!;
 
         }
