@@ -2468,6 +2468,12 @@ namespace sicf_DataBase.Data
                     .HasColumnName("subestado_solicitud")
                     .HasDefaultValueSql("('EN PROCESO')");
 
+                entity.Property(e => e.SexoAfectado)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("SexoAfectado")
+                    .HasDefaultValueSql("('NA')");
+
                 entity.HasOne(d => d.IdCiudadanoNavigation)
                     .WithMany(p => p.SicofaSolicitudServicio)
                     .HasForeignKey(d => d.IdCiudadano)

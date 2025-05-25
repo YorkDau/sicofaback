@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace sicf_Models.Dto.Solicitudes
+﻿namespace sicf_Models.Dto.Solicitudes
 {
     public class RequestCrearSolicitud
     {
@@ -28,7 +22,8 @@ namespace sicf_Models.Dto.Solicitudes
         public string justificacionRemision { get; set; }
         public int idUsuarioSistema { get; set; }
         public string tipoSolicitud { get; set; }
-       
+        public string SexoAfectado { get; set; }
+
 
         public RequestCrearSolicitud() {
 
@@ -43,13 +38,12 @@ namespace sicf_Models.Dto.Solicitudes
             esNecesarioRemitir = false;
             justificacionRemision = string.Empty;
             tipoSolicitud = string.Empty;
-            
+            SexoAfectado = string.Empty;
         }
     }
 
     public class RequestActualizarSolicitud : RequestCrearSolicitud
     {
         public long idSolicitud { get; set; }
-
     }
 }

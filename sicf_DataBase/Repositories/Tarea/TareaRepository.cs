@@ -168,6 +168,7 @@ namespace sicf_DataBase.Repositories.Tarea
                     response1.riesgo = this.EvaluacionRiesgosPorSolicitud(caso.idSolicitud);
                     response1.pathRetorno = caso.pathRetorno;
                     response1.remision = caso.remision;
+                    response1.sexoAfectado = caso.sexoAfectado;
 
                     listRestono.Add(response1);
 

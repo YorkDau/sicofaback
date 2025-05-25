@@ -515,6 +515,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@relacionParentescoAgresor", BdValidation.ToDBNull(requestCrearSolicitud.relacionParentescoAgresor));
 
                         _command.Parameters.AddWithValue("@justificacionRemision", BdValidation.ToDBNull(requestCrearSolicitud.justificacionRemision));
+                        _command.Parameters.AddWithValue("@sexoAfectado", BdValidation.ToDBNull(requestCrearSolicitud.SexoAfectado));
                         _command.Parameters.AddWithValue("@idUsuarioSistema", BdValidation.ToDBNull((requestCrearSolicitud.idUsuarioSistema == 0) ? null : requestCrearSolicitud.idUsuarioSistema));
 
                         _command.Connection = _connectionDb;
@@ -580,6 +581,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@relacionParentescoAgresor", BdValidation.ToDBNull(requestModificarSolicitud.relacionParentescoAgresor));
 
                         _command.Parameters.AddWithValue("@justificacionRemision", BdValidation.ToDBNull(requestModificarSolicitud.justificacionRemision));
+                        _command.Parameters.AddWithValue("@sexoAfectado", BdValidation.ToDBNull(requestModificarSolicitud.SexoAfectado));
                         _command.Parameters.AddWithValue("@idUsuarioSistema", BdValidation.ToDBNull((requestModificarSolicitud.idUsuarioSistema == 0) ? null : requestModificarSolicitud.idUsuarioSistema));
 
                         _command.Connection = _connectionDb;
@@ -1112,7 +1114,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         esNecesarioRemitir = solicitud.EsNecesarioRemitir,
                         idtipoTramite = solicitud.IdTipoTramite.ToString(),
                         idContextofamiliar = solicitud.IdContextoFamiliar.ToString(),
-                        noCompetenciaDescripcion = solicitud.NoCompetenciaDescrip
+                        noCompetenciaDescripcion = solicitud.NoCompetenciaDescrip,
+                        sexoAfectado = solicitud.SexoAfectado
                     }).FirstOrDefault()!;
 
         }
