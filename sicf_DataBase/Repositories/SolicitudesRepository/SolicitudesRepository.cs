@@ -502,7 +502,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@horaSolicitud", BdValidation.ToDBNull(DateTime.ParseExact(requestCrearSolicitud.horaSolicitud, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                         _command.Parameters.AddWithValue("@descripcionHechos", BdValidation.ToDBNull(requestCrearSolicitud.descripcionHechos));
                         _command.Parameters.AddWithValue("@esVictima", BdValidation.ToDBNull(requestCrearSolicitud.esVictima));
-
+                        _command.Parameters.AddWithValue("@id_tipo_entidad", BdValidation.ToDBNull(requestCrearSolicitud.id_tipo_entidad));
 
                         _command.Parameters.AddWithValue("@fechaHechoViolento", BdValidation.ToDBNull(DateTime.ParseExact(requestCrearSolicitud.fechaHechoViolento, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                         _command.Parameters.AddWithValue("@conviveConAgresor", BdValidation.ToDBNull(requestCrearSolicitud.conviveConAgresor));
@@ -568,6 +568,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@horaSolicitud", BdValidation.ToDBNull(DateTime.ParseExact(requestModificarSolicitud.horaSolicitud, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                         _command.Parameters.AddWithValue("@descripcionHechos", BdValidation.ToDBNull(requestModificarSolicitud.descripcionHechos));
                         _command.Parameters.AddWithValue("@esVictima", BdValidation.ToDBNull(requestModificarSolicitud.esVictima));
+                        _command.Parameters.AddWithValue("@id_tipo_entidad", BdValidation.ToDBNull(requestModificarSolicitud.id_tipo_entidad));
 
 
                         _command.Parameters.AddWithValue("@fechaHechoViolento", BdValidation.ToDBNull(DateTime.ParseExact(requestModificarSolicitud.fechaHechoViolento, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
@@ -1080,6 +1081,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 solicitud.hora_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["hora_solicitud"]);
                                 solicitud.descripcion_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_de_hechos"]);
                                 solicitud.es_victima = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_victima"]);
+                                solicitud.id_tipo_entidad = ConvertFDBVal.ConvertFromDBVal<string>(reader["id_tipo_entidad"]);
                                 solicitud.fecha_hecho_violento = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_hecho_violento"]);
                             }
                         }

@@ -152,10 +152,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			try
 			{
 				string codSolicitud = _solicitudesRepository.ObtenerNumeroSolicitud(requestCrearSolicitud.idComisaria);
-
-
-				 long idSolicitud = _solicitudesRepository.CrearSolicitudCiudadano(requestCrearSolicitud, codSolicitud);
-
+				
+				long idSolicitud = _solicitudesRepository.CrearSolicitudCiudadano(requestCrearSolicitud, codSolicitud);
 
 				if (!requestCrearSolicitud.esCompetenciaComisaria || (requestCrearSolicitud.esCompetenciaComisaria && requestCrearSolicitud.esNecesarioRemitir)) {
 

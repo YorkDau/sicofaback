@@ -9,6 +9,7 @@
         public string fechaHechoViolento { get; set; }
         public string descripcionHechos { get; set; }
         public bool esVictima { get; set; }
+        public string id_tipo_entidad { get; set; }
         public bool conviveConAgresor { get; set; }
         public int relacionParentescoAgresor{ get; set; }
         public bool esCompetenciaComisaria { get; set; }
@@ -16,7 +17,6 @@
         public int idtipoTramite { get; set; }
         public int idContextofamiliar { get; set; }
         public bool esNecesarioRemitir { get; set; }
-
         public long? idComisariaRemision{ get; set; }
         public long idEntidadExterna{ get; set; }
         public string justificacionRemision { get; set; }
