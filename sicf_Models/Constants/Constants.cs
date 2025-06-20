@@ -352,6 +352,7 @@ namespace sicf_Models.Constants
                 {
                     public const string actividadEjecutarSeguimiento = "EJEC-SEG";
                     public const string actividadProgramarSeguimiento = "LEGSEG";
+                    public const string actividadProgramarSeguimientoPard = "AUDSPARD";
                     public const string actividadEjecutarSeguimientoPard = "PARD-SEG";
                 }
             }

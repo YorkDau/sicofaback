@@ -5,13 +5,7 @@ using sicf_Models.Core;
 using sicf_Models.Dto.Seguimientos;
 using sicf_Models.Utility;
 using sicfExceptions.Exceptions;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static sicf_Models.Constants.Constants;
 
 namespace sicf_DataBase.Repositories.Seguimientos
 {
@@ -327,16 +321,26 @@ namespace sicf_DataBase.Repositories.Seguimientos
             }
         }
 
-        public SicofaProgramacion obtenerProgramacionSeguimiento(long idSolicitudServicio)
+        public SicofaProgramacion obtenerProgramacionSeguimiento(long idSolicitudServicio, string etiqueta)
         {
             try
             {
-                return context.SicofaProgramacion.Where(prg => prg.IdSolicitud == idSolicitudServicio & prg.Etiqueta == Constants.Medidas.Seguimiento.etiquetas.actividadProgramarSeguimiento).OrderByDescending(prg => prg.IdProgramacion).FirstOrDefault()!; 
+                string etiquetaConsulta = etiqueta;
+
+                // Si la etiqueta no es AUDSPARD, usar la constante por defecto
+                if (string.IsNullOrEmpty(etiqueta) || etiqueta != "AUDSPARD")
+                {
+                    etiquetaConsulta = Constants.Medidas.Seguimiento.etiquetas.actividadProgramarSeguimiento;
+                }
+
+                return context.SicofaProgramacion
+                    .Where(prg => prg.IdSolicitud == idSolicitudServicio && prg.Etiqueta == etiquetaConsulta)
+                    .OrderByDescending(prg => prg.IdProgramacion)
+                    .FirstOrDefault();
             }
             catch (Exception ex)
             {
-
-                throw new Exception(ex.Message);
+                throw new Exception("Error al obtener la programación de seguimiento: " + ex.Message, ex);
             }
         }
 
