@@ -34,6 +34,7 @@ namespace sicf_Models.Dto.Solicitudes
     public class ConsultaGeneralPreSolicitudDTO
     {
         public string? CodigoSolicitud { get; set; }
+        public string? TipoSolicitud { get; set; }
         public int? IdComisaria { get; set; }
         public int IdSolicitudServicio { get; set; }
         public DateTime FechaSolicitud { get; set; }
@@ -41,6 +42,7 @@ namespace sicf_Models.Dto.Solicitudes
         public string DescripcionHechos { get; set; }
         public int? EsVictima { get; set; }
         public int? EsCompetenciaComisaria { get; set; }
+        
     }
 
 

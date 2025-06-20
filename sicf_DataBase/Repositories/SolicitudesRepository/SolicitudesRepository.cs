@@ -1034,7 +1034,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                             CodigoSolicitud = Convert.ToString(reader["codigo_solicitud"]),
                             EsCompetenciaComisaria = Convert.ToInt32(reader["esCompetenciaComisaria"]), 
                             EsVictima = Convert.ToInt32(reader["es_victima"]),              
-                            DescripcionHechos = Convert.ToString(reader["descripcion_de_hechos"]), 
+                            DescripcionHechos = Convert.ToString(reader["descripcion_de_hechos"]),
+                            TipoSolicitud = Convert.ToString(reader["tipoSolicitud"]),
                         };
 
                         resultados.Add(item);
