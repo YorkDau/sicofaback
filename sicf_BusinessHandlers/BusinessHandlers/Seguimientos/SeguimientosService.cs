@@ -7,6 +7,7 @@ using sicf_Models.Dto.Compartido;
 using sicf_Models.Dto.Seguimientos;
 using sicf_Models.Dto.Tarea;
 using sicfExceptions.Exceptions;
+using static sicf_Models.Constants.Constants.Tarea;
 
 namespace sicf_BusinessHandlers.BusinessHandlers.Seguimientos
 {
@@ -129,7 +130,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Seguimientos
             {
                 List<MedidaSeguimientoDTO>? medidasSeguimiento = new List<MedidaSeguimientoDTO>();
                 //buscar ultima programacion activa
-                var programacion = seguimientosServicioRepository.obtenerProgramacionSeguimiento(idSolicitudServicio);
+                var programacion = seguimientosServicioRepository.obtenerProgramacionSeguimiento(idSolicitudServicio,null);
                 
                 if (programacion == null)
                     throw new ControledException("No se encontró una programación de seguimiento asociada a la solicitud.");
@@ -214,16 +215,29 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Seguimientos
         {
             try
             {
+                string etiqueta = Constants.Medidas.Seguimiento.etiquetas.actividadProgramarSeguimientoPard;
                 List<MedidaSeguimientoDTO>? medidasSeguimiento = new List<MedidaSeguimientoDTO>();
-                //buscar ultima programacion activa
-                var programacion = seguimientosServicioRepository.obtenerProgramacionSeguimiento(idSolicitudServicio);
 
+                // Buscar última programación activa
+                var programacion = seguimientosServicioRepository.obtenerProgramacionSeguimiento(idSolicitudServicio, etiqueta);
                 if (programacion == null)
                     throw new ControledException("No se encontró una programación de seguimiento asociada a la solicitud.");
 
+                // Buscar seguimiento (puede ser null si es PARD)
                 var seguimiento = seguimientosServicioRepository.obtenerSeguimientoPorProgramacion(programacion.IdProgramacion);
+
+                // Si no existe seguimiento y es PARD, crear uno simulado
                 if (seguimiento == null)
-                    throw new ControledException("No se encontró un seguimiento activo asociado a la solicitud.");
+                {
+                    seguimiento = new SicofaSeguimiento // Fix: Use SicofaSeguimiento instead of SeguimientoDTO
+                    {
+                        IdProgramacion = programacion.IdProgramacion,
+                        IdSeguimiento = 0,
+                        IdSolicitudServicio = idSolicitudServicio,
+                        IdTareaInstrumentos = programacion.IdTareaUso + 1,
+                        ComentarioAprobacion = ""
+                    };
+                }
 
                 medidasSeguimiento = seguimientosServicioRepository.ObtenerMedidasSeguimiento(programacion.IdProgramacion);
 
@@ -237,25 +251,22 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Seguimientos
                     var res = await seguimientosServicioRepository.crearNuevasMedidasSeguimiento(nuevasMedidas);
                     if (!res)
                         throw new ControledException("No se encontraron medidas para el seguimiento.");
-
                 }
 
                 medidasSeguimiento = seguimientosServicioRepository.ObtenerMedidasSeguimiento(programacion.IdProgramacion);
-
                 if (medidasSeguimiento == null)
                     throw new ControledException("No se encontraron medidas para el seguimiento.");
 
-                responseMedidasSeguimientoPard response = new responseMedidasSeguimientoPard();
-
-                response.medidas = new List<MedidaSeguimientoDTO>();
-
-                response.idProgramacion = seguimiento.IdProgramacion;
-                response.idSeguimiento = seguimiento.IdSeguimiento;
-                response.idSolicitudServicio = seguimiento.IdSolicitudServicio;
-                response.idTareaInstrumentos = seguimiento.IdTareaInstrumentos;
-                response.comentario = seguimiento.ComentarioAprobacion;
-
-                response.medidas = medidasSeguimiento;
+                // Armar la respuesta
+                responseMedidasSeguimientoPard response = new responseMedidasSeguimientoPard
+                {
+                    medidas = medidasSeguimiento,
+                    idProgramacion = seguimiento.IdProgramacion,
+                    idSeguimiento = seguimiento.IdSeguimiento,
+                    idSolicitudServicio = seguimiento.IdSolicitudServicio,
+                    idTareaInstrumentos = seguimiento.IdTareaInstrumentos,
+                    comentario = seguimiento.ComentarioAprobacion
+                };
 
                 return response;
             }
@@ -263,42 +274,47 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Seguimientos
             {
                 throw new Exception(ex.Message);
             }
-
         }
-
 
         public async Task<bool> GuardarMedidasSeguimiento(responseMedidasSeguimiento request)
         {
             try
             {
-                var responseMedidasDeAtencion = await seguimientosServicioRepository.ActualizarMedidasSeguimiento(request.medidasDeAtencion, request.usuarioModifica);
+                if (request.medidasDeAtencion?.Any() == true)
+                    await seguimientosServicioRepository.ActualizarMedidasSeguimiento(request.medidasDeAtencion, request.usuarioModifica);
 
-                var responseMedidasDeProteccion = await seguimientosServicioRepository.ActualizarMedidasSeguimiento(request.medidasDeProteccion, request.usuarioModifica);
+                if (request.medidasDeProteccion?.Any() == true)
+                    await seguimientosServicioRepository.ActualizarMedidasSeguimiento(request.medidasDeProteccion, request.usuarioModifica);
 
-                var responseMedidasDeEstabilizacion = await seguimientosServicioRepository.ActualizarMedidasSeguimiento(request.medidasDeEstabilizacion, request.usuarioModifica);
+                if (request.medidasDeEstabilizacion?.Any() == true)
+                    await seguimientosServicioRepository.ActualizarMedidasSeguimiento(request.medidasDeEstabilizacion, request.usuarioModifica);
 
-                var responseMedidaseProteccionEntidad = await seguimientosServicioRepository.ActualizarMedidasSeguimiento(request.medidasDeProteccionEntidad, request.usuarioModifica);
+                if (request.medidasDeProteccionEntidad?.Any() == true)
+                    await seguimientosServicioRepository.ActualizarMedidasSeguimiento(request.medidasDeProteccionEntidad, request.usuarioModifica);
 
+                // Solo actualizar seguimiento si idSeguimiento es válido (> 0)
+                if (request.idSeguimiento > 0)
+                {
+                    SicofaSeguimiento seguimiento = new SicofaSeguimiento
+                    {
+                        IdSolicitudServicio = request.idSolicitudServicio,
+                        IdSeguimiento = request.idSeguimiento,
+                        IdProgramacion = request.idProgramacion,
+                        IdTareaInstrumentos = request.idTareaInstrumentos,
+                        ComentarioAprobacion = request.comentario
+                    };
 
-                SicofaSeguimiento seguimiento = new SicofaSeguimiento();
-
-                seguimiento.IdSolicitudServicio = request.idSolicitudServicio;
-                seguimiento.IdSeguimiento = request.idSeguimiento;
-                seguimiento.IdProgramacion = request.idProgramacion;
-                seguimiento.IdTareaInstrumentos = request.idTareaInstrumentos;
-                seguimiento.ComentarioAprobacion = request.comentario;
-
-                await seguimientosServicioRepository.ActualizarSeguimiento(seguimiento);
+                    await seguimientosServicioRepository.ActualizarSeguimiento(seguimiento);
+                }
 
                 return true;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-
             }
-
         }
+
 
 
         public async Task<List<RemisionesAsociada>> RemisionesSeguimientosPorTarea(long idTarea, long idSolitiudServicio)
@@ -456,7 +472,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Seguimientos
                 throw new ControledException("No se encontró una tarea en el proceso de seguimiento.");
 
             //Consultar Programacion
-            var programacion = seguimientosServicioRepository.obtenerProgramacionSeguimiento((long)tarea.IdSolicitudServicio!);
+            var programacion = seguimientosServicioRepository.obtenerProgramacionSeguimiento((long)tarea.IdSolicitudServicio!,"");
 
             if (programacion == null)
                 throw new ControledException("No se encontró una programacion en el proceso de seguimiento.");

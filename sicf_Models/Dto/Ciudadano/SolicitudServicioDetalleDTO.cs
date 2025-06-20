@@ -11,5 +11,14 @@
         public bool es_victima { get; set; }
         public string? id_tipo_entidad { get; set; }
         public int numero_victimas { get; set; }
+        public List<InvolucradoDetalleDTO> involucrados { get; set; } = new();
+
     }
+        public class InvolucradoDetalleDTO
+        {
+            public string nombre_completo { get; set; }
+            public string numero_documento { get; set; }
+            public string parentesco { get; set; }
+        }
+
 }

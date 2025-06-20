@@ -1054,45 +1054,62 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
 
         public SolicitudServicioDetalleDTO ObtenerSolicitudServiciosCiudadanoDetalle(int id)
         {
-            string? mensaje = "";
-            SolicitudServicioDetalleDTO solicitud = new SolicitudServicioDetalleDTO();
+            var solicitud = new SolicitudServicioDetalleDTO();
+            string parentescoVictima = null;
+
             using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
             {
                 string query = "PR_SICOFA_CONSULTA_PROCESO_DETALLE_POR_ID";
                 using (_command = new SqlCommand(query))
                 {
                     _command.CommandType = CommandType.StoredProcedure;
-
                     _command.Parameters.AddWithValue("@id", BdValidation.ToDBNull(id));
-
                     _command.Connection = _connectionDb;
+
                     _connectionDb.Open();
                     using SqlDataReader reader = _command.ExecuteReader();
 
-                    if (reader.HasRows)
+                    while (reader.Read())
                     {
-                        while (reader.Read())
+                        bool esVictima = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_victima"]);
+
+                        if (solicitud.codigo_solicitud == null)
                         {
-                            if (reader.FieldCount > 1)
-                            {
-                                solicitud.codigo_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_solicitud"]);
-                                solicitud.nombre_ciudaddano = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_ciudadano"]);
-                                solicitud.fecha_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_solicitud"]);
-                                solicitud.hora_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["hora_solicitud"]);
-                                solicitud.descripcion_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_de_hechos"]);
-                                solicitud.es_victima = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_victima"]);
-                                solicitud.id_tipo_entidad = ConvertFDBVal.ConvertFromDBVal<string>(reader["id_tipo_entidad"]);
-                                solicitud.fecha_hecho_violento = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_hecho_violento"]);
-                            }
+                            solicitud.codigo_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_solicitud"]);
+                            solicitud.nombre_ciudaddano = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_ciudadano"]);
+                            solicitud.fecha_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_solicitud"]);
+                            solicitud.hora_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["hora_solicitud"]);
+                            solicitud.descripcion_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_de_hechos"]);
+                            solicitud.es_victima = esVictima;
+                            solicitud.fecha_hecho_violento = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_hecho_violento"]);
                         }
-                        _connectionDb.Close();
-                        return solicitud;
+
+                        if (esVictima && parentescoVictima == null)
+                        {
+                            parentescoVictima = ConvertFDBVal.ConvertFromDBVal<string>(reader["parentesco"]) ?? "NO TIENE ASIGNADO";
+                        }
+
+                        if (!esVictima && !reader.IsDBNull(reader.GetOrdinal("nombre_completo")))
+                        {
+                            var involucrado = new InvolucradoDetalleDTO
+                            {
+                                nombre_completo = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_completo"]),
+                                numero_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento"]),
+                                parentesco = parentescoVictima ?? "NO TIENE ASIGNADO"
+                            };
+
+                            solicitud.involucrados.Add(involucrado);
+                        }
                     }
+                    _connectionDb.Close();
+
+                    if (solicitud.codigo_solicitud != null)
+                        return solicitud;
                 }
             }
-            throw new Exception("no existen datos");
-        }
 
+            throw new Exception("No existen datos");
+        }
 
         public SolicitudServicioDatosDTO ObtenerDatosSolicitud(int idSolicitud)
         {
