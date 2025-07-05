@@ -9,7 +9,7 @@
         public string fechaHechoViolento { get; set; }
         public string descripcionHechos { get; set; }
         public bool esVictima { get; set; }
-        public string id_tipo_entidad { get; set; }
+        public string? id_tipo_entidad { get; set; }
         public bool conviveConAgresor { get; set; }
         public int relacionParentescoAgresor{ get; set; }
         public bool esCompetenciaComisaria { get; set; }
