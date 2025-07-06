@@ -35,6 +35,7 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
         public int? identidadGenero { get; set; }
 
         public int? idGenero { get; set; }
+        public int? idRegimen { get; set; }
 
         public string ocupacion { get; set; }
 

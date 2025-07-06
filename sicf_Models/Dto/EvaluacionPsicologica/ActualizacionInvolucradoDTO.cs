@@ -45,6 +45,7 @@
         public long? municipioExp { get; set; }
 
         public int? idSexo { get; set; }
+        public int? idRegimen { get; set; }
 
         public int? idRelacionPareja { get; set; }
 
