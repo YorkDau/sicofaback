@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace sicf_Models.Dto.ReporteSolicitud
+﻿namespace sicf_Models.Dto.ReporteSolicitud
 {
     [Serializable]
     public class InformacionSolicitudDTO
@@ -72,5 +65,55 @@ namespace sicf_Models.Dto.ReporteSolicitud
         public DateTime fechaHechoViolento { get; set; }
         public TimeSpan horaHechoViolento { get; set; }
         public string? DescripcionLugareHechos { get; set; }
+    }
+
+
+    [Serializable]
+    public class ReporteSolicitudDTO
+    {
+        public DateTime? fecha_ingreso { get; set; }
+        public string? comisaria { get; set; }
+        public string? historia { get; set; }
+        public string? barrio { get; set; }
+        public string? direccion_ubicacion_involucrado { get; set; }
+        public string? nombre_completo_involucrado { get; set; }
+        public string? tipo_documento_involucrado { get; set; }
+        public string? numero_documento_involucrado { get; set; }
+        public int? edad_involucrado { get; set; }
+        public string? tipo_violencia { get; set; }
+        public string? descripcion_lugar_de_hechos { get; set; }
+        public TimeSpan? hora_hecho_violento { get; set; }
+        public string? sexo_genero_involucrado { get; set; }
+        public string? identidad_genero_involucrado { get; set; }
+        public string? orientacion_sexual_involucrado { get; set; }
+        public string? etnia_involucrado { get; set; }
+        public string? pais_involucrado { get; set; }
+        public string? victima_conflicto_armado_involucrado { get; set; }
+        public string? vicitma_es_poblacion_proteccion_especial { get; set; }
+        public string? discapacidad_involucrado { get; set; }
+        public string? nivel_academico_involucrado { get; set; }
+        public string? ocupacion_involucrado { get; set; }
+        public int? estrato_involucrado { get; set; }
+        public int? hijos_involucrado { get; set; }
+        public string? estado_embarazo_involucrado { get; set; }
+        public string? afiliado_seguridad_social_involucrado { get; set; }
+        public string? contexto_familiar_involucrado { get; set; }
+        public string? convive_con_agresor { get; set; }
+        public string? nombre_completo_agresor { get; set; }
+        public string? tipo_documento_agresor { get; set; }
+        public string? numero_documento_agresor { get; set; }
+        public int? edad_agresor { get; set; }
+        public string? sexo_genero_agresor { get; set; }
+        public string? identidad_genero_agresor { get; set; }
+        public string? etnia_agresor { get; set; }
+        public string? ocupacion_agresor { get; set; }
+        public string? nivel_academico_agresor { get; set; }
+        public int? hijos_agresor { get; set; }
+        public string? pertenece_grupo_armado_agresor { get; set; }
+        public string? medida_proteccion_otorgada_ley_575_2000 { get; set; }
+        public DateTime? fecha_audiencia { get; set; }
+        public string? estado { get; set; }
+        public DateTime? fecha_estado_proceso { get; set; }
+        public string? observaciones { get; set; }
     }
 }
