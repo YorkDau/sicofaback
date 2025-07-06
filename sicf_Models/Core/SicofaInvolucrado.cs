@@ -44,6 +44,7 @@
         public bool? PersonaHabitalidadCalle { get; set; }
         public string? PuebloIndigena { get; set; }
         public int? IdSexo { get; set; }
+        public int? IdRegimen { get; set; }
         public int? IdGenero { get; set; }
         public int? IdOrientacionSexual { get; set; }
         public int? IdContextoFamiliar { get; set; }

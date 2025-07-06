@@ -1184,6 +1184,7 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.IdOrientacionSexual).HasColumnName("id_orientacion_sexual");
 
                 entity.Property(e => e.IdSexo).HasColumnName("id_sexo");
+                entity.Property(e => e.IdRegimen).HasColumnName("id_regimen");
 
                 entity.Property(e => e.IdTipoDiscpacidad).HasColumnName("id_tipo_discpacidad");
 

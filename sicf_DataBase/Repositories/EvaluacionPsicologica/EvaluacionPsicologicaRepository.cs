@@ -116,6 +116,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.sexo = involucrado.IdSexo;
                     salida.idGenero = involucrado.IdGenero;
                     salida.idEscolaridad = involucrado.IdNivelAcademico;
+                    salida.idRegimen = involucrado.IdRegimen;
                     salida.ocupacion = complementario != null ? complementario.Ocupacion : null;
                     salida.numeroHijos = complementario != null ? complementario.NumeroHijos : null;
                     salida.agresorConflicto = complementario != null ? complementario.AgresorGrupoArmado : null;
@@ -260,6 +261,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 involucrado.IdTipoRelacion = data.RelacionAgresor;
                 involucrado.IdNivelAcademico = data.Escolidad;
                 involucrado.FechaExpedicion = data.fechaExpedicion;
+                involucrado.IdRegimen = data.idRegimen;
 
                 //involucrado.IdLugarExpedicion = data.lugarExpedicion;
                 involucrado.IdPaisExpedicion = data.paisExp;
