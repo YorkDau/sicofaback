@@ -250,6 +250,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@idOrientacionSexual", BdValidation.ToDBNull((requestRegistrarCiudadano.idOrientacionSexual == 0) ? null : requestRegistrarCiudadano.idOrientacionSexual));
                         _command.Parameters.AddWithValue("@idNivelAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idNivelAcademico == 0) ? null : requestRegistrarCiudadano.idNivelAcademico));
                         _command.Parameters.AddWithValue("@idEstadoAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idEstadoAcademico == 0) ? null : requestRegistrarCiudadano.idEstadoAcademico)); //agregado
+                        _command.Parameters.AddWithValue("@idEstrato", BdValidation.ToDBNull((requestRegistrarCiudadano.idEstrato == 0) ? null : requestRegistrarCiudadano.idEstrato)); //agregado
+                        _command.Parameters.AddWithValue("@idLocalidadComuna", BdValidation.ToDBNull((requestRegistrarCiudadano.idLocalidadComuna == 0) ? null : requestRegistrarCiudadano.idLocalidadComuna)); //agregado
                         _command.Parameters.AddWithValue("@direccionResidencia", BdValidation.ToDBNull(requestRegistrarCiudadano.direccionResidencia));
 
                         _command.Parameters.AddWithValue("@idLocalidad", BdValidation.ToDBNull((requestRegistrarCiudadano.idLocalidad == 0) ? null : requestRegistrarCiudadano.idLocalidad));
@@ -264,6 +266,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@estaAfiliado", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.estaAfiliado));
                         _command.Parameters.AddWithValue("@eps", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.eps));
                         _command.Parameters.AddWithValue("@ips", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.ips));
+                        _command.Parameters.AddWithValue("@mujerFamilia ", BdValidation.ToDBNull(requestRegistrarCiudadano.mujerFamilia)); // agregado
+
 
                         _command.Parameters.AddWithValue("@poblacionLgtbi", BdValidation.ToDBNull(requestRegistrarCiudadano.poblacionLgtbi));
                         _command.Parameters.AddWithValue("@adultoMayor", BdValidation.ToDBNull(requestRegistrarCiudadano.adultoMayor));
@@ -344,6 +348,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@idOrientacionSexual", BdValidation.ToDBNull((requestRegistrarCiudadano.idOrientacionSexual == 0) ? null : requestRegistrarCiudadano.idOrientacionSexual));
                         _command.Parameters.AddWithValue("@idNivelAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idNivelAcademico == 0) ? null : requestRegistrarCiudadano.idNivelAcademico));
                         _command.Parameters.AddWithValue("@idEstadoAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idEstadoAcademico == 0) ? null : requestRegistrarCiudadano.idEstadoAcademico)); //agregado
+                        _command.Parameters.AddWithValue("@idEstrato", BdValidation.ToDBNull((requestRegistrarCiudadano.idEstrato == 0) ? null : requestRegistrarCiudadano.idEstrato)); //agregado
+                        _command.Parameters.AddWithValue("@idLocalidadComuna", BdValidation.ToDBNull((requestRegistrarCiudadano.idLocalidadComuna == 0) ? null : requestRegistrarCiudadano.idLocalidadComuna)); //agregado
                         _command.Parameters.AddWithValue("@direccionResidencia", BdValidation.ToDBNull(requestRegistrarCiudadano.direccionResidencia));
 
                         _command.Parameters.AddWithValue("@idLocalidad", BdValidation.ToDBNull((requestRegistrarCiudadano.idLocalidad == 0) ? null : requestRegistrarCiudadano.idLocalidad));
@@ -358,6 +364,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@estaAfiliado", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.estaAfiliado));
                         _command.Parameters.AddWithValue("@eps", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.eps));
                         _command.Parameters.AddWithValue("@ips", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.ips));
+                        _command.Parameters.AddWithValue("@mujerFamilia ", BdValidation.ToDBNull(requestRegistrarCiudadano.mujerFamilia)); // agregado
+
 
                         _command.Parameters.AddWithValue("@poblacionLgtbi", BdValidation.ToDBNull(requestRegistrarCiudadano.poblacionLgtbi));
                         _command.Parameters.AddWithValue("@adultoMayor", BdValidation.ToDBNull(requestRegistrarCiudadano.adultoMayor));

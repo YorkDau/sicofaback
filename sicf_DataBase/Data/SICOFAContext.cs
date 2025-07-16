@@ -373,65 +373,46 @@ namespace sicf_DataBase.Data
                     .HasColumnName("fecha_nacimiento");
 
                 entity.Property(e => e.IdCiudMunNacimiento).HasColumnName("id_ciud_mun_nacimiento");
-
                 entity.Property(e => e.IdContextoFamiliar).HasColumnName("id_contexto_familiar");
-
                 entity.Property(e => e.IdDepartamento).HasColumnName("id_departamento");
-
                 entity.Property(e => e.IdGenero).HasColumnName("id_genero");
-
                 entity.Property(e => e.IdLocalidad).HasColumnName("id_localidad");
 
                 //entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
 
                 entity.Property(e => e.IdNivelAcademico).HasColumnName("id_nivel_academico");
                 entity.Property(e => e.IdEstadoAcademico).HasColumnName("id_estado_academico");
-
+                entity.Property(e => e.IdEstrato).HasColumnName("id_estrato");
+                entity.Property(e => e.IdLocalidadComuna).HasColumnName("id_localidad_comuna");
                 entity.Property(e => e.IdOrientacionSexual).HasColumnName("id_orientacion_sexual");
-
                 entity.Property(e => e.IdPaisNacimiento).HasColumnName("id_pais_nacimiento");
-
                 entity.Property(e => e.IdSexo).HasColumnName("id_sexo");
-
                 entity.Property(e => e.IdTipoDiscpacidad).HasColumnName("id_tipo_discpacidad");
-
                 entity.Property(e => e.IdTipoDocumento).HasColumnName("id_tipo_documento");
-
                 entity.Property(e => e.IdTipoRelacion).HasColumnName("id_tipo_relacion");
-
                 entity.Property(e => e.IdTipoTramite).HasColumnName("id_tipo_tramite");
-
                 entity.Property(e => e.IdTipoViolencia).HasColumnName("id_tipo_violencia");
-
                 entity.Property(e => e.Ips)
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("ips");
-
                 entity.Property(e => e.MesesEmbarazo).HasColumnName("meses_embarazo");
-
                 entity.Property(e => e.Migrante).HasColumnName("migrante");
-
                 entity.Property(e => e.NinoNinaAdolecente).HasColumnName("nino_nina_adolecente");
-
                 entity.Property(e => e.NombreCiudadano)
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("nombre_ciudadano");
-
                 entity.Property(e => e.NumeroDocumento)
                     .HasMaxLength(20)
                     .IsUnicode(false)
                     .HasColumnName("numero_documento");
-
                 entity.Property(e => e.PersonaHabitalidadCalle).HasColumnName("persona_habitalidad_calle");
-
                 entity.Property(e => e.PersonaLiderDefensorDh).HasColumnName("persona_lider_defensor_DH");
-
                 entity.Property(e => e.PoblacionLgtbi).HasColumnName("poblacion_lgtbi");
                 entity.Property(e => e.AdultoMayor).HasColumnName("adulto_mayor");
                 entity.Property(e => e.MujerEmbarazada).HasColumnName("mujer_embarazada");
-
+                entity.Property(e => e.MujerFamilia).HasColumnName("mujer_familia");
                 entity.Property(e => e.PrimerApellido)
                     .HasMaxLength(100)
                     .IsUnicode(false)

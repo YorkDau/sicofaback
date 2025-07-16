@@ -23,6 +23,10 @@
         public int idOrientacionSexual { get; set; }
         public int idNivelAcademico { get; set; }
         public int idEstadoAcademico { get; set; } //agregado
+        public int idEstrato{ get; set; } //agregado
+        public int idLocalidadComuna { get; set; } //agregado
+        public string? mujerFamilia { get; set; }
+
         public string direccionResidencia { get; set; }
         public int idLocalidad { get; set; }
         public string? barrio { get; set; }

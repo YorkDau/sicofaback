@@ -25,6 +25,8 @@ namespace sicf_Models.Core
         public long? IdCiudMunNacimiento { get; set; }
         public int? IdNivelAcademico { get; set; }
         public int? IdEstadoAcademico { get; set; } //agregado
+        public int? IdEstrato { get; set; } //agregado
+        public int? IdLocalidadComuna { get; set; } //agregado
         public int? IdLocalidad { get; set; }
         public string? Barrio { get; set; }
         public string NombreCiudadano { get; set; } = null!;
@@ -48,6 +50,7 @@ namespace sicf_Models.Core
         public bool? PoblacionLgtbi { get; set; }
         public bool? AdultoMayor { get; set; }
         public bool? MujerEmbarazada { get; set; }
+        public string? MujerFamilia { get; set; }
         public bool? NinoNinaAdolecente { get; set; }
         public bool? Migrante { get; set; }
         public bool? VictimaConflictoArmado { get; set; }
