@@ -46,7 +46,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             //var dem = context.SicofaSolicitudServicioEstadoSolicitud.Where(s => s.IdSolicitudServicio == idSolicitudProceso).OrderByDescending(s => s.IdSolicitudServicio).First();
 
            
-            var involucrados = context.SicofaSolicitudServicio.Include(se => se.IdInvolucrado).Where(s => s.IdSolicitudServicio == idSolicitudProceso).First();
+            var involucrados = context.SicofaSolicitudServicio.Include(se => se.IdInvolucrado).Where(s => s.IdSolicitudServicio == idSolicitudProceso).FirstOrDefault();
 
            AccionanteDTO salida = new AccionanteDTO();
             salida.codigoSolicitudServicio = solicitud.CodigoSolicitud;
