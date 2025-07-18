@@ -42,7 +42,7 @@ namespace sicf_DataBase.Repositories.Programacion
                              {
                                  idTarea = t.IdTarea,
                                  IdSolicitudServicio = t.IdSolicitudServicio,
-                                 etiqueta = f.EtiquetaDocumento
+                                 etiqueta = f.EtiquetaDocumento ?? "AUDINC"
                              }).Single();
 
                 ProgramacionDTO programacion = (from p in _context.SicofaProgramacion
