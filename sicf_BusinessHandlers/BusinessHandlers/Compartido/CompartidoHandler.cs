@@ -200,6 +200,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Compartido
             bool response = false;
             try
             {
+                //guardar el documento
                 response = await this._compartidoRepository.GuardarInvolucrado(involucrado);
             }
             catch (Exception ex)

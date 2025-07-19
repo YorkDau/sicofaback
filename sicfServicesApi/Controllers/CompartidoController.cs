@@ -11,6 +11,8 @@ using sicf_BusinessHandlers.BusinessHandlers.Usuario;
 using sicf_BusinessHandlers.BusinessHandlers.Tarea;
 using sicf_Models.Constants;
 using Microsoft.AspNetCore.Authorization;
+using sicf_BusinessHandlers.BusinessHandlers.Archivos;
+using sicf_Models.Dto.Archivos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -29,13 +31,16 @@ namespace sicfServicesApi.Controllers
 
         private readonly ITareaHandler _tareaHandler;
 
+        private readonly IArchivoService _archivoService;
 
-        public CompartidoController(ICompartidoHandler compartidoHandler, IValidarAcceso validarAcceso, IUsuarioHandler usuarioHandler, ITareaHandler tareaHandler) {
+
+        public CompartidoController(ICompartidoHandler compartidoHandler, IValidarAcceso validarAcceso, IUsuarioHandler usuarioHandler, ITareaHandler tareaHandler, IArchivoService archivoService) {
 
             _compartidoHandler = compartidoHandler;
             _validarAcceso = validarAcceso;
             _usuarioHandler = usuarioHandler;
             _tareaHandler = tareaHandler;
+            _archivoService = archivoService;
 
         }
 
@@ -294,6 +299,17 @@ namespace sicfServicesApi.Controllers
         {
             try
             {
+                if (data.InfoAdicional?.Adjunto is not null)
+                {
+                    var archivoDto = new CargaArchivoDTO
+                    {
+                        entrada = data.InfoAdicional.Adjunto,
+                        idSolicitudServicio = data.IdSolicitudServicio,
+                        tipoDocumento = "Archivo_Auto_Tramite",
+                    };
+                    await _archivoService.Carga(archivoDto);    
+                }
+                
                 await _compartidoHandler.GuardarInvolucrado(data);
                 return CustomResult(Message.Ok, CargaDocumento.documentoCargado, HttpStatusCode.OK);
             }
