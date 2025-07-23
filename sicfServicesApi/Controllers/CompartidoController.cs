@@ -31,17 +31,13 @@ namespace sicfServicesApi.Controllers
 
         private readonly ITareaHandler _tareaHandler;
 
-        private readonly IArchivoService _archivoService;
 
-
-        public CompartidoController(ICompartidoHandler compartidoHandler, IValidarAcceso validarAcceso, IUsuarioHandler usuarioHandler, ITareaHandler tareaHandler, IArchivoService archivoService) {
+        public CompartidoController(ICompartidoHandler compartidoHandler, IValidarAcceso validarAcceso, IUsuarioHandler usuarioHandler, ITareaHandler tareaHandler) {
 
             _compartidoHandler = compartidoHandler;
             _validarAcceso = validarAcceso;
             _usuarioHandler = usuarioHandler;
             _tareaHandler = tareaHandler;
-            _archivoService = archivoService;
-
         }
 
         [HttpGet]
@@ -299,17 +295,6 @@ namespace sicfServicesApi.Controllers
         {
             try
             {
-                if (data.InfoAdicional?.Adjunto is not null)
-                {
-                    var archivoDto = new CargaArchivoDTO
-                    {
-                        entrada = data.InfoAdicional.Adjunto,
-                        idSolicitudServicio = data.IdSolicitudServicio,
-                        tipoDocumento = "Archivo_Auto_Tramite",
-                    };
-                    await _archivoService.Carga(archivoDto);    
-                }
-                
                 await _compartidoHandler.GuardarInvolucrado(data);
                 return CustomResult(Message.Ok, CargaDocumento.documentoCargado, HttpStatusCode.OK);
             }
