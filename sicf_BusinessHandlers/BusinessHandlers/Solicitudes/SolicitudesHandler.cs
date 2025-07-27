@@ -4,11 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using sicf_BusinessHandlers.BusinessHandlers.Archivos;
 using sicf_BusinessHandlers.BusinessHandlers.Tarea;
 using sicf_DataBase.Repositories.Apelacion;
 using sicf_DataBase.Repositories.SolicitudesRepository;
 using sicf_Models.Constants;
 using sicf_Models.Dto.Apelacion;
+using sicf_Models.Dto.Archivos;
 using sicf_Models.Dto.Ciudadano;
 using sicf_Models.Dto.Solicitudes;
 using sicf_Models.Utility;
@@ -20,11 +22,13 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
     {
         private readonly ISolicitudesRepository _solicitudesRepository;
 		private readonly ITareaHandler _tareaHandler;
+		private readonly IArchivoService _archivoService;
 
-		public SolicitudesHandler(ISolicitudesRepository solicitudesRepository, ITareaHandler tareaHandler)
+		public SolicitudesHandler(ISolicitudesRepository solicitudesRepository, ITareaHandler tareaHandler, IArchivoService archivoService)
         {
             _solicitudesRepository = solicitudesRepository;
 			_tareaHandler = tareaHandler;
+			_archivoService = archivoService;
         }
 
 		#region Joel Vila Bringuez
@@ -154,6 +158,17 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 				string codSolicitud = _solicitudesRepository.ObtenerNumeroSolicitud(requestCrearSolicitud.idComisaria);
 				
 				long idSolicitud = _solicitudesRepository.CrearSolicitudCiudadano(requestCrearSolicitud, codSolicitud);
+
+				if (requestCrearSolicitud.adjunto is { Length: > 0 })
+				{
+					var archivo = new CargaArchivoDTO
+					{
+						idSolicitudServicio = idSolicitud,
+						entrada = requestCrearSolicitud.adjunto,
+						tipoDocumento = "Archivo_Tipo_Entidad",
+					};
+					 _archivoService.Carga(archivo);
+				}
 
 				if (!requestCrearSolicitud.esCompetenciaComisaria || (requestCrearSolicitud.esCompetenciaComisaria && requestCrearSolicitud.esNecesarioRemitir)) {
 
