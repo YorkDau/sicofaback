@@ -646,6 +646,8 @@ namespace sicf_DataBase.Compartido
             try
             {
                 SicofaInvolucrado invo = await context.SicofaInvolucrado.Where(x => x.IdInvolucrado == involucrado.IdInvolucrado).FirstOrDefaultAsync();
+
+
                 // ;
                 invo.NumeroDocumento = involucrado.NumeroDocumento == "" ? invo.NumeroDocumento : involucrado.NumeroDocumento;
                 invo.TipoDocumento = involucrado.TipoDocumento == 0 ? invo.TipoDocumento : Convert.ToInt16(involucrado.TipoDocumento);
@@ -675,6 +677,7 @@ namespace sicf_DataBase.Compartido
                 invo.CorreoElectronico = involucrado.CorreoElectronico == "" ? invo.CorreoElectronico : involucrado.CorreoElectronico;
                 invo.EsVictima = involucrado.EsVictima is null ? invo.EsVictima : involucrado.EsVictima.Value;
                 invo.EsPrincipal = involucrado.EsPrincipal == null ? invo.EsPrincipal : involucrado.EsPrincipal;
+                invo.EsRepresentante = involucrado.EsRepresentante == null ? invo.EsRepresentante : involucrado.EsRepresentante;
                 invo.Eps = involucrado.Eps == "" ? invo.Eps : involucrado.Eps;
 
                 //invo.IdLugarExpedicion = involucrado.IdLugarExpedicion == 0 ? invo.IdLugarExpedicion : involucrado.IdLugarExpedicion;

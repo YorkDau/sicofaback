@@ -20,6 +20,7 @@ namespace sicf_Models.Dto.Compartido
         public string? CorreoElectronico { get; set; }
         public bool?   EsVictima { get; set; }
         public bool?   EsPrincipal { get; set; }
+        public bool?   EsRepresentante { get; set; }
         //public long?   IdLugarExpedicion { get; set; }
         public int? PaisExp { get; set; }
         public long? DepartamentoExp { get; set; }

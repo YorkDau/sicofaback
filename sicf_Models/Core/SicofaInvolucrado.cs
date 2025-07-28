@@ -29,7 +29,7 @@
         public string? Barrio { get; set; }
         public string? DireccionRecidencia { get; set; }
         public bool EsVictima { get; set; }
-        public bool EsRepresentante { get; set; }
+        public bool?EsRepresentante { get; set; }
         public bool? EsPrincipal { get; set; }
         public int? IdTipoDiscpacidad { get; set; }
         public string? EstadoEmbarazo { get; set; }
@@ -60,7 +60,7 @@
         public int? IdPaisExpedicion { get; set; }
         public long? IdDepartamentoExpedicion { get; set; }
         public long? IdMunicipioExpedicion { get; set; }
-        public DateTime? FechaExpedicion { get; set; }
+        public DateTime ? FechaExpedicion { get; set; }
         public string? DatosAdicionales { get; set; }
 
         public virtual ICollection<SicofaComplementoInvolucrado> SicofaComplementoInvolucrado { get; set; }
@@ -69,6 +69,7 @@
         public virtual ICollection<SicofaSolicitudPrueba> SicofaSolicitudPrueba { get; set; }
 
         public virtual ICollection<SicofaSolicitudServicio> IdSolicitudServicio { get; set; }
+        //public virtual SicofaInvolucradoComplementaria SicofaInvolucradoComplementaria { get; set; } = null!;
         public virtual SicofaInvolucradoComplementaria SicofaInvolucradoComplementaria { get; set; } = null!;
     }
 }
