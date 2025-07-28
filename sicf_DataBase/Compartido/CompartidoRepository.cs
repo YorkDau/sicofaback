@@ -485,6 +485,7 @@ namespace sicf_DataBase.Compartido
                 invo.Edad = involucrado.Edad;
                 invo.Telefono = involucrado.Telefono;
                 invo.CorreoElectronico = involucrado.CorreoElectronico;
+                invo.EsRepresentante = involucrado.EsRepresentante ?? false;
 
                 if (involucrado.EsVictima == true)
                 {

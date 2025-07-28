@@ -1044,6 +1044,9 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                             EsVictima = Convert.ToInt32(reader["es_victima"]),              
                             DescripcionHechos = Convert.ToString(reader["descripcion_de_hechos"]),
                             TipoSolicitud = Convert.ToString(reader["tipoSolicitud"]),
+                            NombreInvolucradoVictima = Convert.ToString(reader["NombreVictima"]),
+                            DocumentoInvolucradoVictima = ConvertFDBVal.ConvertFromDBVal<string>(reader["DocumentoVictima"]),
+                            TipoDocumentoInvolucradoVictima = ConvertFDBVal.ConvertFromDBVal<string>(reader["TipoDocumentoVictima"]),
                         };
 
                         resultados.Add(item);

@@ -29,6 +29,7 @@
         public string? Barrio { get; set; }
         public string? DireccionRecidencia { get; set; }
         public bool EsVictima { get; set; }
+        public bool EsRepresentante { get; set; }
         public bool? EsPrincipal { get; set; }
         public int? IdTipoDiscpacidad { get; set; }
         public string? EstadoEmbarazo { get; set; }

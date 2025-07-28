@@ -29,16 +29,38 @@ namespace sicf_DataBase.Repositories.ReporteSolicitud
         /// <exception cref="ControledException"></exception>
         public ResponseListaPaginada ObtenerReporteSolicitudes(RequestReporteSolicitudDTO prm_solicitud)
         {
+            ResponseListaPaginada responseListaPaginada = new ResponseListaPaginada();
+
             try
             {
-                List<ReporteSolicitudDTO> solicitudes = new List<ReporteSolicitudDTO>();
+                string query;
+                if (prm_solicitud.pard_generar)
+                {
+                    query = "PR_SICOFA_REPORTES_SOLICITUDES_PARD";
+                }
+                else
+                {
+                    query = "PR_SICOFA_REPORTES_SOLICITUDES_BASE";
+                }
+
                 using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
                 {
-                    string query = "PR_SICOFA_REPORTES_SOLICITUDES_BASE";
                     using (_command = new SqlCommand(query))
                     {
                         _command.CommandType = CommandType.StoredProcedure;
-                        EstablecerParametrosReporteSolicitudes(_command, prm_solicitud);
+
+                        // AUMENTA EL COMMANDTIMEOUT AQUÍ
+                       // _command.CommandTimeout = 180; // Establece el timeout a 180 segundos (3 minutos)
+                                                       // Puedes probar con 60, 90, o más si es necesario.
+
+                        if (prm_solicitud.pard_generar)
+                        {
+                            _command.Parameters.AddWithValue("@id_comisaria", (object)prm_solicitud.id_comisaria ?? DBNull.Value);
+                        }
+                        else
+                        {
+                            EstablecerParametrosReporteSolicitudes(_command, prm_solicitud);
+                        }
 
                         _command.Connection = _connectionDb;
                         _connectionDb.Open();
@@ -46,73 +68,144 @@ namespace sicf_DataBase.Repositories.ReporteSolicitud
 
                         if (reader.HasRows)
                         {
-                            while (reader.Read())
+                            if (prm_solicitud.pard_generar)
                             {
-                                if (reader.FieldCount >= 1)
+                                List<ReporteSolicitudPARDDTO> solicitudesPARD = new List<ReporteSolicitudPARDDTO>();
+
+                                while (reader.Read())
                                 {
-                                    ReporteSolicitudDTO solicitud = new ReporteSolicitudDTO();
+                                    ReporteSolicitudPARDDTO solicitud = new ReporteSolicitudPARDDTO
+                                    {
+                                        id_solicitud_servicio = reader["id_solicitud_servicio"] != DBNull.Value ? Convert.ToInt64(reader["id_solicitud_servicio"]) : 0,
+                                        fecha_solicitud = reader["fecha_solicitud"] != DBNull.Value ? Convert.ToDateTime(reader["fecha_solicitud"]) : DateTime.MinValue,
+                                        estado_solicitud = reader["estado_solicitud"]?.ToString(),
+                                        codigo_solicitud = reader["codigo_solicitud"]?.ToString(),
+                                        id_comisaria = reader["id_comisaria"] != DBNull.Value ? (long?)Convert.ToInt64(reader["id_comisaria"]) : null,
+                                        nombre_comisaria = reader["nombre_comisaria"]?.ToString(),
+                                        descripcion_de_hechos = reader["descripcion_de_hechos"]?.ToString(),
+                                        tipo_solicitud = reader["tipo_solicitud"]?.ToString(),
+                                        subestado_solicitud = reader["subestado_solicitud"]?.ToString(),
 
-                                    solicitud.fecha_ingreso = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_ingreso"]);
-                                    solicitud.comisaria = ConvertFDBVal.ConvertFromDBVal<string>(reader["comisaria"]);
-                                    solicitud.historia = ConvertFDBVal.ConvertFromDBVal<string>(reader["historia"]);
-                                    solicitud.barrio = ConvertFDBVal.ConvertFromDBVal<string>(reader["barrio"]);
-                                    solicitud.direccion_ubicacion_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["direccion_ubicacion_involucrado"]);
-                                    solicitud.nombre_completo_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_completo_involucrado"]);
-                                    solicitud.tipo_documento_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["tipo_documento_involucrado"]);
-                                    solicitud.numero_documento_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento_involucrado"]);
-                                    solicitud.edad_involucrado = ConvertFDBVal.ConvertFromDBVal<int>(reader["edad_involucrado"]);
-                                    solicitud.tipo_violencia = ConvertFDBVal.ConvertFromDBVal<string>(reader["tipo_violencia"]);
-                                    solicitud.descripcion_lugar_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_lugar_de_hechos"]);
-                                    solicitud.hora_hecho_violento = ConvertFDBVal.ConvertFromDBVal<TimeSpan>(reader["hora_hecho_violento"]);
-                                    solicitud.sexo_genero_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["sexo_genero_involucrado"]);
-                                    solicitud.identidad_genero_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["identidad_genero_involucrado"]);
-                                    solicitud.orientacion_sexual_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["orientacion_sexual_involucrado"]);
-                                    solicitud.etnia_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["etnia_involucrado"]);
-                                    solicitud.pais_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["pais_involucrado"]);
-                                    solicitud.victima_conflicto_armado_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["victima_conflicto_armado_involucrado"]);
-                                    solicitud.vicitma_es_poblacion_proteccion_especial = ConvertFDBVal.ConvertFromDBVal<string>(reader["vicitma_es_poblacion_proteccion_especial"]);
-                                    solicitud.discapacidad_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["discapacidad_involucrado"]);
-                                    solicitud.nivel_academico_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["nivel_academico_involucrado"]);
-                                    solicitud.ocupacion_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["ocupacion_involucrado"]);
-                                    solicitud.estrato_involucrado = ConvertFDBVal.ConvertFromDBVal<int>(reader["estrato_involucrado"]);
-                                    solicitud.hijos_involucrado = ConvertFDBVal.ConvertFromDBVal<int>(reader["hijos_involucrado"]);
-                                    solicitud.estado_embarazo_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_embarazo_involucrado"]);
-                                    solicitud.afiliado_seguridad_social_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["afiliado_seguridad_social_involucrado"]);
-                                    solicitud.contexto_familiar_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["contexto_familiar_involucrado"]);
-                                    solicitud.convive_con_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["convive_con_agresor"]);
-                                    solicitud.nombre_completo_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_completo_agresor"]);
-                                    solicitud.tipo_documento_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["tipo_documento_agresor"]);
-                                    solicitud.numero_documento_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento_agresor"]);
-                                    solicitud.edad_agresor = ConvertFDBVal.ConvertFromDBVal<int>(reader["edad_agresor"]);
-                                    solicitud.sexo_genero_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["sexo_genero_agresor"]);
-                                    solicitud.identidad_genero_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["identidad_genero_agresor"]);
-                                    solicitud.etnia_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["etnia_agresor"]);
-                                    solicitud.ocupacion_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["ocupacion_agresor"]);
-                                    solicitud.nivel_academico_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["nivel_academico_agresor"]);
-                                    solicitud.hijos_agresor = ConvertFDBVal.ConvertFromDBVal<int>(reader["hijos_agresor"]);
-                                    solicitud.pertenece_grupo_armado_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["pertenece_grupo_armado_agresor"]);
-                                    solicitud.medida_proteccion_otorgada_ley_575_2000 = ConvertFDBVal.ConvertFromDBVal<string>(reader["medida_proteccion_otorgada_ley_575_2000"]);
-                                    solicitud.fecha_audiencia = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_audiencia"]);
-                                    solicitud.estado = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado"]);
-                                    solicitud.fecha_estado_proceso = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_estado_proceso"]);
-                                    solicitud.observaciones = ConvertFDBVal.ConvertFromDBVal<string>(reader["observaciones"]);
+                                        NombreVictima = reader["NombreVictima"]?.ToString(),
+                                        DocumentoVictima = reader["DocumentoVictima"]?.ToString(),
+                                        TipoDocumentoVictima = reader["TipoDocumentoVictima"]?.ToString(),
+                                        GeneroVictima = reader["GeneroVictima"]?.ToString(),
+                                        OrientacionSexualVictima = reader["OrientacionSexualVictima"]?.ToString(),
+                                        EdadVictima = reader["EdadVictima"] != DBNull.Value ? (int?)Convert.ToInt32(reader["EdadVictima"]) : null,
+                                        TelefonoVictima = reader["TelefonoVictima"]?.ToString(),
+                                        CorreoVictima = reader["CorreoVictima"]?.ToString(),
+                                        DireccionVictima = reader["DireccionVictima"]?.ToString(),
+                                        nombre_contacto_confianza = reader["nombre_contacto_confianza"]?.ToString(),
+                                        telefono_contacto_confianza = reader["telefono_contacto_confianza"]?.ToString(),
 
-                                    solicitudes.Add(solicitud);
+                                        es_PARD = reader["es_PARD"]?.ToString() == "1" ? "SI" : "NO",
+                                        tipo_presolicitud = reader["tipo_presolicitud"]?.ToString(),
+                                        observacion_Legal = reader["observacion_Legal"]?.ToString(),
+                                        denuncia_verificada = reader["denuncia_verificada"]?.ToString() == "1" ? "SI" : "NO",
+                                        observacion_verificacion = reader["observacion_verificacion"]?.ToString(),
+                                        continua_denuncia = reader["continua_denuncia"]?.ToString() == "1" ? "SI" : "NO",
+                                        competencia_icbf = reader["competencia_icbf"]?.ToString() == "1" ? "SI" : "NO",
+                                        observaciones_competencia_icbf = reader["observaciones_competencia_icbf"]?.ToString(),
+                                        numero_documento_denunciante = reader["numero_documento_denunciante"]?.ToString(),
+                                        nombres_denunciante = reader["nombres_denunciante"]?.ToString(),
+                                        telefono_denunciante = reader["telefono_denunciante"]?.ToString(),
+                                        correo_denunciante = reader["correo_denunciante"]?.ToString(),
 
+                                        id_plantilla = long.TryParse(reader["id_plantilla"]?.ToString(), out long idPlantilla) ? idPlantilla : (long?)null,
+                                        estado_plantilla = reader["estado_plantilla"]?.ToString(),
+                                        observacion_plantilla = reader["observacion_plantilla"]?.ToString(),
+                                        aprobado = reader["aprobado"]?.ToString() == "1" ? "SI" : "NO",
+                                        apelacion = reader["apelacion"]?.ToString() == "1" ? "SI" : "NO",
+                                        afecta_medidas = reader["afecta_medidas"]?.ToString() == "1" ? "SI" : "NO",
+
+                                        estado_involucrado = reader["estado_involucrado"]?.ToString(),
+
+                                        nombre_documento_anexo = reader["nombre_documento_anexo"]?.ToString(),
+                                        fecha_creacion_anexo = DateTime.TryParse(reader["fecha_creacion_anexo"]?.ToString(), out DateTime fechaAnexo) ? fechaAnexo : (DateTime?)null,
+                                        es_anexo_victima = reader["es_anexo_victima"]?.ToString() == "1" ? "SI" : "NO",
+
+                                        nombre_usuario_anexo = reader["nombre_usuario_anexo"]?.ToString(),
+                                        correo_usuario_anexo = reader["correo_usuario_anexo"]?.ToString(),
+                                        cargo_usuario = reader["cargo_usuario"]?.ToString(),
+                                        celular_usuario = long.TryParse(reader["celular_usuario"]?.ToString(), out long celular) ? celular : 0,
+                                        perfil_usuario = reader["perfil_usuario"]?.ToString(),
+
+                                        estado_tarea = reader["estado_tarea"]?.ToString(),
+                                        fecha_creacion_tarea = DateTime.TryParse(reader["fecha_creacion_tarea"]?.ToString(), out DateTime fechaCreacionTarea) ? fechaCreacionTarea : (DateTime?)null,
+                                        fecha_terminacion_tarea = DateTime.TryParse(reader["fecha_terminacion_tarea"]?.ToString(), out DateTime fechaTerminacionTarea) ? fechaTerminacionTarea : (DateTime?)null,
+                                    };
+
+                                    solicitudesPARD.Add(solicitud);
                                 }
+
+                                responseListaPaginada.DatosPaginados = solicitudesPARD;
+                                responseListaPaginada.TotalRegistros = solicitudesPARD.Count;
+                            }
+                            else
+                            {
+                                // Tu lógica existente para ReporteSolicitudDTO
+                                List<ReporteSolicitudDTO> solicitudes = new List<ReporteSolicitudDTO>();
+                                while (reader.Read())
+                                {
+                                    if (reader.FieldCount >= 1)
+                                    {
+                                        ReporteSolicitudDTO solicitud = new ReporteSolicitudDTO
+                                        {
+                                            fecha_ingreso = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_ingreso"]),
+                                            comisaria = ConvertFDBVal.ConvertFromDBVal<string>(reader["comisaria"]),
+                                            historia = ConvertFDBVal.ConvertFromDBVal<string>(reader["historia"]),
+                                            barrio = ConvertFDBVal.ConvertFromDBVal<string>(reader["barrio"]),
+                                            direccion_ubicacion_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["direccion_ubicacion_involucrado"]),
+                                            nombre_completo_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_completo_involucrado"]),
+                                            tipo_documento_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["tipo_documento_involucrado"]),
+                                            numero_documento_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento_involucrado"]),
+                                            edad_involucrado = ConvertFDBVal.ConvertFromDBVal<int>(reader["edad_involucrado"]),
+                                            tipo_violencia = ConvertFDBVal.ConvertFromDBVal<string>(reader["tipo_violencia"]),
+                                            descripcion_lugar_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_lugar_de_hechos"]),
+                                            hora_hecho_violento = ConvertFDBVal.ConvertFromDBVal<TimeSpan>(reader["hora_hecho_violento"]),
+                                            sexo_genero_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["sexo_genero_involucrado"]),
+                                            identidad_genero_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["identidad_genero_involucrado"]),
+                                            orientacion_sexual_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["orientacion_sexual_involucrado"]),
+                                            etnia_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["etnia_involucrado"]),
+                                            pais_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["pais_involucrado"]),
+                                            victima_conflicto_armado_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["victima_conflicto_armado_involucrado"]),
+                                            vicitma_es_poblacion_proteccion_especial = ConvertFDBVal.ConvertFromDBVal<string>(reader["vicitma_es_poblacion_proteccion_especial"]),
+                                            discapacidad_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["discapacidad_involucrado"]),
+                                            nivel_academico_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["nivel_academico_involucrado"]),
+                                            ocupacion_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["ocupacion_involucrado"]),
+                                            estrato_involucrado = ConvertFDBVal.ConvertFromDBVal<int>(reader["estrato_involucrado"]),
+                                            hijos_involucrado = ConvertFDBVal.ConvertFromDBVal<int>(reader["hijos_involucrado"]),
+                                            estado_embarazo_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_embarazo_involucrado"]),
+                                            afiliado_seguridad_social_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["afiliado_seguridad_social_involucrado"]),
+                                            contexto_familiar_involucrado = ConvertFDBVal.ConvertFromDBVal<string>(reader["contexto_familiar_involucrado"]),
+                                            convive_con_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["convive_con_agresor"]),
+                                            nombre_completo_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_completo_agresor"]),
+                                            tipo_documento_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["tipo_documento_agresor"]),
+                                            numero_documento_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento_agresor"]),
+                                            edad_agresor = ConvertFDBVal.ConvertFromDBVal<int>(reader["edad_agresor"]),
+                                            sexo_genero_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["sexo_genero_agresor"]),
+                                            identidad_genero_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["identidad_genero_agresor"]),
+                                            etnia_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["etnia_agresor"]),
+                                            ocupacion_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["ocupacion_agresor"]),
+                                            nivel_academico_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["nivel_academico_agresor"]),
+                                            hijos_agresor = ConvertFDBVal.ConvertFromDBVal<int>(reader["hijos_agresor"]),
+                                            pertenece_grupo_armado_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["pertenece_grupo_armado_agresor"]),
+                                            medida_proteccion_otorgada_ley_575_2000 = ConvertFDBVal.ConvertFromDBVal<string>(reader["medida_proteccion_otorgada_ley_575_2000"]),
+                                            fecha_audiencia = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_audiencia"]),
+                                            estado = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado"]),
+                                            fecha_estado_proceso = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_estado_proceso"]),
+                                            observaciones = ConvertFDBVal.ConvertFromDBVal<string>(reader["observaciones"])
+                                        };
+                                        solicitudes.Add(solicitud);
+                                    }
+                                }
+                                responseListaPaginada.DatosPaginados = solicitudes;
+                                responseListaPaginada.TotalRegistros = solicitudes.Count;
                             }
                         }
                         _connectionDb.Close();
                     }
                 }
-
-                if (solicitudes.Any())
-                {
-                    responseListaPaginada = new ResponseListaPaginada();
-                    responseListaPaginada.DatosPaginados = solicitudes;
-                    responseListaPaginada.TotalRegistros = solicitudes.Count;
-                }
-
 
                 return responseListaPaginada;
             }
@@ -125,7 +218,6 @@ namespace sicf_DataBase.Repositories.ReporteSolicitud
                 throw new ControledException(ex.Message, ex.HResult);
             }
         }
-
         /// <summary>
         /// Establece la lista de parámetros y sus repesctivos valores pare el método ObtenerReporteSolicitudes
         /// </summary>

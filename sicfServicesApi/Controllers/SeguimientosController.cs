@@ -34,6 +34,7 @@ namespace sicfServicesApi.Controllers
         public async Task<IActionResult> ListaCodigosServicio([FromRoute] int tipoDoc, string numDoc)
         {
             try
+            
             {
                 var response = await seguimientosService.ListaCodigosServicio(tipoDoc, numDoc);
 

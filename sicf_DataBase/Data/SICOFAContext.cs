@@ -1137,6 +1137,7 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.EsPrincipal).HasColumnName("es_principal");
 
                 entity.Property(e => e.EsVictima).HasColumnName("es_victima");
+                entity.Property(e => e.EsRepresentante).HasColumnName("es_representante");
 
                 entity.Property(e => e.EstadoEmbarazo)
                     .HasMaxLength(2)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sicf_Models.Dto.Compartido;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,7 +43,13 @@ namespace sicf_Models.Dto.Solicitudes
         public string DescripcionHechos { get; set; }
         public int? EsVictima { get; set; }
         public int? EsCompetenciaComisaria { get; set; }
-        
+
+        // Propiedades añadidas para la información del involucrado principal
+
+        // Colección de involucrados
+        public string? NombreInvolucradoVictima { get; set; }
+        public string? DocumentoInvolucradoVictima { get; set; }
+        public string? TipoDocumentoInvolucradoVictima { get; set; }
     }
 
 
