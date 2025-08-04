@@ -150,7 +150,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			}
 		}
 
-		public long CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud)
+		public async Task<long> CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud)
 		{
 			//// se realiza insercion en bitacora
 			try
@@ -167,7 +167,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 						entrada = requestCrearSolicitud.adjunto,
 						tipoDocumento = "Archivo_Tipo_Entidad",
 					};
-					 _archivoService.Carga(archivo);
+					await _archivoService.Carga(archivo);
 				}
 
 				if (!requestCrearSolicitud.esCompetenciaComisaria || (requestCrearSolicitud.esCompetenciaComisaria && requestCrearSolicitud.esNecesarioRemitir)) {
@@ -206,7 +206,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			}
 		}
 
-		public long ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud)
+		public async Task<long> ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud)
 		{
 			//// se realiza insercion en bitacora
 			try
@@ -214,6 +214,16 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 
 				long idSolicitud = _solicitudesRepository.ActualizarSolicitudCiudadano(requestActualizarSolicitud);
 
+				if (requestActualizarSolicitud.adjunto is { Length: > 0 })
+				{
+					var archivo = new CargaArchivoDTO
+					{
+						idSolicitudServicio = idSolicitud,
+						entrada = requestActualizarSolicitud.adjunto,
+						tipoDocumento = "Archivo_Tipo_Entidad",
+					};
+					await _archivoService.Carga(archivo);
+				}
 
 				if (!requestActualizarSolicitud.esCompetenciaComisaria || (requestActualizarSolicitud.esCompetenciaComisaria && requestActualizarSolicitud.esNecesarioRemitir))
 				{

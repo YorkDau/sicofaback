@@ -176,12 +176,12 @@ namespace sicfServicesApi.Controllers
         [HttpPost]
         [Route("crearSolicitudCiudadano")]
         //[Authorize]   
-        public IActionResult CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud)
+        public async Task<IActionResult> CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud)
         {
             try
             {
                 long idSolicitud = 0;
-                idSolicitud = _solicitudesHandler.CrearSolicitudCiudadano(requestCrearSolicitud);
+                idSolicitud = await _solicitudesHandler.CrearSolicitudCiudadano(requestCrearSolicitud);
 
                 if (idSolicitud != 0)
                     return CustomResult(Message.Ok, idSolicitud, HttpStatusCode.OK);
@@ -201,12 +201,12 @@ namespace sicfServicesApi.Controllers
         [HttpPost]
         [Route("ActualizarSolicitudCiudadano")]
         //[Authorize]   
-        public IActionResult ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud)
+        public async Task<IActionResult> ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud)
         {
             try
             {
                 long idSolicitud = 0;
-                idSolicitud = _solicitudesHandler.ActualizarSolicitudCiudadano(requestActualizarSolicitud);
+                idSolicitud = await _solicitudesHandler.ActualizarSolicitudCiudadano(requestActualizarSolicitud);
 
                 if (idSolicitud != 0)
                     return CustomResult(Message.Ok, idSolicitud, HttpStatusCode.OK);
@@ -432,7 +432,6 @@ namespace sicfServicesApi.Controllers
 
         public IActionResult ObtenerDatosSolicitud([FromRoute] int idSolicitud)
         {
-
             try
             {
                 var response = _solicitudesHandler.ObtenerDatosSolicitud(idSolicitud);

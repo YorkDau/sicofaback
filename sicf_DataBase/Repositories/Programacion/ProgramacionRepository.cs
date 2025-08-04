@@ -129,6 +129,30 @@ namespace sicf_DataBase.Repositories.Programacion
             }
         }
 
+        public Task<List<ProgramacionAgendaDTO>> ObtenerAgendaGeneral()
+        {
+            try
+            {
+                var agenda = (from p in _context.SicofaProgramacion
+                    join s in _context.SicofaSolicitudServicio on p.IdSolicitud equals s.IdSolicitudServicio
+                    where  p.Estado == Constants.programacion.estadoDisponible
+                    select new ProgramacionAgendaDTO
+                    { 
+                        IdProgramacion = p.IdProgramacion,
+                        codigoSolicitud = s.CodigoSolicitud,
+                        FechaHoraInicial = p.FechaHoraInicial,
+                        FechaHoraFinal = p.FechaHoraFinal,
+                        esAgendaTarea = true
+                    }).ToList();
+
+                return Task.FromResult(agenda);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+        }
+
         public Task<List<ProgramacionAgendaDTO>> ObtenerAgenda(long idSolicitudServicio, long idTarea)
         {
             try

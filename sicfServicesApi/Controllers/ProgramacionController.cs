@@ -33,10 +33,26 @@ namespace sicfServicesApi.Controllers
         {
             try
             {
-                Task<ProgramacionDTO> response = _programacionService.ObtenerProgramacion(idTarea);
+                var response = _programacionService.ObtenerProgramacion(idTarea);
                 return CustomResult(Message.Ok, response.Result, HttpStatusCode.OK);
             }
             catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorInterno, ex.Message, HttpStatusCode.NotImplemented);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("ObtenerAgendaGeneral")]
+        public async Task<IActionResult> ObtenerAgendaGeneral()
+        {
+            try
+            {
+                var agenda = await _programacionService.ObtenerAgendaGeneral();
+                return CustomResult(Message.Ok, agenda, HttpStatusCode.OK);
+            }
+            catch(Exception ex)
             {
                 return CustomResult(Message.ErrorInterno, ex.Message, HttpStatusCode.NotImplemented);
             }

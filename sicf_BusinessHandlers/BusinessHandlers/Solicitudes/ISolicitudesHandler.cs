@@ -89,14 +89,14 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         /// </summary>
         /// <param name="requestCrearSolicitud"></param>
         /// <returns></returns>
-        public long CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud);
+        public Task<long> CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="requestActualizarSolicitud"></param>
         /// <returns></returns>
-        public long ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud);
+        public Task<long> ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud);
 
         /// <summary>
         /// 
