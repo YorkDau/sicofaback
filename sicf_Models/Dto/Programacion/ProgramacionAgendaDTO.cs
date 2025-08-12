@@ -12,6 +12,7 @@ namespace sicf_Models.Dto.Programacion
     {
         public long IdProgramacion { get; set; }
         public string codigoSolicitud { get; set; }
+        public string Audiencia { get; set; } = string.Empty;
 
         [JsonConverter(typeof(CustomDateTimeConverter))]
         public DateTime FechaHoraInicial { get; set; }

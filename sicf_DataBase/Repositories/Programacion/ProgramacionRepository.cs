@@ -135,6 +135,7 @@ namespace sicf_DataBase.Repositories.Programacion
             {
                 var agenda = (from p in _context.SicofaProgramacion
                     join s in _context.SicofaSolicitudServicio on p.IdSolicitud equals s.IdSolicitudServicio
+                    join a in _context.SicofaTipoAudiencia on p.IdTipoAudiencia equals a.IdTipoAudiencia 
                     where  p.Estado == Constants.programacion.estadoDisponible
                     select new ProgramacionAgendaDTO
                     { 
@@ -142,6 +143,7 @@ namespace sicf_DataBase.Repositories.Programacion
                         codigoSolicitud = s.CodigoSolicitud,
                         FechaHoraInicial = p.FechaHoraInicial,
                         FechaHoraFinal = p.FechaHoraFinal,
+                        Audiencia = a.Descripcion,
                         esAgendaTarea = true
                     }).ToList();
 
