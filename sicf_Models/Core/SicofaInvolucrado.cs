@@ -23,6 +23,7 @@
         public string? SegundoApellido { get; set; }
         public DateTime? FechaNacimiento { get; set; }
         public int? Edad { get; set; }
+        public int? EdadEn { get; set; }
         public string? Genero { get; set; }
         public string? Telefono { get; set; }
         public string? CorreoElectronico { get; set; }
@@ -30,6 +31,7 @@
         public string? DireccionRecidencia { get; set; }
         public bool EsVictima { get; set; }
         public bool?EsRepresentante { get; set; }
+
         public bool? EsPrincipal { get; set; }
         public int? IdTipoDiscpacidad { get; set; }
         public string? EstadoEmbarazo { get; set; }

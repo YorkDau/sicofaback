@@ -1128,6 +1128,8 @@ namespace sicf_DataBase.Data
                     .HasColumnName("direccion_recidencia");
 
                 entity.Property(e => e.Edad).HasColumnName("edad");
+                entity.Property(e => e.EdadEn).HasColumnName("edadEn");
+
 
                 entity.Property(e => e.Eps)
                     .HasMaxLength(50)

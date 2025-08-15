@@ -242,28 +242,29 @@ namespace sicf_DataBase.Repositories.Seguimientos
         {
             try
             {
-                List<RemisionesAsociada> salida = await (from docu in context.SicofaDocumentoServicioSolicitud
+                List<RemisionesAsociada> salida = await (from solianexo in context.SicofaSolicitudServicioAnexo
+                                                         join docu in context.SicofaDocumentoServicioSolicitud on solianexo.IdSolicitudAnexo equals docu.IdAnexo
                                                          join documen in context.SicofaDocumento on docu.IdDocumento equals documen.IdDocumento
-                                                         join solianexo in context.SicofaSolicitudServicioAnexo on docu.IdAnexo equals solianexo.IdSolicitudAnexo
                                                          join invo in context.SicofaInvolucrado on docu.IdInvolucrado equals invo.IdInvolucrado
                                                          join usu in context.SicofaUsuarioSistema on solianexo.IdUsuario equals usu.IdUsuarioSistema
                                                          join act in context.SicofaActividad on documen.Codigo equals act.Documento
                                                          join flujov2 in context.SicofaFlujoV2 on act.IdActividad equals flujov2.IdActividadMain
                                                          join tarea in context.SicofaTarea on flujov2.IdFlujo equals tarea.IdFlujo
-                                                         where 
-                                                         tarea.IdTarea == idTarea && 
-                                                         documen.Estado == Constants.ReportesRemision.estadoActivo &&
-                                                         solianexo.IdSolicitudServicio == IdSolicitudServicio
+                                                         where
+                                                         solianexo.IdSolicitudServicio == IdSolicitudServicio &&
+                                                         tarea.IdTarea == idTarea &&
+                                                         documen.Estado == Constants.ReportesRemision.estadoActivo
                                                          select
-                                                   new RemisionesAsociada
-                                                   {
-                                                       nombreInvolucrado = $"{invo.PrimerNombre}  {invo.SegundoNombre} {invo.PrimerApellido} {invo.SegundoApellido}",
-                                                       nombreRemision = documen.NombreDocumento,
-                                                       idAnexo = solianexo.IdSolicitudAnexo,
-                                                       nombreUsuario = usu.Nombres,
-                                                       fecha = String.Format(Constants.FormatoFechaCorta2, solianexo.FechaCreacion),
-                                                       estado =  ""
-                                                   }).ToListAsync();
+                                                         new RemisionesAsociada
+                                                         {
+                                                             nombreInvolucrado = $"{invo.PrimerNombre}  {invo.SegundoNombre} {invo.PrimerApellido} {invo.SegundoApellido}",
+                                                             nombreRemision = documen.NombreDocumento,
+                                                             idAnexo = solianexo.IdSolicitudAnexo,
+                                                             nombreUsuario = usu.Nombres,
+                                                             fecha = String.Format(Constants.FormatoFechaCorta2, solianexo.FechaCreacion),
+                                                             estado = ""
+                                                         }).ToListAsync();
+
                 return salida;
             }
             catch (Exception ex)

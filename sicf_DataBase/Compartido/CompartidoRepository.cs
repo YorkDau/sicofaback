@@ -486,6 +486,8 @@ namespace sicf_DataBase.Compartido
                 invo.Telefono = involucrado.Telefono;
                 invo.CorreoElectronico = involucrado.CorreoElectronico;
                 invo.EsRepresentante = involucrado.EsRepresentante ?? false;
+                invo.EdadEn = involucrado.EdadEn;
+
 
                 if (involucrado.EsVictima == true)
                 {
@@ -673,6 +675,7 @@ namespace sicf_DataBase.Compartido
                     invo.Apellidos = invo.Apellidos;
                 }
                 invo.Edad = involucrado.Edad == 0 ? invo.Edad : involucrado.Edad;
+                invo.EdadEn = involucrado.EdadEn == 0 ? invo.EdadEn : involucrado.EdadEn;
                 invo.Telefono = involucrado.Telefono == "" ? invo.Telefono : involucrado.Telefono;
                 invo.CorreoElectronico = involucrado.CorreoElectronico == "" ? invo.CorreoElectronico : involucrado.CorreoElectronico;
                 invo.EsVictima = involucrado.EsVictima is null ? invo.EsVictima : involucrado.EsVictima.Value;

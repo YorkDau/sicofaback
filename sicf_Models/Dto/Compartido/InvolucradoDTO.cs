@@ -11,6 +11,7 @@
         public string? PrimerApellido { get; set; }
         public string? SegundoApellido { get; set; }
         public int? Edad { get; set; }
+        public int? EdadEn { get; set; }
         public string? Telefono { get; set; }
         public string? CorreoElectronico { get; set; }
         public bool? EsVictima { get; set; }

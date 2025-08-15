@@ -270,7 +270,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
                 var remision = await abogadoRepository.ObtenerRemision(data.tipoDocumento);
                 var reponse = await Carga(data);
 
-                if (!await notificacionRepository.NotificacionPrevia(data.idInvolucrado, data.tipoDocumento))
+                //if (!await notificacionRepository.NotificacionPrevia(data.idInvolucrado, data.tipoDocumento))
                 {
 
                     await abogadoRepository.RegistrarSolicitudRemision(data.idInvolucrado, remision, data.idSolicitudServicio, reponse);
