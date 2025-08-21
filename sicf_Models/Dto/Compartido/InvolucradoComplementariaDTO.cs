@@ -19,6 +19,7 @@
         public bool? VacunacionCompleta { get; set; }
         
         public string? Adjunto { get; set; }
+        public string? Consetimiento { get; set; }
 
         public bool? Escolarizado { get; set; }
         public string? MatriculadoEnElColegio { get; set; }

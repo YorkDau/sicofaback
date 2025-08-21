@@ -212,6 +212,17 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Compartido
                     await _archivoService.Carga(archivoDto);    
                 }
 
+                if (involucrado.InfoAdicional?.Consetimiento is not null)
+                {
+                    var archivoDto = new CargaArchivoDTO()
+                    {
+                        entrada = involucrado.InfoAdicional.Adjunto,
+                        idSolicitudServicio = involucrado.IdSolicitudServicio,
+                        tipoDocumento = "Anexo_Consentimiento_Informado",
+                    };
+                    await _archivoService.Carga(archivoDto);    
+                }
+
                 //guardar el documento
                 response = await this._compartidoRepository.GuardarInvolucrado(involucrado);
             }
