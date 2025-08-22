@@ -146,7 +146,7 @@ namespace sicfServicesApi.Controllers
         public async Task<IActionResult> RemisionesAsociadasPorTarea(long idTarea,long idSolitiudServicio)
         {
             try
-            {
+           {
                 var response = await seguimientosService.RemisionesSeguimientosPorTarea(idTarea, idSolitiudServicio);
                 return CustomResult(Message.Ok, response, HttpStatusCode.OK);
             }
