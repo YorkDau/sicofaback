@@ -21,6 +21,7 @@ using sicf_Models.Core;
 using Microsoft.EntityFrameworkCore;
 using sicf_Models.Constants;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace sicf_DataBase.Repositories.SolicitudesRepository
 {
@@ -1253,6 +1254,14 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 int idInsercion = 0;
                 using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
                 {
+                    var solicitud = (from s in _context.SicofaSolicitudServicio
+                                     where s.IdSolicitudServicio ==  data.id_solicitud_servicio
+                                     select new SolicitudServicioDTO
+                                     {
+                                         id_solicitud_servicio = s.IdSolicitudServicio,
+                                         codigo_solicitud = s.CodigoSolicitud
+                                     }).FirstOrDefault();
+
                     string query = "PR_SICOFA_CREAR_REMISION_SOLICITUD_SERVICIO";
                     using (_command = new SqlCommand(query))
                     {
