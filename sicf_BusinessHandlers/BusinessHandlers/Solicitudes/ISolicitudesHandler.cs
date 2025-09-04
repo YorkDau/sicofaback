@@ -29,6 +29,13 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="requestConsultarCiudadano"></param>
+        /// <returns></returns>
+        public ResponseListaPaginada GetInvolucrados(RequestCiudadano requestConsultarCiudadano);
+        
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="requestSolicitudDto"></param>
         /// <returns></returns>
         public ResponseListaPaginada ValidarSolicitudes(RequestSolicitudDto requestSolicitudDto);

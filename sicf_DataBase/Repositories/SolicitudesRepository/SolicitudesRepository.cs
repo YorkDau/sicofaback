@@ -213,6 +213,79 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 throw new ControledException(ex.HResult);
             }
         }
+        
+        public ResponseListaPaginada ObtenerInvolucrados(RequestCiudadano requestCiudadano)
+        {
+            var involucrados = new List<ResponseInvolucradoDto>();
+            try
+            {
+                string? mensaje = "";
+                using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+                {
+                    string query = "PR_SICOFA_OBTENER_INVOLUCRADOS";
+                    using (_command = new SqlCommand(query))
+                    {
+
+                        _command.CommandType = CommandType.StoredProcedure;
+                        _command.Parameters.AddWithValue("@nombres", BdValidation.ToDBNull((!string.IsNullOrEmpty(requestCiudadano.nombre_ciudadano)) ? requestCiudadano.nombre_ciudadano.Trim() : requestCiudadano.nombre_ciudadano));
+                        _command.Parameters.AddWithValue("@apellidos", BdValidation.ToDBNull((!string.IsNullOrEmpty(requestCiudadano.apellido_ciudadano)) ? requestCiudadano.apellido_ciudadano.Trim() : requestCiudadano.apellido_ciudadano));
+                        _command.Parameters.AddWithValue("@numero_documento", BdValidation.ToDBNull(requestCiudadano.numero_documento));
+
+                        _command.Connection = _connectionDb;
+                        _connectionDb.Open();
+
+
+                        using SqlDataReader reader = _command.ExecuteReader();
+                        if (reader.HasRows)
+                            while (reader.Read())
+                            {
+                                if (reader.FieldCount > 1)
+                                {
+
+                                    var involucrado = new ResponseInvolucradoDto();
+
+                                    involucrado.idInvolucrado = ConvertFDBVal.ConvertFromDBVal<long>(reader["ID Involucrado"]);
+                                    involucrado.nombres = ConvertFDBVal.ConvertFromDBVal<string>(reader["Nombres"]);
+                                    involucrado.apellidos = ConvertFDBVal.ConvertFromDBVal<string>(reader["Apellidos"]);
+                                    involucrado.tipo_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["Tipo Documento"]);
+                                    involucrado.numero_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["Numero Documento"]);
+                                    involucrado.numero_solicitudes = ConvertFDBVal.ConvertFromDBVal<int>(reader["Numero Solicitudes"]);
+                                    involucrado.fecha_ult_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["Ultima Solicitud"]);
+                                    
+                                    involucrados.Add(involucrado);
+                                }
+                                else
+                                {
+                                    mensaje = ConvertFDBVal.ConvertFromDBVal<string>(reader["Mensaje"]);
+                                }
+                            }
+
+                        _connectionDb.Close();
+                    }
+                }
+
+                ResponseListaPaginada responseListaPaginada = new ResponseListaPaginada();
+
+                if (mensaje != "")
+                    responseListaPaginada.DatosPaginados = mensaje;
+                else
+                {
+                    if (involucrados.Count == 0) return responseListaPaginada;
+                    responseListaPaginada.DatosPaginados = involucrados;
+                    responseListaPaginada.TotalRegistros = involucrados.Count;
+                }
+
+                return responseListaPaginada;
+            }
+            catch (ControledException ex)
+            {
+                throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+        } 
 
         public ResponseListaPaginada RegistrarCiudadano(RequestRegistrarCiudadano requestRegistrarCiudadano)
         {
@@ -839,6 +912,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 }
             }
         }
+        
 
         /// <summary>
         ///  el metodo regresa los procesos activos que tiene el ciudadano.

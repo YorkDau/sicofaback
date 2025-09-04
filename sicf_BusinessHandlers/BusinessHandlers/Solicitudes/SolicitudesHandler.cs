@@ -70,6 +70,22 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			}
 		}
 
+		public ResponseListaPaginada GetInvolucrados(RequestCiudadano requestCiudadano)
+		{
+			try
+			{
+				return _solicitudesRepository.ObtenerInvolucrados(requestCiudadano);
+			}
+			catch (ControledException ex)
+			{
+				throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
+			}
+			catch (Exception ex)
+			{
+				throw new ControledException(ex.HResult);
+			}
+		}
+
 
 		public ResponseListaPaginada RegistrarCiudadano(RequestRegistrarCiudadano requestRegistrarCiudadano)
 		{

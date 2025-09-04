@@ -95,6 +95,34 @@ namespace sicfServicesApi.Controllers
             }
         }
 
+
+        [HttpPost]
+        [Route("consultarInvolucrados")]
+        public IActionResult GetInvolucrados(RequestCiudadano requestCiudadano)
+        {
+            try
+            {
+                var response = new ResponseListaPaginada();
+                response = _solicitudesHandler.ValidarCiudadano(requestCiudadano);
+
+                if (response.TotalRegistros > 0)
+                    return CustomResult(Message.ErrorRequest, response, HttpStatusCode.BadRequest);
+
+                response = _solicitudesHandler.GetInvolucrados(requestCiudadano);
+
+                return CustomResult(Message.Ok, response, HttpStatusCode.OK);
+
+            }
+            catch (ControledException ex)
+            {
+                return CustomResult(Message.ErrorInterno, Message.ErrorGenerico, HttpStatusCode.InternalServerError);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorInterno, Message.ErrorGenerico, HttpStatusCode.InternalServerError);
+            }
+        }
+        
         [HttpGet]
         [Route("consultarNumeroDocumentoCiudadano")]
         //[Authorize]   

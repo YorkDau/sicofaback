@@ -24,6 +24,13 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
         /// <param name="requestConsultarCiudadano"></param>
         /// <returns></returns>
         public ResponseListaPaginada ObtenerCiudadanos(RequestCiudadano requestCiudadano);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requestConsultarCiudadano"></param>
+        /// <returns></returns>
+        public ResponseListaPaginada ObtenerInvolucrados(RequestCiudadano requestCiudadano);
 
         /// <summary>
         /// 
