@@ -80,6 +80,10 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
         public long? paisExp { get; set; }
         public long? departamentoExp { get; set; }
         public long? municipioExp { get; set; }
+        
+        public long? paisNacimiento { get; set; }
+        public long? departamentoNacimiento { get; set; }
+        public long? municipioNacimiento { get; set; }
 
         public List<informacionHijo> hijos { get; set; } = new List<informacionHijo>();
 

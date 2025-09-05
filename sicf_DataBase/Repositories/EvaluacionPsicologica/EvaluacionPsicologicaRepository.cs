@@ -139,6 +139,11 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.paisExp = involucrado.IdPaisExpedicion;
                     salida.departamentoExp = involucrado.IdDepartamentoExpedicion;
                     salida.municipioExp = involucrado.IdMunicipioExpedicion;
+                    
+                    //salida.lugarNacimiento = involucrado.IdLugarNacimiento;
+                    salida.paisNacimiento= involucrado.IdPaisNacimiento;
+                    salida.departamentoNacimiento= involucrado.IdDepartamentoNacimiento;
+                    salida.municipioNacimiento = involucrado.IdMunicipioNacimiento;
 
                     salida.relacionAgresor = involucrado.IdTipoRelacion;
                     salida.relacionPareja = complementario != null ? complementario.RelacionPareja : null;
@@ -267,9 +272,13 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 involucrado.IdPaisExpedicion = data.paisExp;
                 involucrado.IdDepartamentoExpedicion = data.departamentoExp;
                 involucrado.IdMunicipioExpedicion = data.municipioExp;
+                
+                //involucrado.IdLugarNacimiento = data.lugarNacimiento;
+                involucrado.IdPaisNacimiento = data.paisNacimiento;
+                involucrado.IdDepartamentoNacimiento = data.departamentoNacimiento;
+                involucrado.IdMunicipioNacimiento = data.municipioNacimiento;
 
                 var actualizacion = context.SicofaComplementoInvolucrado.Where(s => s.IdInvolucrado == data.IdInvolucrado).FirstOrDefault();
-
 
                 // evitar duplicidad en registros de complementos
                 if (actualizacion == null)

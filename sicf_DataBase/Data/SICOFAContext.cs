@@ -1265,6 +1265,17 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.IdMunicipioExpedicion)
                     .IsRequired(false)
                     .HasColumnName("id_ciud_mun_expedicion");
+                
+                //entity.Property(e => e.IdLugarNacimiento).HasColumnName("id_lugar_nacimeinto");
+                entity.Property(e => e.IdPaisNacimiento)
+                    .IsRequired(false)
+                    .HasColumnName("id_pais_nacimiento");
+                entity.Property(e => e.IdDepartamentoNacimiento)
+                    .IsRequired(false)
+                    .HasColumnName("id_departamento_nacimiento");
+                entity.Property(e => e.IdMunicipioNacimiento)
+                    .IsRequired(false)
+                    .HasColumnName("id_ciud_mun_nacimiento");
             });
 
             modelBuilder.Entity<SicofaInvolucradoComplementaria>(entity =>

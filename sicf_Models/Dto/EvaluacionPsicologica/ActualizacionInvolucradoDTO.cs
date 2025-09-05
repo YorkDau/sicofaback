@@ -43,6 +43,10 @@
         public int? paisExp { get; set; }
         public long? departamentoExp { get; set; }
         public long? municipioExp { get; set; }
+        
+        public int? paisNacimiento{ get; set; }
+        public long? departamentoNacimiento { get; set; }
+        public long? municipioNacimiento{ get; set; }
 
         public int? idSexo { get; set; }
         public int? idRegimen { get; set; }

@@ -62,6 +62,11 @@
         public int? IdPaisExpedicion { get; set; }
         public long? IdDepartamentoExpedicion { get; set; }
         public long? IdMunicipioExpedicion { get; set; }
+        
+        public int? IdPaisNacimiento { get; set; }
+        public long? IdDepartamentoNacimiento { get; set; }
+        public long? IdMunicipioNacimiento { get; set; }
+        
         public DateTime ? FechaExpedicion { get; set; }
         public string? DatosAdicionales { get; set; }
 
