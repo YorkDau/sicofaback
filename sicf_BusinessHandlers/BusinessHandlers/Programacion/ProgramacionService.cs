@@ -33,9 +33,9 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Programacion
             return programacion;
         }
 
-        public async Task<List<ProgramacionAgendaDTO>> ObtenerAgendaGeneral()
+        public async Task<List<ProgramacionAgendaDTO>> ObtenerAgendaGeneral(long idComisaria)
         {
-            var result = await _programacionRepository.ObtenerAgendaGeneral();
+            var result = await _programacionRepository.ObtenerAgendaGeneral(idComisaria);
             return result;
         }
 

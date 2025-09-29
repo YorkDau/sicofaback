@@ -12,7 +12,7 @@ namespace sicf_DataBase.Repositories.Programacion
     {
         public Task<ProgramacionDTO> ObtenerProgramacion(long idTarea);
 
-        public Task<List<ProgramacionAgendaDTO>> ObtenerAgendaGeneral();
+        public Task<List<ProgramacionAgendaDTO>> ObtenerAgendaGeneral(long idComisaria);
         public Task<bool> ActualizarProgramacion(ProgramacionGuardarDTO programacion);
         public List<ProgramacionTipoAudienciaDTO> ObtenerTiposAudiencia(string etiqueta);
         public Task<ProgramacionQuorumDTO> ObtenerQuorum(long idTarea);

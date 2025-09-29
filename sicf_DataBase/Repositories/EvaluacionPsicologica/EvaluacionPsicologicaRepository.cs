@@ -1,21 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
 using sicf_DataBase.Data;
 using sicf_Models.Core;
 using sicf_Models.Dto;
 using sicf_Models.Dto.EvaluacionPsicologica;
-using sicf_Models.Dto.Solicitudes;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using static sicf_Models.Constants.Constants;
 
 namespace sicf_DataBase.Repositories.EvaluacionPsicologica
@@ -236,11 +223,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
 
 
         public SicofaInvolucrado ConsultarInvolucrado(long id) {
-
-            
-
             return context.SicofaInvolucrado.Where(s => s.IdInvolucrado == id).First();
-
         }
         public void ActualizarInvolucrado(ActualizacionInvolucradoDTO data) {
 

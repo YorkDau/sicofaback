@@ -137,7 +137,6 @@ namespace sicfServicesApi.Controllers
         {
             try
             {
-
                 return CustomResult(Message.Ok, await service.EvaluacionRiesgosPorSolicitud(idSolicitudServicio), HttpStatusCode.OK);
             }
             catch (Exception ex)

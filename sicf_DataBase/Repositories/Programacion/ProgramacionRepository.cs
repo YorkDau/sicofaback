@@ -129,14 +129,15 @@ namespace sicf_DataBase.Repositories.Programacion
             }
         }
 
-        public Task<List<ProgramacionAgendaDTO>> ObtenerAgendaGeneral()
+        public Task<List<ProgramacionAgendaDTO>> ObtenerAgendaGeneral(long idComisaria)
         {
             try
             {
                 var agenda = (from p in _context.SicofaProgramacion
                     join s in _context.SicofaSolicitudServicio on p.IdSolicitud equals s.IdSolicitudServicio
                     join a in _context.SicofaTipoAudiencia on p.IdTipoAudiencia equals a.IdTipoAudiencia 
-                    where  p.Estado == Constants.programacion.estadoDisponible
+                    where  p.Estado == Constants.programacion.estadoDisponible && s.IdComisaria == idComisaria
+                    where s.IdComisaria == idComisaria
                     select new ProgramacionAgendaDTO
                     { 
                         IdProgramacion = p.IdProgramacion,

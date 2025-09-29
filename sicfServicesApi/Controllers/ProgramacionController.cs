@@ -44,13 +44,13 @@ namespace sicfServicesApi.Controllers
 
 
         [HttpGet]
-        [Route("ObtenerAgendaGeneral")]
-        public async Task<IActionResult> ObtenerAgendaGeneral()
+        [Route("ObtenerAgendaGeneral/{idComisaria:long}")]
+        public async Task<IActionResult> ObtenerAgendaGeneral(long idComisaria)
         {
             try
             {
-                var agenda = await _programacionService.ObtenerAgendaGeneral();
-                return CustomResult(Message.Ok, agenda, HttpStatusCode.OK);
+                var agenda = await _programacionService.ObtenerAgendaGeneral(idComisaria);
+                return CustomResult(Message.Ok, agenda);
             }
             catch(Exception ex)
             {
