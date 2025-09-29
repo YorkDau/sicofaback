@@ -708,7 +708,6 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Connection = _connectionDb;
                         _connectionDb.Open();
 
-
                         using SqlDataReader reader = _command.ExecuteReader();
                         if (reader.HasRows)
                             while (reader.Read())
@@ -719,7 +718,9 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 responseEditar.idTipoDocumento = ConvertFDBVal.ConvertFromDBVal<int>(reader["idTipoDocumento"]);
                                 responseEditar.numeroDocumento = ConvertFDBVal.ConvertFromDBVal<string>(reader["numeroDocumento"]);
                                 responseEditar.fechaExpedicion = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fechaExpedicion"]).ToShortDateString();
-                                //responseEditar.idlugarExpedicion = ConvertFDBVal.ConvertFromDBVal<long>(reader["idlugarExpedicion"]);
+                                responseEditar.idPaisExpedicion = ConvertFDBVal.ConvertFromDBVal<int>(reader["idPaisExpedicion"]);
+                                responseEditar.idDepartamentoExpedicion = ConvertFDBVal.ConvertFromDBVal<long>(reader["idDepartamentoExpedicion"]);
+                                responseEditar.idMunicipioExpedicion = ConvertFDBVal.ConvertFromDBVal<long>(reader["idMunicipioExpedicion"]);
                                 responseEditar.fechaNacimiento = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fechaNacimiento"]).ToShortDateString();
                                 responseEditar.edad = ConvertFDBVal.ConvertFromDBVal<int>(reader["edad"]);
                                 responseEditar.idPaisNacimiento = ConvertFDBVal.ConvertFromDBVal<int>(reader["idPaisNacimiento"]);
@@ -729,37 +730,38 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 responseEditar.idIdentidadGenero = ConvertFDBVal.ConvertFromDBVal<int>(reader["idIdentidadGenero"]);
                                 responseEditar.idOrientacionSexual = ConvertFDBVal.ConvertFromDBVal<int>(reader["idOrientacionSexual"]);
                                 responseEditar.idNivelAcademico = ConvertFDBVal.ConvertFromDBVal<int>(reader["idNivelAcademico"]);
-                                responseEditar.idNivelAcademico = ConvertFDBVal.ConvertFromDBVal<int>(reader["idEstadoAcademico"]); //agregado
+                                responseEditar.idEstadoAcademico = ConvertFDBVal.ConvertFromDBVal<int>(reader["idEstadoAcademico"]);
                                 responseEditar.direccionResidencia = ConvertFDBVal.ConvertFromDBVal<string>(reader["direccionResidencia"]);
+                                responseEditar.idLocalidad = ConvertFDBVal.ConvertFromDBVal<int>(reader["idLocalidad"]);
+                                responseEditar.idEstrato = ConvertFDBVal.ConvertFromDBVal<int>(reader["idEstrato"]);
+                                responseEditar.idLocalidadComuna = ConvertFDBVal.ConvertFromDBVal<int>(reader["idLocalidadComuna"]);
                                 responseEditar.barrio = ConvertFDBVal.ConvertFromDBVal<string>(reader["barrio"]);
                                 responseEditar.telefono = ConvertFDBVal.ConvertFromDBVal<string>(reader["telefono"]);
                                 responseEditar.celular = ConvertFDBVal.ConvertFromDBVal<string>(reader["celular"]);
                                 responseEditar.correoElectronico = ConvertFDBVal.ConvertFromDBVal<string>(reader["correoElectronico"]);
                                 responseEditar.idDiscapasidad = ConvertFDBVal.ConvertFromDBVal<int>(reader["idDiscapasidad"]);
 
-
                                 responseEditar.estadoEmbarazo.estadoEmbarazo = ConvertFDBVal.ConvertFromDBVal<string>(reader["estadoEmbarazo"]);
                                 responseEditar.estadoEmbarazo.mesesEmbarazo = ConvertFDBVal.ConvertFromDBVal<int>(reader["mesesEmbarazo"]);
                                 responseEditar.afiliadoSeguridadSocial.estaAfiliado = ConvertFDBVal.ConvertFromDBVal<string>(reader["estaAfiliado"]);
                                 responseEditar.afiliadoSeguridadSocial.eps = ConvertFDBVal.ConvertFromDBVal<string>(reader["eps"]);
                                 responseEditar.afiliadoSeguridadSocial.ips = ConvertFDBVal.ConvertFromDBVal<string>(reader["ips"]);
-                                responseEditar.adultoMayor = ConvertFDBVal.ConvertFromDBVal<bool>(reader["poblacionLgtbi"]);
-                                responseEditar.mujerEmbarazada = ConvertFDBVal.ConvertFromDBVal<bool>(reader["adultoMayor"]);
-                                responseEditar.poblacionLgtbi = ConvertFDBVal.ConvertFromDBVal<bool>(reader["mujerEmbarazada"]);
+
+                                responseEditar.poblacionLgtbi = ConvertFDBVal.ConvertFromDBVal<bool>(reader["poblacionLgtbi"]);
+                                responseEditar.adultoMayor = ConvertFDBVal.ConvertFromDBVal<bool>(reader["adultoMayor"]);
+                                responseEditar.mujerEmbarazada = ConvertFDBVal.ConvertFromDBVal<bool>(reader["mujerEmbarazada"]);
                                 responseEditar.ninoNinaAdolocente = ConvertFDBVal.ConvertFromDBVal<bool>(reader["ninoNinaAdolocente"]);
                                 responseEditar.migrante = ConvertFDBVal.ConvertFromDBVal<bool>(reader["migrante"]);
                                 responseEditar.victimaConflictoArmado = ConvertFDBVal.ConvertFromDBVal<bool>(reader["victimaConflictoArmado"]);
                                 responseEditar.personasLideresDefensorasDH = ConvertFDBVal.ConvertFromDBVal<bool>(reader["personasLideresDefensorasDH"]);
                                 responseEditar.personasHabitalidadCalle = ConvertFDBVal.ConvertFromDBVal<bool>(reader["personasHabitalidadCalle"]);
                                 responseEditar.puebloIndigena = ConvertFDBVal.ConvertFromDBVal<string>(reader["puebloIndigena"]);
-
+                                responseEditar.requiereModificacion = ConvertFDBVal.ConvertFromDBVal<bool>(reader["requiereModificacion"]);
                             }
 
                         _connectionDb.Close();
-
                     }
                 }
-
                 return responseEditar;
             }
             catch (ControledException ex)
