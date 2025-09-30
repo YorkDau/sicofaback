@@ -166,63 +166,68 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			}
 		}
 
-		public async Task<long> CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud)
-		{
-			//// se realiza insercion en bitacora
-			try
-			{
-				string codSolicitud = _solicitudesRepository.ObtenerNumeroSolicitud(requestCrearSolicitud.idComisaria);
-				
-				long idSolicitud = _solicitudesRepository.CrearSolicitudCiudadano(requestCrearSolicitud, codSolicitud);
+        public async Task<long> CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud)
+        {
+            try
+            {
+                // se realiza inserción en bitácora
+                string codSolicitud = _solicitudesRepository.ObtenerNumeroSolicitud(requestCrearSolicitud.idComisaria);
+                long idSolicitud = _solicitudesRepository.CrearSolicitudCiudadano(requestCrearSolicitud, codSolicitud);
 
-				if (requestCrearSolicitud.adjunto is { Length: > 0 })
-				{
-					var archivo = new CargaArchivoDTO
-					{
-						idSolicitudServicio = idSolicitud,
-						entrada = requestCrearSolicitud.adjunto,
-						tipoDocumento = "Archivo_Tipo_Entidad",
-					};
-					await _archivoService.Carga(archivo);
-				}
+                // guardar adjuntos (se ignoran si son null o vacíos)
+                await GuardarArchivoAsync(requestCrearSolicitud.adjunto, idSolicitud, "Archivo_Tipo_Entidad");
+                await GuardarArchivoAsync(requestCrearSolicitud.archivoTraslado, idSolicitud, "Traslado_Caso_VIF");
 
-				if (!requestCrearSolicitud.esCompetenciaComisaria || (requestCrearSolicitud.esCompetenciaComisaria && requestCrearSolicitud.esNecesarioRemitir)) {
+                // validar si requiere remisión
+                if (!requestCrearSolicitud.esCompetenciaComisaria ||
+                    (requestCrearSolicitud.esCompetenciaComisaria && requestCrearSolicitud.esNecesarioRemitir))
+                {
+                    var data = new RequestRemisionSolicitud
+                    {
+                        id_solicitud_servicio = idSolicitud,
+                        justificacion = requestCrearSolicitud.justificacionRemision,
+                        id_comisaria_origen = requestCrearSolicitud.idComisaria,
+                        id_comisaria_destino = requestCrearSolicitud.idComisariaRemision,
+                        id_entidad_externa = requestCrearSolicitud.idEntidadExterna,
+                        idUsuarioSistema = requestCrearSolicitud.idUsuarioSistema,
+                        tipo_remision = requestCrearSolicitud.idComisariaRemision != 0 // true = comisaría, false = entidad externa
+                    };
 
-					RequestRemisionSolicitud data = new RequestRemisionSolicitud();
-					data.id_solicitud_servicio = idSolicitud;
-					data.justificacion = requestCrearSolicitud.justificacionRemision;
-					data.id_comisaria_origen = requestCrearSolicitud.idComisaria;
-					data.id_comisaria_destino = requestCrearSolicitud.idComisariaRemision;
-					data.id_entidad_externa = requestCrearSolicitud.idEntidadExterna;
-					data.idUsuarioSistema = requestCrearSolicitud.idUsuarioSistema;
+                    _solicitudesRepository.RegistroRemisionSolicitud(data);
+                }
 
-					if (requestCrearSolicitud.idComisariaRemision != 0)
-						data.tipo_remision = true;
+                _solicitudesRepository.RegistroInvolucradoPrincipalAproceso(requestCrearSolicitud.idCiudadano, idSolicitud);
 
-					if (requestCrearSolicitud.idEntidadExterna != 0)
-						data.tipo_remision = false;
+                return idSolicitud;
+            }
+            catch (ControledException ex)
+            {
+                throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+        }
 
-					_solicitudesRepository.RegistroRemisionSolicitud(data);
+        /// <summary>
+        /// Guarda un archivo asociado a la solicitud si existe contenido en base64.
+        /// </summary>
+        private async Task GuardarArchivoAsync(string? archivoBase64, long idSolicitud, string tipoDocumento)
+        {
+            if (archivoBase64 is { Length: > 0 })
+            {
+                var archivo = new CargaArchivoDTO
+                {
+                    idSolicitudServicio = idSolicitud,
+                    entrada = archivoBase64,
+                    tipoDocumento = tipoDocumento,
+                };
 
-				}
-
-				_solicitudesRepository.RegistroInvolucradoPrincipalAproceso(requestCrearSolicitud.idCiudadano, idSolicitud);
-
-				return idSolicitud;
-
-				//_solicitudesRepository.RegistroInvolucrado(); integracion con miguel
-			}
-			catch (ControledException ex)
-			{
-				throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
-			}
-			catch (Exception ex)
-			{
-				throw new ControledException(ex.HResult);
-			}
-		}
-
-		public async Task<long> ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud)
+                await _archivoService.Carga(archivo);
+            }
+        }
+        public async Task<long> ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud)
 		{
 			//// se realiza insercion en bitacora
 			try

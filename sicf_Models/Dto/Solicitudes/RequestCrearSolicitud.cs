@@ -11,6 +11,7 @@
         public bool esVictima { get; set; }
 
         public string? adjunto { get; set; } = string.Empty;
+        public string? archivoTraslado { get; set; } = string.Empty;
         public string? id_tipo_entidad { get; set; }
         public bool conviveConAgresor { get; set; }
         public int relacionParentescoAgresor{ get; set; }
