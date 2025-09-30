@@ -65,6 +65,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
 
         public ResponseListaPaginada ObtenerCiudadano(int id);
 
+        public ResponseListaPaginada ObtenerInvolucrado(int id);
+
         /// <summary>
         /// 
         /// </summary>
@@ -105,6 +107,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
         /// <param name="id"></param>
         /// <returns></returns>
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int id, int idComisaria);
+        public ResponseListaPaginada ObtenerSolicitudServiciosInvolucrado(int id, int idComisaria);
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int idComisaria);
 
         List<ConsultaGeneralSolicitudDTO> ConsultaSolicitudGeneral(ConsultaGeneralSolicitudDTO solicitud);

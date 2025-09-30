@@ -79,6 +79,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 
         public ResponseListaPaginada ObtenerCiudadano(int id);
 
+        public ResponseListaPaginada ObtenerInvolucrado(int id);
         /// <summary>
         /// 
         /// </summary>
@@ -118,6 +119,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         /// <returns></returns>
         /// 
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int id, int idComisaria);
+        public ResponseListaPaginada ObtenerSolicitudServiciosInvolucrado(int id, int idComisaria);
+        
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int idComisaria);
         /// <summary>
         /// 

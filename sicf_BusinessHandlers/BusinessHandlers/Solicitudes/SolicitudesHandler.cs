@@ -482,6 +482,11 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			return _solicitudesRepository.ObtenerCiudadano(id);
 		}
 
+		public ResponseListaPaginada ObtenerInvolucrado(int id)
+		{
+			return _solicitudesRepository.ObtenerInvolucrado(id);
+		}
+
 		public async Task<ResponseListaPaginada> RegistroInvolucrado(long id,List<RequestDatosInvolucrado> data)
 		{
 			try
@@ -524,7 +529,20 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			}
 
         }
-        
+		
+        public ResponseListaPaginada ObtenerSolicitudServiciosInvolucrado(int id, int idComisaria)
+        {
+	        try {
+
+		        return _solicitudesRepository.ObtenerSolicitudServiciosInvolucrado(id, idComisaria);
+	        }
+	        catch (Exception e)
+	        {
+
+		        throw new Exception(e.Message);
+	        }
+
+        }
 
         public ResponseListaPaginada ConsultarSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
         {
