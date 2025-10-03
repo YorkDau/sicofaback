@@ -807,7 +807,13 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@barrio", BdValidation.ToDBNull(data.barrio));
                         _command.Parameters.AddWithValue("@direccion", BdValidation.ToDBNull(data.direccion));
                         _command.Parameters.AddWithValue("@es_victima", data.tipoInvolucrado);
-                        _command.Parameters.AddWithValue("@principal", data.principal ? true : false);
+                        _command.Parameters.AddWithValue("@principal", data.principal);
+                        
+                        //es un menor de edad
+                        _command.Parameters.AddWithValue("@tieneSalud", data.tieneSalud);
+                        _command.Parameters.AddWithValue("@tieneEducacion", data.tieneEducacion);
+                        _command.Parameters.AddWithValue("@lugarEstudio", data.lugarEstudio);
+                        _command.Parameters.AddWithValue("@vacunacionCompleta", data.vacunacionCompleta);
 
                         // cambio añadido para idenficiar agresor y victima principal
                         _command.Connection = _connectionDb;
@@ -836,7 +842,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 string? mensaje = "";
                 using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
                 {
-                    string query = "PR_SICOFA_CREAR_SERVICIO_INVOLUCRADO";
+                    var query = "PR_SICOFA_CREAR_SERVICIO_INVOLUCRADO";
                     using (_command = new SqlCommand(query))
                     {
                         _command.CommandType = CommandType.StoredProcedure;
@@ -1862,6 +1868,12 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 involucrado.direccion = ConvertFDBVal.ConvertFromDBVal<string>(reader["direccion_recidencia"]);
                                 involucrado.tipoInvolucrado = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_victima"]);
                                 involucrado.principal = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_principal"]);
+                                 //es menor de edad
+                                involucrado.tieneSalud  = ConvertFDBVal.ConvertFromDBVal<bool>(reader["tiene_salud"]); 
+                                involucrado.tieneEducacion = ConvertFDBVal.ConvertFromDBVal<bool>(reader["tiene_educacion"]);
+                                involucrado.lugarEstudio = ConvertFDBVal.ConvertFromDBVal<string>(reader["lugarEstudio"]);
+                                involucrado.vacunacionComplete = ConvertFDBVal.ConvertFromDBVal<bool>(reader["vacunacion_complete"]);
+                                    
                                 involucrado.id_tipo_discapacidad = 1;
                                 involucrado.estado_embarazo = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_embarazo"]);
                                 involucrado.afiliado_seguridad_social = ConvertFDBVal.ConvertFromDBVal<string>(reader["afiliado_seguridad_social"]);
