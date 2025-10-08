@@ -767,7 +767,6 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             switch (data.tipoDominio) {
 
                 case Evaluacion.motivo:
-
                     evaluacion.MotivoDescripcion = data.descripcionA;
                     break;
 
@@ -809,12 +808,25 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     evaluacion.ConclusionesEntrevista = data.descripcionA;
                     evaluacion.RecomendacionesEntrevista = data.descripcionB;
                     break;
-
-
+                
+                case Evaluacion.informacionMenores:
+                    evaluacion.ValoracionPsicologica = data.descripcionA;
+                    evaluacion.ValoracionEntorno = data.descripcionB;
+                    
+                    RegistrarEvaluacionOrientacion(evaluacion.IdEvaluacion,data.respuestas); 
+                    break;
 
             }
         
                     context.SaveChanges();
+        }
+
+        public async Task ActualizarEvaluacionInfoMenores(RegistroEvaluacionInfoMenoresDTO data, long idTarea)
+        {
+            var evaluacion = await context.SicofaEvaluacionPsicologica.Where(s => s.IdSolicitudServicio == data.IdSolicitudServicio & s.IdTarea == idTarea).FirstOrDefaultAsync();
+            evaluacion.ValoracionPsicologica = data.valoracionPsicologica;
+            evaluacion.ValoracionEntorno = data.valoracionEntornoFamiliar;
+            context.SaveChanges();
         }
 
         public void RegistrarRecomendacion(long idSolicitudServicio, string descripcion , long? idTarea) 
@@ -822,26 +834,16 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             SicofaEvaluacionPsicologica evaluacion = context.SicofaEvaluacionPsicologica.Where(s => s.IdSolicitudServicio == idSolicitudServicio & s.IdTarea == idTarea ).First();
             if (evaluacion == null)
             {
-
                 throw new Exception(ErrorRespuestaEvaluacionRiesgo.errorEvaluacionPsicologica);
             }
-
             try
             {
-
                 evaluacion.Recomendaciones = descripcion;
-
                 context.SaveChanges();
-
             }
             catch (Exception ex) {
-
                 throw new Exception(ex.Message);
-            
-            
             }
-        
-        
         }
 
         public List<EvaluacionOrientacionRespuesta> EvaluacionOrientacion(long idSolicitudServicio , string data, long? idTarea) 
@@ -876,22 +878,14 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     {
                         var cruce = respuestaPrevias.Where(s => s.IdDominio == dominio.IdDominio).FirstOrDefault();
                         salida.respuesta = cruce.Respuesta;
-
-
                     }
                     listadoSalida.Add(salida);
-
                 }
-
-
+                
                 return listadoSalida;
-
-
             }
             catch (Exception ex) {
-
                 throw new Exception(ex.Message);
-            
             }
         }
 
@@ -1164,9 +1158,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
         private void RegistrarEvaluacionOrientacion( long idEvaluacionPsicologica, List<RespuestaEvaluacionEmocionalDTO> data) 
         {
 
-               int[] elementos=  data.Select(s => s.idDominio).ToArray();
+            int[] elementos=  data.Select(s => s.idDominio).ToArray();
 
-             var identicarNucleo = context.SicofaEvaluacionPsicologicaLista.Where(s => elementos.Contains((int)s.IdDominio)).ToList();
+            var identicarNucleo = context.SicofaEvaluacionPsicologicaLista.Where(s => elementos.Contains((int)s.IdDominio)).ToList();
 
             context.SicofaEvaluacionPsicologicaLista.RemoveRange(identicarNucleo);
 

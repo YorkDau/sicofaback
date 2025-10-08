@@ -20,6 +20,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.EvaluacionPsicologica
         public void RegistrarCuestionario(RespuestaCuestionarioDTO data);
 
         public InformacionVictimaDTO ObtenerInvolucrado(long id, bool esvictima, bool principal);
+        
+        public EvaluacionInformacionMenoresDTO ObtenerEvaluacionMenores(long idSolicitudServicio);
 
         public void ActualizarInvolucrado(ActualizacionInvolucradoDTO data);
 
@@ -38,6 +40,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.EvaluacionPsicologica
         public Task RegistrarEvaluacionOrientacion(RegistroEvaluacionEmocionalDTO data);
 
         public Task ActualizarEvaluacionPsicologica(RegistroEvaluacionEmocionalDTO data);
+        public Task ActualizarEvaluacionInfoMenores(RegistroEvaluacionInfoMenoresDTO data);
 
         public Task<ObtenerEvaluacionPsicologicaEmocionalDTO>  ObtenerEvaluacionPsicologicaEmocional(long idSolicitudServicio, string tipoDominio);
 

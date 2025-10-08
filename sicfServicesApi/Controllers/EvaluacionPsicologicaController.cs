@@ -276,8 +276,35 @@ namespace sicfServicesApi.Controllers
         
         }
 
-        [HttpGet("ObtenerEvaluacionPsicologicaEmocional/{idSolicitudServicio}/{tipoDominio}")]
+        [HttpPost("ActualizarEvaluacionInfoMenores")]
+        public async Task<IActionResult> ActualizarInfoMenores([FromBody] RegistroEvaluacionInfoMenoresDTO data)
+        {
+            try{
+                await service.ActualizarEvaluacionInfoMenores(data);
+                return CustomResult(Message.Ok);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorGenerico, ex.Message, HttpStatusCode.BadRequest);
+            }
+        }
+        
+        [HttpGet("ObtenerEvaluacionMenores/{idSolicitudServicio}")]
+        public IActionResult ObtenerEvaluacionMenores([FromRoute] long idSolicitudServicio)
+        {
+            try
+            {
+                var response =  service.ObtenerEvaluacionMenores(idSolicitudServicio);
+                return CustomResult(Message.Ok, response, HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorGenerico, ex.Message, HttpStatusCode.BadRequest);
+            }
+        }
+        
 
+        [HttpGet("ObtenerEvaluacionPsicologicaEmocional/{idSolicitudServicio}/{tipoDominio}")]
         public async Task<IActionResult> ObtenerEvaluacionPsicologicaEmocional([FromRoute] long idSolicitudServicio, string tipoDominio)
         {
             try

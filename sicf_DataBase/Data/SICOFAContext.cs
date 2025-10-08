@@ -920,6 +920,19 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.TipoRedApoyoDescripcion)
                     .IsUnicode(false)
                     .HasColumnName("tipo_red_apoyo_descripcion");
+                
+                entity.Property(e => e.ValoracionPsicologica)
+                    .IsUnicode(false)
+                    .HasColumnName("valoracion_psicologica");
+                
+                entity.Property(e => e.ValoracionEntorno)
+                    .IsUnicode(false)
+                    .HasColumnName("valoracion_entorno_familiar"); 
+                
+                entity.Property(e => e.HayMenores)
+                    .IsUnicode(false)
+                    .HasColumnName("hay_menores"); 
+                
             });
 
             modelBuilder.Entity<SicofaEvaluacionPsicologicaLista>(entity =>

@@ -30,11 +30,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
         /// 
         /// </summary>
         /// <param name="data"></param>
-
-
-
         public void RegistrarCuestionario(RespuestaCuestionarioDTO data, long idTarea);
-
 
         /// <summary>
         /// Cantidad de pregunas por tipo de violencia
@@ -52,7 +48,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
         public DatosInstitucionesDTO IdentificarDatosInstitucionales(long id);
 
         InformacionVictimaDTO ObtenerInvolucrado(long id, bool esvictima, bool principal);
-
+        
         public void ActualizarInvolucrado(ActualizacionInvolucradoDTO data);
 
         public Task<EvaluacionRiegoDTO> EvaluacionRiesgosPorSolicitud(long idSolicitud, long? Idtarea);
@@ -74,6 +70,8 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
         public void RegistrarEvaluacionOrientacion(RegistroEvaluacionEmocionalDTO data, long idTarea);
 
         public  Task ActualizarEvaluacionPsicologica(RegistroEvaluacionEmocionalDTO data, long idTarea);
+        
+        public  Task ActualizarEvaluacionInfoMenores(RegistroEvaluacionInfoMenoresDTO data, long idTarea);
 
         public ObtenerEvaluacionPsicologicaEmocionalDTO ObtenerEvaluacionPsicologicaEmocional(long idSolicituServicio, string tipoDominio, long idTarea);
 
