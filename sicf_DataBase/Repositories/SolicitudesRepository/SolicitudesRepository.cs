@@ -1868,11 +1868,12 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 involucrado.direccion = ConvertFDBVal.ConvertFromDBVal<string>(reader["direccion_recidencia"]);
                                 involucrado.tipoInvolucrado = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_victima"]);
                                 involucrado.principal = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_principal"]);
+                                
                                  //es menor de edad
                                 involucrado.tieneSalud  = ConvertFDBVal.ConvertFromDBVal<bool>(reader["tiene_salud"]); 
                                 involucrado.tieneEducacion = ConvertFDBVal.ConvertFromDBVal<bool>(reader["tiene_educacion"]);
-                                involucrado.lugarEstudio = ConvertFDBVal.ConvertFromDBVal<string>(reader["lugarEstudio"]);
-                                involucrado.vacunacionComplete = ConvertFDBVal.ConvertFromDBVal<bool>(reader["vacunacion_complete"]);
+                                involucrado.lugarEstudio = ConvertFDBVal.ConvertFromDBVal<string>(reader["lugar_estudio"]);
+                                involucrado.vacunacionComplete = ConvertFDBVal.ConvertFromDBVal<bool>(reader["vacunacion_completa"]);
                                     
                                 involucrado.id_tipo_discapacidad = 1;
                                 involucrado.estado_embarazo = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_embarazo"]);
