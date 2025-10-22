@@ -505,10 +505,6 @@ namespace sicfServicesApi.Controllers
 
                 retorno.funcionario = await compartidoHandler.ObtenerDatosFuncionarioPorTarea(id);
 
-
-
-
-
                 return CustomResult(Message.Ok, retorno, HttpStatusCode.OK);
 
             }

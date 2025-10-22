@@ -1071,8 +1071,11 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                                                   telefono = involucrado.Telefono,
                                                   barrio = involucrado.Barrio,
                                                   escolaridad = dominioEscolaridad.NombreDominio,
-                                                  direccion = involucrado.DireccionRecidencia
-
+                                                  direccion = involucrado.DireccionRecidencia,
+                                                  tieneSalud = involucrado.tieneSalud,
+                                                  tieneEducacion = involucrado.tieneEducacion,
+                                                  lugarEstudio = involucrado.lugarEstudio,
+                                                  vacunacionCompleta = involucrado.vacunacionCompleta
                                               }).First();
 
                 return salida; 
@@ -1151,10 +1154,13 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 salida.direccionContacto = involucrado.DireccionContactoConfianza;
                 salida.telefonoContacto = involucrado.TelefonoContactoConfianza;
                 salida.nombreContacto = involucrado.NombreContactoConfianza;
-
+                
+                //es menor de edad
+                salida.HayMenores = evaluacion.HayMenores;
+                salida.ValoracionPsicologica = evaluacion.ValoracionPsicologica;
+                salida.ValoracionEntorno = evaluacion.ValoracionEntorno;
+                    
                 return salida;
-
-
 
             }
             catch (Exception ex) {

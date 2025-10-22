@@ -22,7 +22,10 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
         public string telefonoContacto { get; set; } = string.Empty;
 
         public string direccionContacto { get; set; } = string.Empty;
-
-
+        
+        public bool? HayMenores { get; set; } = false;
+        public string? ValoracionPsicologica { get; set; }
+        public string? ValoracionEntorno {get; set;}
+        
     }
 }

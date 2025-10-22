@@ -52,8 +52,5 @@ namespace sicf_BusinessHandlers.BusinessHandlers.EvaluacionPsicologica
 
         public  InvolucradosReporte13DTO Reporte13(long idSolicitudServicio);
 
-        //public List<EvaluacionPsicologicaReporte17DTO> ObtenerEvaluacionPsicologicaReporte17(long idSolicitud, string tipoDoc);
-
-
     }
 }
