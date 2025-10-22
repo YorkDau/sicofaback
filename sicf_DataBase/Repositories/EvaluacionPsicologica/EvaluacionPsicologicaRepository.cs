@@ -80,7 +80,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
 
                 var involucrado = solicitud.IdInvolucrado.Where(s => s.EsPrincipal == principal && s.EsVictima == esvictima).First();
 
-                InformacionVictimaDTO salida = new InformacionVictimaDTO();
+                var salida = new InformacionVictimaDTO();
 
                 if ((bool)involucrado.EsPrincipal! & (bool)involucrado.EsVictima)
                 {
@@ -159,7 +159,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     // flujo para agresor
                     //TODO: Eliminar nombres y apellidos
                     var complementario = context.SicofaComplementoInvolucrado.Where(s => s.IdInvolucrado == involucrado.IdInvolucrado).FirstOrDefault();
-
+                    
                     salida.id = involucrado.IdInvolucrado;
                     salida.nombres = involucrado.Nombres;
                     salida.primerNombre = involucrado.PrimerNombre;
@@ -181,6 +181,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.agresorConflicto = complementario != null ? complementario.AgresorGrupoArmado : null;
                     salida.relacionPareja = involucrado.IdTipoRelacion;
                     salida.edadAproximadaAgresor = complementario != null ? complementario.EdadAproximadaAgresor : involucrado.Edad;
+                    
                     var hijos = context.SicofaHijoinvolucrado.Where(s => s.IdInvolucrado == involucrado.IdInvolucrado).ToList();
                     salida.numeroHijos = hijos.Count();
 
@@ -188,19 +189,28 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.paisExp = involucrado.IdPaisExpedicion;
                     salida.departamentoExp = involucrado.IdDepartamentoExpedicion;
                     salida.municipioExp = involucrado.IdMunicipioExpedicion;
+                    
+                    //es menor edad
+                    salida.tieneEducacion = involucrado.tieneEducacion;
+                    salida.tieneSalud = involucrado.tieneSalud;
+                    salida.lugarEstudio = involucrado.lugarEstudio;
+                    salida.vacunacionCompleta = involucrado.vacunacionCompleta;
+                    
 
                     if (hijos.Count >= 1)
                     {
                         foreach (var hijo in hijos)
                         {
 
-                            informacionHijo hijoSalida = new informacionHijo();
-                            hijoSalida.nombres = hijo.Nombres;
-                            hijoSalida.edad = hijo.Edad;
-                            hijoSalida.edadEn = hijo.EdadEn;
-                            hijoSalida.sexo = hijo.IdSexo;
-                            hijoSalida.custodia = hijo.Custodia;
-                            hijoSalida.relacionParental = hijo.IdRelacionParental;
+                            var hijoSalida = new informacionHijo
+                            {
+                                nombres = hijo.Nombres,
+                                edad = hijo.Edad,
+                                edadEn = hijo.EdadEn,
+                                sexo = hijo.IdSexo,
+                                custodia = hijo.Custodia,
+                                relacionParental = hijo.IdRelacionParental
+                            };
 
                             salida.hijos.Add(hijoSalida);
                         }

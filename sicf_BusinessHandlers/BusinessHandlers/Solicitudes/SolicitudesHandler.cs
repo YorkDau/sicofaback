@@ -501,11 +501,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 
 				foreach (var involucrado in data)
 				{
-
 					var tuple = _solicitudesRepository.RegistroInvolucrado(involucrado);
-
 					_solicitudesRepository.RegistroServicioInvolucrado(id, tuple.Item2);
-
 				}
 
 				/*Se genera la tarea*/

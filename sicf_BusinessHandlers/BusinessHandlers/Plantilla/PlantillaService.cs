@@ -62,11 +62,9 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Plantilla
                     
                     var seccionCambio = response.secciones.Where(s => s.idSeccionPlantilla == VictimaReporte.seccionReporteVictima).FirstOrDefault();
 
-                     if(seccionCambio != null) {
-                        var info = await plantillaRepository.InformacionVictimaReporte(idSolicitudServicio);
-                        seccionCambio.textoSeccion = InterPolacionVictima(seccionCambio.textoSeccion! ,info );
-                    }
-                    
+                    if (seccionCambio == null) return response;
+                    var info = await plantillaRepository.InformacionVictimaReporte(idSolicitudServicio);
+                    seccionCambio.textoSeccion = InterPolacionVictima(seccionCambio.textoSeccion! ,info);
                     return response;
                 }
                 else

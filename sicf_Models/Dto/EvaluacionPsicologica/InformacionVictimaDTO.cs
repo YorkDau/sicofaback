@@ -85,6 +85,11 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
         public long? departamentoNacimiento { get; set; }
         public long? municipioNacimiento { get; set; }
 
+        public bool? tieneSalud { get; set; } = false;
+        public bool? tieneEducacion { get; set; } = false;
+        public bool? vacunacionCompleta { get; set; } = false;
+        public string? lugarEstudio { get; set; } = string.Empty;
+        
         public List<informacionHijo> hijos { get; set; } = new List<informacionHijo>();
 
 

@@ -1289,6 +1289,22 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.IdMunicipioNacimiento)
                     .IsRequired(false)
                     .HasColumnName("id_ciud_mun_nacimiento");
+
+                entity.Property(e => e.tieneEducacion)
+                    .IsRequired(false)
+                    .HasColumnName("tiene_educacion");
+                
+                entity.Property(e => e.tieneSalud)
+                    .IsRequired(false)
+                    .HasColumnName("tiene_salud");
+                
+                entity.Property(e => e.vacunacionCompleta)
+                    .IsRequired(false)
+                    .HasColumnName("vacunacion_completa");
+                
+                entity.Property(e => e.lugarEstudio)
+                    .IsRequired(false)
+                    .HasColumnName("lugar_estudio");
             });
 
             modelBuilder.Entity<SicofaInvolucradoComplementaria>(entity =>

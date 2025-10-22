@@ -69,6 +69,10 @@
         
         public DateTime ? FechaExpedicion { get; set; }
         public string? DatosAdicionales { get; set; }
+        public bool? tieneEducacion { get; set; } = false;
+        public bool? tieneSalud { get; set; } = false;
+        public bool? vacunacionCompleta { get; set; } = false;
+        public string? lugarEstudio { get; set; } = string.Empty;
 
         public virtual ICollection<SicofaComplementoInvolucrado> SicofaComplementoInvolucrado { get; set; }
         public virtual ICollection<SicofaQuorum> SicofaQuorum { get; set; }
