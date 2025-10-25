@@ -1809,6 +1809,7 @@ namespace sicf_DataBase.Data
                     .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.aprobado).HasColumnName("aprobado");
+                entity.Property(e => e.esNecesarioRemitir).HasColumnName("es_necesario_remitir");
 
                 entity.Property(e => e.apelacion).HasColumnName("apelacion");
 

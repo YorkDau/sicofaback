@@ -51,13 +51,15 @@ namespace sicfServicesApi.Controllers
         {
             try
             {
+                var id_comisaria_valida = requestCrearPresolicitud.id_comisaria ?? 0;
                 var quest = Context.GetToken(HttpContext);
                 var comisaria = await _usuarioHandler.ComisariaUsuario(quest.usuario);
+                var id_comisaria_usuario = await _usuarioHandler.ComisariaUsuarioPorId(quest.usuario, id_comisaria_valida);
                 var usuario = await _usuarioHandler.ConsultarUsuarioPorCorreo(quest.usuario);
 
                 long idPresolicitud = 0;
 
-                idPresolicitud = _presolicitudService.CrearPresolicitud(requestCrearPresolicitud, comisaria , usuario.IdUsuarioSistema).Result;
+                idPresolicitud = _presolicitudService.CrearPresolicitud(requestCrearPresolicitud, id_comisaria_usuario , usuario.IdUsuarioSistema).Result;
 
                 if (idPresolicitud != 0)
                     return CustomResult(Message.Ok, idPresolicitud, HttpStatusCode.OK);

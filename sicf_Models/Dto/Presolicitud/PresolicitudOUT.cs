@@ -33,6 +33,7 @@ namespace sicf_Models.Dto.Presolicitud
         public string tipoPresolicitud { get; set; }
         public string? archivoAdjunto { get; set; }
         public long? id_anexo { get; set; }
+        public long? id_comisaria { get; set; }
         public long? idSolicitudRelacionado { get; set; }
         public List<SolicitudServicioDTO>? solicitudesCiudadano { get; set; }
         

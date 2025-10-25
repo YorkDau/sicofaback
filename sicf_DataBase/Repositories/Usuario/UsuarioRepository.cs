@@ -541,6 +541,28 @@ namespace sicf_DataBase.Repositories.Usuario
             }
         
         }
+        public async Task<int> ComisariaUsuarioPorId(string email, long idComisaria)
+        {
+            try
+            {
+                var response = await (from usu in _context.SicofaUsuarioSistema
+                                      join comi in _context.SicofaUsuarioComisaria on usu.IdUsuarioSistema equals comi.IdUsuario
+
+                                      where usu.CorreoElectronico == email &&
+                                            comi.IdComisaria == idComisaria
+
+                                      select comi.IdComisaria
+                                     )
+                                     .FirstOrDefaultAsync();
+
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         public async Task<string> AsignacionClaveTemporal(string email)
         {

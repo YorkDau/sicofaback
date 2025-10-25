@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace sicf_BusinessHandlers.BusinessHandlers.Usuario
 {
-    public class UsuarioHandler: IUsuarioHandler
+    public class UsuarioHandler : IUsuarioHandler
     {
         private readonly IUnitofWork _unitofWork;
         private readonly IMapper _mapper;
@@ -28,14 +28,14 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Usuario
 
             try
             {
-                return   _unitofWork.UsuarioRepository.IsUserPerfil(userID, codPefil);
+                return _unitofWork.UsuarioRepository.IsUserPerfil(userID, codPefil);
             }
             catch (Exception ex)
             {
 
                 throw ex;
             }
-        
+
         }
 
         public async Task CrearUsuario(CrearUsuarioDTO data)
@@ -45,13 +45,13 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Usuario
             {
                 var dataUsu = await _unitofWork.UsuarioRepository.CrearUsuario(data);
 
-                await _unitofWork.UsuarioRepository.UsuarioAsignacionComisaria(dataUsu.Item1,data.Idcomisaria);
+                await _unitofWork.UsuarioRepository.UsuarioAsignacionComisaria(dataUsu.Item1, data.Idcomisaria);
 
-                await _unitofWork.UsuarioRepository.AsignarPerfiles(dataUsu.Item1 , data.perfiles, data.Idcomisaria);
+                await _unitofWork.UsuarioRepository.AsignarPerfiles(dataUsu.Item1, data.perfiles, data.Idcomisaria);
 
                 //await _unitofWork.UsuarioRepository.AgregarhistorialContrasena(dataUsu.Item1, dataUsu.Item2);
 
-                _IsendgridNotificaciones.EnviarContrasena(data.correoElectronico , dataUsu.Item3);
+                _IsendgridNotificaciones.EnviarContrasena(data.correoElectronico, dataUsu.Item3);
 
 
             }
@@ -61,7 +61,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Usuario
             }
         }
 
-        
+
         public async Task<bool> ActualizarUsuario(UsuarioDTO data)
         {
             try
@@ -117,7 +117,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Usuario
         {
             try
             {
-                var response= await _unitofWork.UsuarioRepository.ComisariaUsuario(email);
+                var response = await _unitofWork.UsuarioRepository.ComisariaUsuario(email);
                 return response;
             }
             catch (Exception ex) {
@@ -126,6 +126,20 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Usuario
             }
         }
 
-       
+        public async Task<int> ComisariaUsuarioPorId(string email,long  idComisaria)
+        {
+            try
+            {
+                var response = await _unitofWork.UsuarioRepository.ComisariaUsuarioPorId(email,idComisaria);
+                return response;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
+
+
     }
 }
