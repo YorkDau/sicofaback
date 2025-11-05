@@ -836,6 +836,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             var evaluacion = await context.SicofaEvaluacionPsicologica.Where(s => s.IdSolicitudServicio == data.IdSolicitudServicio & s.IdTarea == idTarea).FirstOrDefaultAsync();
             evaluacion.ValoracionPsicologica = data.valoracionPsicologica;
             evaluacion.ValoracionEntorno = data.valoracionEntornoFamiliar;
+            evaluacion.HayMenores = data.hayMenores;
             context.SaveChanges();
         }
 

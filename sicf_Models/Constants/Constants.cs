@@ -390,7 +390,7 @@ namespace sicf_Models.Constants
             public const string agresor = "No registra Agresor";
 
             public const string medicinalegal = "Oficio_Remisorio_Medicina_legal";
-            public const string secretariaMujer = "Remision_secretaria_de_la_Mujer_u_otro_organo";
+            public const string secretariaMujer = "Remision_secretaria_de_Bienestar_u_otro_organo";
             public const string remisionProcesoPsicologia = "Remision_Proceso_Psicologia_Externa";
             public const string remisionApoyoPolicivo = "Remision_Apoyo_Policivo_Victima_Mujer";
             public const string remisionProcesoExterno = "Remision_Proceso_Psicologia_Externa";
