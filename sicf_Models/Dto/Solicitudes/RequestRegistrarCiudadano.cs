@@ -21,6 +21,8 @@ namespace sicf_Models.Dto.Solicitudes
         public string? fechaNacimiento { get; set; }
         public int edad { get; set; }
         public int idPaisNacimiento { get; set; }
+        public int idPaisExpedicion { get; set; }
+        public int idDepartamentoExpedicion { get; set; }
         public int idDepartamentoNacimiento { get; set; }
         public int idMunicipioNacimiento { get; set; }
         public int idSexo { get; set; }

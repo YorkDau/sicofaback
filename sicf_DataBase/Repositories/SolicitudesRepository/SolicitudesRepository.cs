@@ -236,6 +236,11 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
 
                         _command.Parameters.AddWithValue("@edad", BdValidation.ToDBNull(requestRegistrarCiudadano.edad));
                         _command.Parameters.AddWithValue("@idPaisNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisNacimiento == 0) ? null : requestRegistrarCiudadano.idPaisNacimiento));
+                        _command.Parameters.AddWithValue("@idPaisExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisExpedicion == 0) ? null : requestRegistrarCiudadano.idPaisExpedicion));
+                        _command.Parameters.AddWithValue("@idDepartamentoExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idDepartamentoExpedicion == 0) ? null : requestRegistrarCiudadano.idDepartamentoExpedicion));
+                        
+
+
                         _command.Parameters.AddWithValue("@idDepartamentoNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idDepartamentoNacimiento == 0) ? null : requestRegistrarCiudadano.idDepartamentoNacimiento));
                         _command.Parameters.AddWithValue("@idMunicipioNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idMunicipioNacimiento == 0) ? null : requestRegistrarCiudadano.idMunicipioNacimiento));
                         _command.Parameters.AddWithValue("@idSexo", BdValidation.ToDBNull((requestRegistrarCiudadano.idSexo == 0) ? null : requestRegistrarCiudadano.idSexo));
