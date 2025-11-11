@@ -44,6 +44,14 @@ namespace sicf_Models.Dto.Solicitudes
         public bool? tipoInvolucrado { get; set; }
 
         public bool principal { get; set; }
+        
+        public bool tieneSalud { get; set; }
+        
+        public bool tieneEducacion { get; set; }
+
+        public string lugarEstudio { get; set; } = string.Empty;
+        
+        public bool vacunacionCompleta { get; set; }
     }
 
     public class RequestDatosInvolucradoPrincipal : RequestDatosInvolucrado

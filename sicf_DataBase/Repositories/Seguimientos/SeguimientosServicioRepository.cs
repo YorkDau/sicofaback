@@ -5,13 +5,7 @@ using sicf_Models.Core;
 using sicf_Models.Dto.Seguimientos;
 using sicf_Models.Utility;
 using sicfExceptions.Exceptions;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static sicf_Models.Constants.Constants;
 
 namespace sicf_DataBase.Repositories.Seguimientos
 {
@@ -166,7 +160,7 @@ namespace sicf_DataBase.Repositories.Seguimientos
             try
             {
                 var salida = await (from invo in context.SicofaInvolucrado
-                                    join municipio in context.SicofaCiudadMunicipio on invo.IdLugarExpedicion equals municipio.IdCiudadMunicipio
+                                    join municipio in context.SicofaCiudadMunicipio on invo.IdMunicipioExpedicion equals municipio.IdCiudadMunicipio
                                     into invoMunicipio
                                     from iMun in invoMunicipio.DefaultIfEmpty()
                                     join dominio in context.SicofaDominio on invo.TipoDocumento equals dominio.IdDominio
@@ -248,28 +242,29 @@ namespace sicf_DataBase.Repositories.Seguimientos
         {
             try
             {
-                List<RemisionesAsociada> salida = await (from docu in context.SicofaDocumentoServicioSolicitud
+                List<RemisionesAsociada> salida = await (from solianexo in context.SicofaSolicitudServicioAnexo
+                                                         join docu in context.SicofaDocumentoServicioSolicitud on solianexo.IdSolicitudAnexo equals docu.IdAnexo
                                                          join documen in context.SicofaDocumento on docu.IdDocumento equals documen.IdDocumento
-                                                         join solianexo in context.SicofaSolicitudServicioAnexo on docu.IdAnexo equals solianexo.IdSolicitudAnexo
                                                          join invo in context.SicofaInvolucrado on docu.IdInvolucrado equals invo.IdInvolucrado
                                                          join usu in context.SicofaUsuarioSistema on solianexo.IdUsuario equals usu.IdUsuarioSistema
                                                          join act in context.SicofaActividad on documen.Codigo equals act.Documento
                                                          join flujov2 in context.SicofaFlujoV2 on act.IdActividad equals flujov2.IdActividadMain
                                                          join tarea in context.SicofaTarea on flujov2.IdFlujo equals tarea.IdFlujo
-                                                         where 
-                                                         tarea.IdTarea == idTarea && 
-                                                         documen.Estado == Constants.ReportesRemision.estadoActivo &&
-                                                         solianexo.IdSolicitudServicio == IdSolicitudServicio
+                                                         where
+                                                         solianexo.IdSolicitudServicio == IdSolicitudServicio &&
+                                                         tarea.IdTarea == idTarea &&
+                                                         documen.Estado == Constants.ReportesRemision.estadoActivo
                                                          select
-                                                   new RemisionesAsociada
-                                                   {
-                                                       nombreInvolucrado = $"{invo.PrimerNombre}  {invo.SegundoNombre} {invo.PrimerApellido} {invo.SegundoApellido}",
-                                                       nombreRemision = documen.NombreDocumento,
-                                                       idAnexo = solianexo.IdSolicitudAnexo,
-                                                       nombreUsuario = usu.Nombres,
-                                                       fecha = String.Format(Constants.FormatoFechaCorta2, solianexo.FechaCreacion),
-                                                       estado =  ""
-                                                   }).ToListAsync();
+                                                         new RemisionesAsociada
+                                                         {
+                                                             nombreInvolucrado = $"{invo.PrimerNombre}  {invo.SegundoNombre} {invo.PrimerApellido} {invo.SegundoApellido}",
+                                                             nombreRemision = documen.NombreDocumento,
+                                                             idAnexo = solianexo.IdSolicitudAnexo,
+                                                             nombreUsuario = usu.Nombres,
+                                                             fecha = String.Format(Constants.FormatoFechaCorta2, solianexo.FechaCreacion),
+                                                             estado = ""
+                                                         }).ToListAsync();
+
                 return salida;
             }
             catch (Exception ex)
@@ -327,16 +322,26 @@ namespace sicf_DataBase.Repositories.Seguimientos
             }
         }
 
-        public SicofaProgramacion obtenerProgramacionSeguimiento(long idSolicitudServicio)
+        public SicofaProgramacion obtenerProgramacionSeguimiento(long idSolicitudServicio, string etiqueta)
         {
             try
             {
-                return context.SicofaProgramacion.Where(prg => prg.IdSolicitud == idSolicitudServicio & prg.Etiqueta == Constants.Medidas.Seguimiento.etiquetas.actividadProgramarSeguimiento).OrderByDescending(prg => prg.IdProgramacion).FirstOrDefault()!; 
+                string etiquetaConsulta = etiqueta;
+
+                // Si la etiqueta no es AUDSPARD, usar la constante por defecto
+                if (string.IsNullOrEmpty(etiqueta) || etiqueta != "AUDSPARD")
+                {
+                    etiquetaConsulta = Constants.Medidas.Seguimiento.etiquetas.actividadProgramarSeguimiento;
+                }
+
+                return context.SicofaProgramacion
+                    .Where(prg => prg.IdSolicitud == idSolicitudServicio && prg.Etiqueta == etiquetaConsulta)
+                    .OrderByDescending(prg => prg.IdProgramacion)
+                    .FirstOrDefault();
             }
             catch (Exception ex)
             {
-
-                throw new Exception(ex.Message);
+                throw new Exception("Error al obtener la programación de seguimiento: " + ex.Message, ex);
             }
         }
 

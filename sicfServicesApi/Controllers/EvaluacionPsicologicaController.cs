@@ -137,7 +137,6 @@ namespace sicfServicesApi.Controllers
         {
             try
             {
-
                 return CustomResult(Message.Ok, await service.EvaluacionRiesgosPorSolicitud(idSolicitudServicio), HttpStatusCode.OK);
             }
             catch (Exception ex)
@@ -277,8 +276,35 @@ namespace sicfServicesApi.Controllers
         
         }
 
-        [HttpGet("ObtenerEvaluacionPsicologicaEmocional/{idSolicitudServicio}/{tipoDominio}")]
+        [HttpPost("ActualizarEvaluacionInfoMenores")]
+        public async Task<IActionResult> ActualizarInfoMenores([FromBody] RegistroEvaluacionInfoMenoresDTO data)
+        {
+            try{
+                await service.ActualizarEvaluacionInfoMenores(data);
+                return CustomResult(Message.Ok);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorGenerico, ex.Message, HttpStatusCode.BadRequest);
+            }
+        }
+        
+        [HttpGet("ObtenerEvaluacionMenores/{idSolicitudServicio}")]
+        public IActionResult ObtenerEvaluacionMenores([FromRoute] long idSolicitudServicio)
+        {
+            try
+            {
+                var response =  service.ObtenerEvaluacionMenores(idSolicitudServicio);
+                return CustomResult(Message.Ok, response, HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorGenerico, ex.Message, HttpStatusCode.BadRequest);
+            }
+        }
+        
 
+        [HttpGet("ObtenerEvaluacionPsicologicaEmocional/{idSolicitudServicio}/{tipoDominio}")]
         public async Task<IActionResult> ObtenerEvaluacionPsicologicaEmocional([FromRoute] long idSolicitudServicio, string tipoDominio)
         {
             try
@@ -412,7 +438,12 @@ namespace sicfServicesApi.Controllers
                 
 
                 retorno.nombre_psicologo = $"{informacionFuncionario.nombre} {informacionFuncionario.apellido}";
+                if (informacionFuncionario == null)
+                {
+                    return CustomResult(Message.Ok, "No se encontraron datos del funcionario.", HttpStatusCode.NotFound);
+                }
                 retorno.cargo_psicolo = informacionFuncionario.perfil;
+                retorno.numeroTarjetaProfesional = informacionFuncionario.numeroTarjetaProfesional;
 
 
 
@@ -473,10 +504,6 @@ namespace sicfServicesApi.Controllers
                 retorno.ConclusionYRecomendacion = await service.ObtenerEvaluacionPsicologicaEmocional(id, "Conclusion y Recomendaciones");
 
                 retorno.funcionario = await compartidoHandler.ObtenerDatosFuncionarioPorTarea(id);
-
-
-
-
 
                 return CustomResult(Message.Ok, retorno, HttpStatusCode.OK);
 

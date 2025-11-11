@@ -37,7 +37,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.EvaluacionPsicologica
             this.compartido = compartido;
             this.EvaluacionPsicologicaRepository = EvaluacionPsicologicaRepository;
             this.tareaRepository = tareaRepository;
-            
+          
         }
 
 
@@ -85,23 +85,35 @@ namespace sicf_BusinessHandlers.BusinessHandlers.EvaluacionPsicologica
             }
         }
 
+        public EvaluacionInformacionMenoresDTO ObtenerEvaluacionMenores(long idSolicitudServicio)
+        {
+            try
+            {
+                var evaluacion = EvaluacionPsicologicaRepository.ObtenerEvaluacionPsicologica(idSolicitudServicio, null);
+                return new EvaluacionInformacionMenoresDTO(
+                    evaluacion.HayMenores,
+                    evaluacion.ValoracionPsicologica,
+                    evaluacion.ValoracionEntorno
+                );
+            }
+            catch (Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public void ActualizarInvolucrado(ActualizacionInvolucradoDTO data) {
 
             try
             {
                 EvaluacionPsicologicaRepository.ActualizarInvolucrado(data);
                 // Cerrar tarea y crear la nueva con identificacion de riesgo
-                var involucrado = EvaluacionPsicologicaRepository.ConsultarInvolucrado(data.IdInvolucrado);
-
+                //var involucrado = EvaluacionPsicologicaRepository.ConsultarInvolucrado(data.IdInvolucrado);
             }
             catch (Exception ex) {
 
                 throw new Exception(ex.Message);
             
             }
-
-            
-
         }
         #endregion HU2
 
@@ -255,31 +267,41 @@ namespace sicf_BusinessHandlers.BusinessHandlers.EvaluacionPsicologica
                 await EvaluacionPsicologicaRepository.ActualizarEvaluacionPsicologica(data, (long)evaluacionT.IdTarea);
             }
             catch (Exception ex) {
-
                 throw new Exception(ex.Message);
             }
         }
 
-         public async Task<ObtenerEvaluacionPsicologicaEmocionalDTO> ObtenerEvaluacionPsicologicaEmocional(long idSolicitudServicio, string tipoDominio )
+        public async Task ActualizarEvaluacionInfoMenores(RegistroEvaluacionInfoMenoresDTO data)
+        {
+            try
             {
-        try
-            {
-                var evaluacionT = EvaluacionPsicologicaRepository.ObtenerEvaluacionPsicologica(idSolicitudServicio, null);
-                ObtenerEvaluacionPsicologicaEmocionalDTO evaluacion =  EvaluacionPsicologicaRepository.ObtenerEvaluacionPsicologicaEmocional(idSolicitudServicio,tipoDominio,(long)evaluacionT.IdTarea);
-
-                return evaluacion;
+                var evaluacionT = EvaluacionPsicologicaRepository.ObtenerEvaluacionPsicologica(data.IdSolicitudServicio, null);
+                await EvaluacionPsicologicaRepository.ActualizarEvaluacionInfoMenores(data, (long)evaluacionT.IdTarea);
             }
-            catch (Exception ex) 
-            {
+            catch (Exception ex) {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<ObtenerEvaluacionPsicologicaEmocionalDTO> ObtenerEvaluacionPsicologicaEmocional(long idSolicitudServicio, string tipoDominio ) {
+        try
+        {
+            var evaluacionT = EvaluacionPsicologicaRepository.ObtenerEvaluacionPsicologica(idSolicitudServicio, null);
+            var evaluacion =  EvaluacionPsicologicaRepository.ObtenerEvaluacionPsicologicaEmocional(idSolicitudServicio,tipoDominio,(long)evaluacionT.IdTarea);
+
+            return evaluacion;
+        }
+        catch (Exception ex) 
+        {
+            throw new Exception(ex.Message);
+        }
         }
 
         public VictimaPrincipalDTO ObtenerVictimaPrincipal(long idSolicitud)
         {
             try
             {
-               return  EvaluacionPsicologicaRepository.ObtenerVictimaPrincipal(idSolicitud);
+                return  EvaluacionPsicologicaRepository.ObtenerVictimaPrincipal(idSolicitud);
             }
             catch (Exception ex) 
             {

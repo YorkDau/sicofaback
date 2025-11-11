@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace sicf_Models.Dto.Solicitudes
+﻿namespace sicf_Models.Dto.Solicitudes
 {
     public class RequestCrearSolicitud
     {
@@ -15,6 +9,10 @@ namespace sicf_Models.Dto.Solicitudes
         public string fechaHechoViolento { get; set; }
         public string descripcionHechos { get; set; }
         public bool esVictima { get; set; }
+
+        public string? adjunto { get; set; } = string.Empty;
+        public string? archivoTraslado { get; set; } = string.Empty;
+        public string? id_tipo_entidad { get; set; }
         public bool conviveConAgresor { get; set; }
         public int relacionParentescoAgresor{ get; set; }
         public bool esCompetenciaComisaria { get; set; }
@@ -22,13 +20,13 @@ namespace sicf_Models.Dto.Solicitudes
         public int idtipoTramite { get; set; }
         public int idContextofamiliar { get; set; }
         public bool esNecesarioRemitir { get; set; }
-
         public long? idComisariaRemision{ get; set; }
         public long idEntidadExterna{ get; set; }
         public string justificacionRemision { get; set; }
         public int idUsuarioSistema { get; set; }
         public string tipoSolicitud { get; set; }
-       
+        public string SexoAfectado { get; set; }
+
 
         public RequestCrearSolicitud() {
 
@@ -43,13 +41,12 @@ namespace sicf_Models.Dto.Solicitudes
             esNecesarioRemitir = false;
             justificacionRemision = string.Empty;
             tipoSolicitud = string.Empty;
-            
+            SexoAfectado = string.Empty;
         }
     }
 
     public class RequestActualizarSolicitud : RequestCrearSolicitud
     {
         public long idSolicitud { get; set; }
-
     }
 }

@@ -4,9 +4,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using sicf_BusinessHandlers.BusinessHandlers.Archivos;
 using sicf_BusinessHandlers.BusinessHandlers.Tarea;
+using sicf_DataBase.Repositories.Apelacion;
 using sicf_DataBase.Repositories.SolicitudesRepository;
 using sicf_Models.Constants;
+using sicf_Models.Dto.Apelacion;
+using sicf_Models.Dto.Archivos;
 using sicf_Models.Dto.Ciudadano;
 using sicf_Models.Dto.Solicitudes;
 using sicf_Models.Utility;
@@ -18,11 +22,13 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
     {
         private readonly ISolicitudesRepository _solicitudesRepository;
 		private readonly ITareaHandler _tareaHandler;
+		private readonly IArchivoService _archivoService;
 
-		public SolicitudesHandler(ISolicitudesRepository solicitudesRepository, ITareaHandler tareaHandler)
+		public SolicitudesHandler(ISolicitudesRepository solicitudesRepository, ITareaHandler tareaHandler, IArchivoService archivoService)
         {
             _solicitudesRepository = solicitudesRepository;
 			_tareaHandler = tareaHandler;
+			_archivoService = archivoService;
         }
 
 		#region Joel Vila Bringuez
@@ -56,6 +62,22 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			catch (ControledException ex)
 			{
 
+				throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
+			}
+			catch (Exception ex)
+			{
+				throw new ControledException(ex.HResult);
+			}
+		}
+
+		public ResponseListaPaginada GetInvolucrados(RequestCiudadano requestCiudadano)
+		{
+			try
+			{
+				return _solicitudesRepository.ObtenerInvolucrados(requestCiudadano);
+			}
+			catch (ControledException ex)
+			{
 				throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
 			}
 			catch (Exception ex)
@@ -144,54 +166,68 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			}
 		}
 
-		public long CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud)
-		{
-			//// se realiza insercion en bitacora
-			try
-			{
-				string codSolicitud = _solicitudesRepository.ObtenerNumeroSolicitud(requestCrearSolicitud.idComisaria);
+        public async Task<long> CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud)
+        {
+            try
+            {
+                // se realiza inserción en bitácora
+                string codSolicitud = _solicitudesRepository.ObtenerNumeroSolicitud(requestCrearSolicitud.idComisaria);
+                long idSolicitud = _solicitudesRepository.CrearSolicitudCiudadano(requestCrearSolicitud, codSolicitud);
 
+                // guardar adjuntos (se ignoran si son null o vacíos)
+                await GuardarArchivoAsync(requestCrearSolicitud.adjunto, idSolicitud, "Archivo_Tipo_Entidad");
+                await GuardarArchivoAsync(requestCrearSolicitud.archivoTraslado, idSolicitud, "Traslado_Caso_VIF");
 
-				 long idSolicitud = _solicitudesRepository.CrearSolicitudCiudadano(requestCrearSolicitud, codSolicitud);
+                // validar si requiere remisión
+                if (!requestCrearSolicitud.esCompetenciaComisaria ||
+                    (requestCrearSolicitud.esCompetenciaComisaria && requestCrearSolicitud.esNecesarioRemitir))
+                {
+                    var data = new RequestRemisionSolicitud
+                    {
+                        id_solicitud_servicio = idSolicitud,
+                        justificacion = requestCrearSolicitud.justificacionRemision,
+                        id_comisaria_origen = requestCrearSolicitud.idComisaria,
+                        id_comisaria_destino = requestCrearSolicitud.idComisariaRemision,
+                        id_entidad_externa = requestCrearSolicitud.idEntidadExterna,
+                        idUsuarioSistema = requestCrearSolicitud.idUsuarioSistema,
+                        tipo_remision = requestCrearSolicitud.idComisariaRemision != 0 // true = comisaría, false = entidad externa
+                    };
 
+                    _solicitudesRepository.RegistroRemisionSolicitud(data);
+                }
 
-				if (!requestCrearSolicitud.esCompetenciaComisaria || (requestCrearSolicitud.esCompetenciaComisaria && requestCrearSolicitud.esNecesarioRemitir)) {
+                _solicitudesRepository.RegistroInvolucradoPrincipalAproceso(requestCrearSolicitud.idCiudadano, idSolicitud);
 
-					RequestRemisionSolicitud data = new RequestRemisionSolicitud();
-					data.id_solicitud_servicio = idSolicitud;
-					data.justificacion = requestCrearSolicitud.justificacionRemision;
-					data.id_comisaria_origen = requestCrearSolicitud.idComisaria;
-					data.id_comisaria_destino = requestCrearSolicitud.idComisariaRemision;
-					data.id_entidad_externa = requestCrearSolicitud.idEntidadExterna;
-					data.idUsuarioSistema = requestCrearSolicitud.idUsuarioSistema;
+                return idSolicitud;
+            }
+            catch (ControledException ex)
+            {
+                throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+        }
 
-					if (requestCrearSolicitud.idComisariaRemision != 0)
-						data.tipo_remision = true;
+        /// <summary>
+        /// Guarda un archivo asociado a la solicitud si existe contenido en base64.
+        /// </summary>
+        private async Task GuardarArchivoAsync(string? archivoBase64, long idSolicitud, string tipoDocumento)
+        {
+            if (archivoBase64 is { Length: > 0 })
+            {
+                var archivo = new CargaArchivoDTO
+                {
+                    idSolicitudServicio = idSolicitud,
+                    entrada = archivoBase64,
+                    tipoDocumento = tipoDocumento,
+                };
 
-					if (requestCrearSolicitud.idEntidadExterna != 0)
-						data.tipo_remision = false;
-
-					_solicitudesRepository.RegistroRemisionSolicitud(data);
-
-				}
-
-				_solicitudesRepository.RegistroInvolucradoPrincipalAproceso(requestCrearSolicitud.idCiudadano, idSolicitud);
-
-				return idSolicitud;
-
-				//_solicitudesRepository.RegistroInvolucrado(); integracion con miguel
-			}
-			catch (ControledException ex)
-			{
-				throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
-			}
-			catch (Exception ex)
-			{
-				throw new ControledException(ex.HResult);
-			}
-		}
-
-		public long ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud)
+                await _archivoService.Carga(archivo);
+            }
+        }
+        public async Task<long> ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud)
 		{
 			//// se realiza insercion en bitacora
 			try
@@ -199,6 +235,16 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 
 				long idSolicitud = _solicitudesRepository.ActualizarSolicitudCiudadano(requestActualizarSolicitud);
 
+				if (requestActualizarSolicitud.adjunto is { Length: > 0 })
+				{
+					var archivo = new CargaArchivoDTO
+					{
+						idSolicitudServicio = idSolicitud,
+						entrada = requestActualizarSolicitud.adjunto,
+						tipoDocumento = "Archivo_Tipo_Entidad",
+					};
+					await _archivoService.Carga(archivo);
+				}
 
 				if (!requestActualizarSolicitud.esCompetenciaComisaria || (requestActualizarSolicitud.esCompetenciaComisaria && requestActualizarSolicitud.esNecesarioRemitir))
 				{
@@ -393,8 +439,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
                 if (requestRegistrarCiudadano.edad == 0)
                     errors.Add("Edad debe ser diligenciado, campo obligatorio");
 
-                if (requestRegistrarCiudadano.idNivelAcademico == 0)
-                    errors.Add("Nivel académico debe ser diligenciado, campo obligatorio");
+                //if (requestRegistrarCiudadano.idNivelAcademico == 0)
+                  //  errors.Add("Nivel académico debe ser diligenciado, campo obligatorio");
 
 				try
 				{
@@ -441,6 +487,11 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			return _solicitudesRepository.ObtenerCiudadano(id);
 		}
 
+		public ResponseListaPaginada ObtenerInvolucrado(int id)
+		{
+			return _solicitudesRepository.ObtenerInvolucrado(id);
+		}
+
 		public async Task<ResponseListaPaginada> RegistroInvolucrado(long id,List<RequestDatosInvolucrado> data)
 		{
 			try
@@ -450,11 +501,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 
 				foreach (var involucrado in data)
 				{
-
 					var tuple = _solicitudesRepository.RegistroInvolucrado(involucrado);
-
 					_solicitudesRepository.RegistroServicioInvolucrado(id, tuple.Item2);
-
 				}
 
 				/*Se genera la tarea*/
@@ -481,6 +529,45 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 
 				throw new Exception(e.Message);
 			}
+
+        }
+		
+        public ResponseListaPaginada ObtenerSolicitudServiciosInvolucrado(int id, int idComisaria)
+        {
+	        try {
+
+		        return _solicitudesRepository.ObtenerSolicitudServiciosInvolucrado(id, idComisaria);
+	        }
+	        catch (Exception e)
+	        {
+
+		        throw new Exception(e.Message);
+	        }
+
+        }
+
+        public ResponseListaPaginada ConsultarSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
+        {
+            try
+            {
+                return _solicitudesRepository.ConsultarSolicitudesGeneralesPorFiltros(solicitud);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+
+        }
+        public ResponseListaPaginada ConsultarPreSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
+        {
+            try
+            {
+                return _solicitudesRepository.ConsultarPreSolicitudesGeneralesPorFiltros(solicitud);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
 
         }
 

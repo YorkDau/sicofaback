@@ -11,6 +11,8 @@ using sicf_BusinessHandlers.BusinessHandlers.Usuario;
 using sicf_BusinessHandlers.BusinessHandlers.Tarea;
 using sicf_Models.Constants;
 using Microsoft.AspNetCore.Authorization;
+using sicf_BusinessHandlers.BusinessHandlers.Archivos;
+using sicf_Models.Dto.Archivos;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,7 +38,6 @@ namespace sicfServicesApi.Controllers
             _validarAcceso = validarAcceso;
             _usuarioHandler = usuarioHandler;
             _tareaHandler = tareaHandler;
-
         }
 
         [HttpGet]

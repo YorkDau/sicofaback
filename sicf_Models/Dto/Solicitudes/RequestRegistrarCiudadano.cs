@@ -1,11 +1,4 @@
-﻿using sicf_Models.Dto.Compartido;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace sicf_Models.Dto.Solicitudes
+﻿namespace sicf_Models.Dto.Solicitudes
 {
     public class RequestRegistrarCiudadano
     {
@@ -17,18 +10,23 @@ namespace sicf_Models.Dto.Solicitudes
         public int idTipoDocumento { get; set; }
         public string numeroDocumento { get; set; }
         public string? fechaExpedicion { get; set; }
-        public int idlugarExpedicion { get; set; }
         public string? fechaNacimiento { get; set; }
         public int edad { get; set; }
-        public int idPaisNacimiento { get; set; }
         public int idPaisExpedicion { get; set; }
         public int idDepartamentoExpedicion { get; set; }
+        public int idMunicipioExpedicion { get; set; }
+        public int idPaisNacimiento { get; set; }
         public int idDepartamentoNacimiento { get; set; }
         public int idMunicipioNacimiento { get; set; }
         public int idSexo { get; set; }
         public int idIdentidadGenero { get; set; }
         public int idOrientacionSexual { get; set; }
         public int idNivelAcademico { get; set; }
+        public int idEstadoAcademico { get; set; } //agregado
+        public int idEstrato{ get; set; } //agregado
+        public int idLocalidadComuna { get; set; } //agregado
+        public string? mujerFamilia { get; set; }
+
         public string direccionResidencia { get; set; }
         public int idLocalidad { get; set; }
         public string? barrio { get; set; }
@@ -39,6 +37,8 @@ namespace sicf_Models.Dto.Solicitudes
         public EstadoEmbarazoDto estadoEmbarazo { get; set; }
         public AfiliadoSeguridadSocialDto afiliadoSeguridadSocial { get; set; }
         public bool poblacionLgtbi { get; set; }
+        public bool adultoMayor { get; set; } //agregado
+        public bool mujerEmbarazada { get; set; } //agregado
         public bool ninoNinaAdolocente { get; set; }
         public bool migrante { get; set; }
         public bool victimaConflictoArmado { get; set; }

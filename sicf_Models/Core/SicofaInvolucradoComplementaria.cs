@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace sicf_Models.Core
+﻿namespace sicf_Models.Core
 {
     public partial class SicofaInvolucradoComplementaria
     {
@@ -20,9 +17,12 @@ namespace sicf_Models.Core
         public bool? NutricionalAdecuada { get; set; }
         public bool? PsicologicaAdecuada { get; set; }
         public bool? VacunacionCompleta { get; set; }
+
+        public bool? Escolarizado { get; set; }
         public string? MatriculadoEnElColegio { get; set; }
         public string? GradoCursa { get; set; }
         public string? JornadaEstudio { get; set; }
+
         public string? TipoVivienda { get; set; }
         public string? OtroTipoVivienda { get; set; }
         public int? NumeroHabitacionesVivienda { get; set; }
@@ -39,8 +39,13 @@ namespace sicf_Models.Core
         public bool? FamiliaExtensa { get; set; }
         public string? OtraInformacionFamiliaExtensa { get; set; }
         public long? IdAnexo { get; set; }
-
+        public bool? NoInformacion { get; set; }
         public string? OtrotipoViviendaCual { get; set; }
+
+        public string? ObservacionesSalud { get; set; }
+        public string? ObservacionesPsicologia { get; set; }
+        public string? ObservacionesTrabajoSocial { get; set; }
+
         public virtual SicofaInvolucrado IdInvolucradoNavigation { get; set; } = null!;
     }
 }

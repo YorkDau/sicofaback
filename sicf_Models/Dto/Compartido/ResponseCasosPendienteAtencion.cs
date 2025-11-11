@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace sicf_Models.Dto.Compartido
+﻿namespace sicf_Models.Dto.Compartido
 {
     public class ResponseCasosPendienteAtencion
     {
@@ -28,5 +22,7 @@ namespace sicf_Models.Dto.Compartido
 
         public string? riesgoCalculado { get; set; }
         public int remision { get; set; }
+        public string sexoAfectado { get; set; }
+        public string tipo_presolicitud { get; set; }
     }
 }

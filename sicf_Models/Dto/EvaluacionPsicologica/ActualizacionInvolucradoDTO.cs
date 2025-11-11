@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace sicf_Models.Dto.EvaluacionPsicologica
+﻿namespace sicf_Models.Dto.EvaluacionPsicologica
 {
     public class ActualizacionInvolucradoDTO
     {
@@ -35,6 +29,8 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
 
         public bool victimaConflicto { get; set; } // aplica cuando es victima  true, si es agresor enviar false
 
+        public bool victimaDesplazamiento { get; set; } // aplica cuando es victima  true, si es agresor enviar false
+
         public string eps { get; set; } // aplica cuando es victima , si es agresor enviar "";
 
         public string ips { get; set; } // aplica cuando es victima , si es agresor enviar "";
@@ -43,8 +39,17 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
 
         public string descripcionOrganizacionCriminal { get; set; } // aplica cuando solo cuando es agresor , si es victima enviar ""
 
-        public int? lugarExpedicion { get; set; }
+        //public int? lugarExpedicion { get; set; }
+        public int? paisExp { get; set; }
+        public long? departamentoExp { get; set; }
+        public long? municipioExp { get; set; }
+        
+        public int? paisNacimiento{ get; set; }
+        public long? departamentoNacimiento { get; set; }
+        public long? municipioNacimiento{ get; set; }
+
         public int? idSexo { get; set; }
+        public int? idRegimen { get; set; }
 
         public int? idRelacionPareja { get; set; }
 
@@ -83,15 +88,11 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
 
     public class informacionHijo
     {
+        public string? nombres { get; set; }
         public int? edad { get; set; }
-
+        public int? edadEn { get; set; }
         public int? sexo { get; set; }
-
         public int? custodia { get; set; }
-
         public int relacionParental { get; set; }
-
-
-
     }
 }

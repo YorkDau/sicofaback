@@ -17,10 +17,16 @@ namespace sicf_Models.Core
         public string NumeroDocumento { get; set; } = null!;
         public int IdTipoDocumento { get; set; }
         public long? IdDepartamento { get; set; }
-        public long? IdLugarExpedicion { get; set; }
+        //public long? IdLugarExpedicion { get; set; }
+        public int? IdPaisExpedicion { get; set; }
+        public long? IdDepartamentoExpedicion { get; set; }
+        public long? IdMunicipioExpedicion { get; set; }
         public int? IdPaisNacimiento { get; set; }
         public long? IdCiudMunNacimiento { get; set; }
         public int? IdNivelAcademico { get; set; }
+        public int? IdEstadoAcademico { get; set; } //agregado
+        public int? IdEstrato { get; set; } //agregado
+        public int? IdLocalidadComuna { get; set; } //agregado
         public int? IdLocalidad { get; set; }
         public string? Barrio { get; set; }
         public string NombreCiudadano { get; set; } = null!;
@@ -42,6 +48,9 @@ namespace sicf_Models.Core
         public bool? RequiereModificacion { get; set; }
         public bool? EsVictima { get; set; }
         public bool? PoblacionLgtbi { get; set; }
+        public bool? AdultoMayor { get; set; }
+        public bool? MujerEmbarazada { get; set; }
+        public string? MujerFamilia { get; set; }
         public bool? NinoNinaAdolecente { get; set; }
         public bool? Migrante { get; set; }
         public bool? VictimaConflictoArmado { get; set; }

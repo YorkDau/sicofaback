@@ -40,16 +40,12 @@ namespace sicf_Models.Dto.Ciudadano
         // public bool poblacion_especial { get; set; }
 
         public bool poblacion_lgtbi { get; set; }
-
+        public bool adulto_mayor { get; set; }
+        public bool mujer_embarazada { get; set; }
         public bool nino_nina_adolecente { get; set; }
-
         public bool victima_conflicto_armado { get; set; }
-
-
         public bool persona_lider_defensor_DH { get; set; }
-
         public bool persona_habitalidad_calle { get; set; }
-
         public bool migrante { get; set; }
 
     }

@@ -485,6 +485,9 @@ namespace sicf_DataBase.Compartido
                 invo.Edad = involucrado.Edad;
                 invo.Telefono = involucrado.Telefono;
                 invo.CorreoElectronico = involucrado.CorreoElectronico;
+                invo.EsRepresentante = involucrado.EsRepresentante ?? false;
+                invo.EdadEn = involucrado.EdadEn;
+
 
                 if (involucrado.EsVictima == true)
                 {
@@ -508,10 +511,14 @@ namespace sicf_DataBase.Compartido
                 }
 
 
-              
-               // invo.EsPrincipal = involucrado.EsPrincipal.Value;
-                invo.IdLugarExpedicion = involucrado.IdLugarExpedicion;
+
+                // invo.EsPrincipal = involucrado.EsPrincipal.Value;
                 invo.Eps = involucrado.Eps;
+
+                //invo.IdLugarExpedicion = involucrado.IdLugarExpedicion == 0 ? invo.IdLugarExpedicion : involucrado.IdLugarExpedicion;
+                invo.IdPaisExpedicion = involucrado.PaisExp == 0 ? invo.IdPaisExpedicion : involucrado.PaisExp;
+                invo.IdDepartamentoExpedicion = involucrado.DepartamentoExp == 0 ? invo.IdDepartamentoExpedicion : involucrado.DepartamentoExp;
+                invo.IdMunicipioExpedicion = involucrado.MunicipioExp == 0 ? invo.IdMunicipioExpedicion : involucrado.MunicipioExp;
 
                 context.SicofaInvolucrado.Add(invo);
                 await context.SaveChangesAsync();
@@ -577,6 +584,11 @@ namespace sicf_DataBase.Compartido
                 deta.ActividadesExtracurriculares = involucrado.ActividadesExtracurriculares;
                 deta.FamiliaExtensa = involucrado.FamiliaExtensa;
                 deta.OtraInformacionFamiliaExtensa = involucrado.OtraInformacionFamiliaExtensa;
+                deta.NoInformacion = involucrado.NoInformacion;
+
+                deta.ObservacionesSalud = involucrado.ObservacionesSalud;
+                deta.ObservacionesPsicologia = involucrado.ObservacionesPsicologia;
+                deta.ObservacionesTrabajoSocial = involucrado.ObservacionesTrabajoSocial;
 
                 context.SicofaInvolucradoComplementaria.Add(deta);
                 await context.SaveChangesAsync();
@@ -636,6 +648,8 @@ namespace sicf_DataBase.Compartido
             try
             {
                 SicofaInvolucrado invo = await context.SicofaInvolucrado.Where(x => x.IdInvolucrado == involucrado.IdInvolucrado).FirstOrDefaultAsync();
+
+
                 // ;
                 invo.NumeroDocumento = involucrado.NumeroDocumento == "" ? invo.NumeroDocumento : involucrado.NumeroDocumento;
                 invo.TipoDocumento = involucrado.TipoDocumento == 0 ? invo.TipoDocumento : Convert.ToInt16(involucrado.TipoDocumento);
@@ -661,12 +675,18 @@ namespace sicf_DataBase.Compartido
                     invo.Apellidos = invo.Apellidos;
                 }
                 invo.Edad = involucrado.Edad == 0 ? invo.Edad : involucrado.Edad;
+                invo.EdadEn = involucrado.EdadEn == 0 ? invo.EdadEn : involucrado.EdadEn;
                 invo.Telefono = involucrado.Telefono == "" ? invo.Telefono : involucrado.Telefono;
                 invo.CorreoElectronico = involucrado.CorreoElectronico == "" ? invo.CorreoElectronico : involucrado.CorreoElectronico;
                 invo.EsVictima = involucrado.EsVictima is null ? invo.EsVictima : involucrado.EsVictima.Value;
                 invo.EsPrincipal = involucrado.EsPrincipal == null ? invo.EsPrincipal : involucrado.EsPrincipal;
-                invo.IdLugarExpedicion = involucrado.IdLugarExpedicion == 0 ? invo.IdLugarExpedicion : involucrado.IdLugarExpedicion;
+                invo.EsRepresentante = involucrado.EsRepresentante == null ? invo.EsRepresentante : involucrado.EsRepresentante;
                 invo.Eps = involucrado.Eps == "" ? invo.Eps : involucrado.Eps;
+
+                //invo.IdLugarExpedicion = involucrado.IdLugarExpedicion == 0 ? invo.IdLugarExpedicion : involucrado.IdLugarExpedicion;
+                invo.IdPaisExpedicion = involucrado.PaisExp == 0 ? invo.IdPaisExpedicion : involucrado.PaisExp;
+                invo.IdDepartamentoExpedicion = involucrado.DepartamentoExp == 0 ? invo.IdDepartamentoExpedicion : involucrado.DepartamentoExp;
+                invo.IdMunicipioExpedicion = involucrado.MunicipioExp == 0 ? invo.IdMunicipioExpedicion : involucrado.MunicipioExp;
 
                 await context.SaveChangesAsync();
 
@@ -709,9 +729,13 @@ namespace sicf_DataBase.Compartido
                     deta.NutricionalAdecuada = involucrado.NutricionalAdecuada;
                     deta.PsicologicaAdecuada = involucrado.PsicologaAdecuada;
                     deta.VacunacionCompleta = involucrado.VacunacionCompleta;
-                    deta.MatriculadoEnElColegio = involucrado.MatriculadoEnElColegio;
-                    deta.GradoCursa = involucrado.GradoCursa;
-                    deta.JornadaEstudio = involucrado.JornadaEstudio;
+
+                    bool escolarizado = involucrado.Escolarizado ?? false;
+                    deta.Escolarizado = escolarizado;
+                    deta.MatriculadoEnElColegio = escolarizado ? involucrado.MatriculadoEnElColegio : "N/A";
+                    deta.GradoCursa = escolarizado ? involucrado.GradoCursa : "N/A";
+                    deta.JornadaEstudio = escolarizado ? involucrado.JornadaEstudio : "N/A";
+
                     deta.TipoVivienda = involucrado.TipoVivienda;
                     deta.OtroTipoVivienda = involucrado.OtroTipoVivienda;
                     deta.NumeroHabitacionesVivienda = involucrado.NumeroHabitacionesVivienda == string.Empty ? 0 : Convert.ToInt16(involucrado.NumeroHabitacionesVivienda);
@@ -728,6 +752,10 @@ namespace sicf_DataBase.Compartido
                     deta.FamiliaExtensa = involucrado.FamiliaExtensa;
                     deta.OtraInformacionFamiliaExtensa = involucrado.OtraInformacionFamiliaExtensa;
                     deta.OtrotipoViviendaCual = involucrado.OtroTipoViviendaCual;
+                    deta.NoInformacion = involucrado.NoInformacion;
+                    deta.ObservacionesSalud = involucrado.ObservacionesSalud;
+                    deta.ObservacionesPsicologia = involucrado.ObservacionesPsicologia;
+                    deta.ObservacionesTrabajoSocial = involucrado.ObservacionesTrabajoSocial;
 
                     context.SicofaInvolucradoComplementaria.Add(deta);
 
@@ -753,9 +781,13 @@ namespace sicf_DataBase.Compartido
                     deta.NutricionalAdecuada = involucrado.NutricionalAdecuada;
                     deta.PsicologicaAdecuada = involucrado.PsicologaAdecuada;
                     deta.VacunacionCompleta = involucrado.VacunacionCompleta;
-                    deta.MatriculadoEnElColegio = involucrado.MatriculadoEnElColegio;
-                    deta.GradoCursa = involucrado.GradoCursa;
-                    deta.JornadaEstudio = involucrado.JornadaEstudio;
+
+                    bool escolarizado = involucrado.Escolarizado ?? false;
+                    deta.Escolarizado = escolarizado;
+                    deta.MatriculadoEnElColegio = escolarizado ? involucrado.MatriculadoEnElColegio : "N/A";
+                    deta.GradoCursa = escolarizado ? involucrado.GradoCursa : "N/A";
+                    deta.JornadaEstudio = escolarizado ? involucrado.JornadaEstudio : "N/A";
+
                     deta.TipoVivienda = involucrado.TipoVivienda;
                     deta.OtroTipoVivienda = involucrado.OtroTipoVivienda;
                     deta.NumeroHabitacionesVivienda = involucrado.NumeroHabitacionesVivienda == string.Empty ? 0 : Convert.ToInt16(involucrado.NumeroHabitacionesVivienda);
@@ -773,7 +805,10 @@ namespace sicf_DataBase.Compartido
                     deta.OtraInformacionFamiliaExtensa = involucrado.OtraInformacionFamiliaExtensa;
                     deta.OtrotipoViviendaCual = involucrado.OtroTipoViviendaCual;
 
-                   
+                    deta.ObservacionesSalud = involucrado.ObservacionesSalud;
+                    deta.ObservacionesPsicologia = involucrado.ObservacionesPsicologia;
+                    deta.ObservacionesTrabajoSocial = involucrado.ObservacionesTrabajoSocial;
+
 
                     await context.SaveChangesAsync();
                     return true;
@@ -820,15 +855,25 @@ namespace sicf_DataBase.Compartido
                                          }
                                           ).First();
 
-                var datosComisaria = await (from usuario in context.SicofaUsuarioSistema
-                                    join comisaria in context.SicofaUsuarioComisaria on usuario.IdUsuarioSistema equals comisaria.IdUsuario
-                                    join comi in context.SicofaComisaria on comisaria.IdComisaria equals comi.IdComisaria
-                                    where usuario.CorreoElectronico == salida.email
-                                    select Tuple.Create(comi.Nombre , comi.Direccion)).FirstAsync();
+                                    
+                var datosComisaria = await (
+                                        from usuario in context.SicofaUsuarioSistema
+                                        join comisaria in context.SicofaUsuarioComisaria on usuario.IdUsuarioSistema equals comisaria.IdUsuario
+                                        join comi in context.SicofaComisaria on comisaria.IdComisaria equals comi.IdComisaria
+                                        where usuario.CorreoElectronico == salida.email
+                                        select Tuple.Create(
+                                            comi.Nombre,
+                                            comi.Direccion,
+                                            usuario.NumeroTarjetaProfesional
+                                        )
+                                    ).FirstAsync();
 
+                                    salida.direccionComisaria = datosComisaria.Item2;
+                                    salida.nombreComisaria = datosComisaria.Item1;
+                                    salida.numeroTarjetaProfesional = string.IsNullOrWhiteSpace(datosComisaria.Item3)
+                                        ? "No tiene Tarjeta profesional"
+                                        : datosComisaria.Item3;
 
-                salida.direccionComisaria = datosComisaria.Item2;
-                salida.nombreComisaria = datosComisaria.Item1;
 
 
                 return salida;

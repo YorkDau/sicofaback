@@ -10,6 +10,7 @@ namespace sicf_Models.Dto.Plantilla
     {
         public string? observacion { get; set; }
         public bool? aprobado { get; set; }
+        public bool? esNecesarioRemitir { get; set; }
         public List<PlantillaSeccionesDTO> secciones { get; set; }
 
         public PlantillaGuardarDTO()

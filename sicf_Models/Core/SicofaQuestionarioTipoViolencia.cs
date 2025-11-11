@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace sicf_Models.Core
+﻿namespace sicf_Models.Core
 {
     public partial class SicofaQuestionarioTipoViolencia : BaseEntity
     {
@@ -15,6 +12,7 @@ namespace sicf_Models.Core
         public string? Descripcion { get; set; }
         public bool EsCerrada { get; set; }
         public int? Puntuacion { get; set; }
+        public string? Nullable { get; set; } = default;
 
         public virtual ICollection<SicofaRespuestaQuestionarioTipoViolencia> SicofaRespuestaQuestionarioTipoViolencia { get; set; }
     }

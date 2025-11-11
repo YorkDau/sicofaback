@@ -94,6 +94,8 @@ namespace sicf_DataBase.Data
 
         public virtual DbSet<SicofaHistorialContrasena> SicofaHistorialContrasena { get; set; } = null!;
 
+        public virtual DbSet<SicofaObservacionSolicitudApelacion> Observaciones { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -104,6 +106,32 @@ namespace sicf_DataBase.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseCollation("Modern_Spanish_CI_AS");
+
+            modelBuilder.Entity<SicofaObservacionSolicitudApelacion>(entity =>
+            {
+                entity.HasKey(e => e.Id_observacion_solicitud_apelacion)
+                    .HasName("PK_SICOFA_ObservacionSolicitudApelacion");
+
+                entity.ToTable("SICOFA_ObervacionSolicitudApelacion");
+
+                entity.Property(e => e.Id_observacion_solicitud_apelacion)
+                    .HasColumnName("id_observacion_solicitud_apelacion");
+
+                entity.Property(e => e.Id_solicitud_servicio)
+                    .HasColumnName("id_solicitud_servicio");
+
+                entity.Property(e => e.Observacion)
+                    .IsUnicode(false)
+                    .HasColumnName("observacion");
+
+           
+
+                entity.HasOne(d => d.SicofaSolicitudServicio)
+                    .WithMany(p => p.Observaciones)
+                    .HasForeignKey(d => d.Id_solicitud_servicio)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_SICOFA_ObservacionSolicitudApelacion_SolicitudServicio");
+            });
 
             modelBuilder.Entity<SicofaActividad>(entity =>
             {
@@ -345,62 +373,46 @@ namespace sicf_DataBase.Data
                     .HasColumnName("fecha_nacimiento");
 
                 entity.Property(e => e.IdCiudMunNacimiento).HasColumnName("id_ciud_mun_nacimiento");
-
                 entity.Property(e => e.IdContextoFamiliar).HasColumnName("id_contexto_familiar");
-
                 entity.Property(e => e.IdDepartamento).HasColumnName("id_departamento");
-
                 entity.Property(e => e.IdGenero).HasColumnName("id_genero");
-
                 entity.Property(e => e.IdLocalidad).HasColumnName("id_localidad");
 
-                entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
+                //entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
 
                 entity.Property(e => e.IdNivelAcademico).HasColumnName("id_nivel_academico");
-
+                entity.Property(e => e.IdEstadoAcademico).HasColumnName("id_estado_academico");
+                entity.Property(e => e.IdEstrato).HasColumnName("id_estrato");
+                entity.Property(e => e.IdLocalidadComuna).HasColumnName("id_localidad_comuna");
                 entity.Property(e => e.IdOrientacionSexual).HasColumnName("id_orientacion_sexual");
-
                 entity.Property(e => e.IdPaisNacimiento).HasColumnName("id_pais_nacimiento");
-
                 entity.Property(e => e.IdSexo).HasColumnName("id_sexo");
-
                 entity.Property(e => e.IdTipoDiscpacidad).HasColumnName("id_tipo_discpacidad");
-
                 entity.Property(e => e.IdTipoDocumento).HasColumnName("id_tipo_documento");
-
                 entity.Property(e => e.IdTipoRelacion).HasColumnName("id_tipo_relacion");
-
                 entity.Property(e => e.IdTipoTramite).HasColumnName("id_tipo_tramite");
-
                 entity.Property(e => e.IdTipoViolencia).HasColumnName("id_tipo_violencia");
-
                 entity.Property(e => e.Ips)
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("ips");
-
                 entity.Property(e => e.MesesEmbarazo).HasColumnName("meses_embarazo");
-
                 entity.Property(e => e.Migrante).HasColumnName("migrante");
-
                 entity.Property(e => e.NinoNinaAdolecente).HasColumnName("nino_nina_adolecente");
-
                 entity.Property(e => e.NombreCiudadano)
                     .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasColumnName("nombre_ciudadano");
-
                 entity.Property(e => e.NumeroDocumento)
                     .HasMaxLength(20)
                     .IsUnicode(false)
                     .HasColumnName("numero_documento");
-
                 entity.Property(e => e.PersonaHabitalidadCalle).HasColumnName("persona_habitalidad_calle");
-
                 entity.Property(e => e.PersonaLiderDefensorDh).HasColumnName("persona_lider_defensor_DH");
-
                 entity.Property(e => e.PoblacionLgtbi).HasColumnName("poblacion_lgtbi");
-
+                entity.Property(e => e.AdultoMayor).HasColumnName("adulto_mayor");
+                entity.Property(e => e.MujerEmbarazada).HasColumnName("mujer_embarazada");
+                entity.Property(e => e.MujerFamilia).HasColumnName("mujer_familia");
                 entity.Property(e => e.PrimerApellido)
                     .HasMaxLength(100)
                     .IsUnicode(false)
@@ -444,6 +456,17 @@ namespace sicf_DataBase.Data
                     .WithMany(p => p.SicofaCiudadano)
                     .HasForeignKey(d => d.IdPaisNacimiento)
                     .HasConstraintName("FK_SICOFA_Ciudadano_SICOFA_Pais");
+
+                //entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
+                entity.Property(e => e.IdPaisExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_pais_expedicion");
+                entity.Property(e => e.IdDepartamentoExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_departamento_expedicion");
+                entity.Property(e => e.IdMunicipioExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_ciud_mun_expedicion");
             });
 
             modelBuilder.Entity<SicofaCiudadanoPobEspcProte>(entity =>
@@ -897,6 +920,19 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.TipoRedApoyoDescripcion)
                     .IsUnicode(false)
                     .HasColumnName("tipo_red_apoyo_descripcion");
+                
+                entity.Property(e => e.ValoracionPsicologica)
+                    .IsUnicode(false)
+                    .HasColumnName("valoracion_psicologica");
+                
+                entity.Property(e => e.ValoracionEntorno)
+                    .IsUnicode(false)
+                    .HasColumnName("valoracion_entorno_familiar"); 
+                
+                entity.Property(e => e.HayMenores)
+                    .IsUnicode(false)
+                    .HasColumnName("hay_menores"); 
+                
             });
 
             modelBuilder.Entity<SicofaEvaluacionPsicologicaLista>(entity =>
@@ -995,11 +1031,20 @@ namespace sicf_DataBase.Data
 
                 entity.ToTable("SICOFA_Hijoinvolucrado");
 
+                entity.Property(e => e.Nombres)
+                    .IsRequired(false)
+                    .HasDefaultValue("Sin ingresar")
+                    .HasColumnName("nombres");
+
                 entity.Property(e => e.IdHijo).HasColumnName("id_hijo");
 
                 entity.Property(e => e.Custodia).HasColumnName("custodia");
 
                 entity.Property(e => e.Edad).HasColumnName("edad");
+                entity.Property(e => e.EdadEn)
+                    .IsRequired(false)
+                    .HasDefaultValue(0)
+                    .HasColumnName("edadEn");
 
                 entity.Property(e => e.IdInvolucrado).HasColumnName("id_involucrado");
 
@@ -1096,6 +1141,8 @@ namespace sicf_DataBase.Data
                     .HasColumnName("direccion_recidencia");
 
                 entity.Property(e => e.Edad).HasColumnName("edad");
+                entity.Property(e => e.EdadEn).HasColumnName("edadEn");
+
 
                 entity.Property(e => e.Eps)
                     .HasMaxLength(50)
@@ -1105,6 +1152,7 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.EsPrincipal).HasColumnName("es_principal");
 
                 entity.Property(e => e.EsVictima).HasColumnName("es_victima");
+                entity.Property(e => e.EsRepresentante).HasColumnName("es_representante");
 
                 entity.Property(e => e.EstadoEmbarazo)
                     .HasMaxLength(2)
@@ -1128,13 +1176,12 @@ namespace sicf_DataBase.Data
 
                 entity.Property(e => e.IdGenero).HasColumnName("id_genero");
 
-                entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
-
                 entity.Property(e => e.IdNivelAcademico).HasColumnName("id_nivel_academico");
 
                 entity.Property(e => e.IdOrientacionSexual).HasColumnName("id_orientacion_sexual");
 
                 entity.Property(e => e.IdSexo).HasColumnName("id_sexo");
+                entity.Property(e => e.IdRegimen).HasColumnName("id_regimen");
 
                 entity.Property(e => e.IdTipoDiscpacidad).HasColumnName("id_tipo_discpacidad");
 
@@ -1217,6 +1264,47 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.TipoDocumento).HasColumnName("tipo_documento");
 
                 entity.Property(e => e.VictimaConflictoArmado).HasColumnName("victima_conflicto_armado");
+                entity.Property(e => e.VictimaDesplazamiento)
+                    .HasColumnName("victima_desplazamiento")
+                    .HasDefaultValue(false);
+
+                //entity.Property(e => e.IdLugarExpedicion).HasColumnName("id_lugar_expedicion");
+                entity.Property(e => e.IdPaisExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_pais_expedicion");
+                entity.Property(e => e.IdDepartamentoExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_departamento_expedicion");
+                entity.Property(e => e.IdMunicipioExpedicion)
+                    .IsRequired(false)
+                    .HasColumnName("id_ciud_mun_expedicion");
+                
+                //entity.Property(e => e.IdLugarNacimiento).HasColumnName("id_lugar_nacimeinto");
+                entity.Property(e => e.IdPaisNacimiento)
+                    .IsRequired(false)
+                    .HasColumnName("id_pais_nacimiento");
+                entity.Property(e => e.IdDepartamentoNacimiento)
+                    .IsRequired(false)
+                    .HasColumnName("id_departamento_nacimiento");
+                entity.Property(e => e.IdMunicipioNacimiento)
+                    .IsRequired(false)
+                    .HasColumnName("id_ciud_mun_nacimiento");
+
+                entity.Property(e => e.tieneEducacion)
+                    .IsRequired(false)
+                    .HasColumnName("tiene_educacion");
+                
+                entity.Property(e => e.tieneSalud)
+                    .IsRequired(false)
+                    .HasColumnName("tiene_salud");
+                
+                entity.Property(e => e.vacunacionCompleta)
+                    .IsRequired(false)
+                    .HasColumnName("vacunacion_completa");
+                
+                entity.Property(e => e.lugarEstudio)
+                    .IsRequired(false)
+                    .HasColumnName("lugar_estudio");
             });
 
             modelBuilder.Entity<SicofaInvolucradoComplementaria>(entity =>
@@ -1255,6 +1343,10 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.FisicaAdecuada)
                     .HasColumnName("Fisica_Adecuada")
                     .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Escolarizado)
+                    .HasDefaultValue(false)
+                    .HasColumnName("Escolarizado");
 
                 entity.Property(e => e.GradoCursa)
                     .HasMaxLength(50)
@@ -1357,6 +1449,25 @@ namespace sicf_DataBase.Data
                     .HasForeignKey<SicofaInvolucradoComplementaria>(d => d.IdInvolucrado)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SICOFA_Involucrado_Complementaria");
+
+                entity.Property(e => e.ObservacionesSalud)
+                    .IsRequired(false)
+                    .HasColumnName("Observaciones_Salud");
+
+                entity.Property(e => e.ObservacionesPsicologia)
+                    .IsRequired(false)
+                    .HasColumnName("Observaciones_Psicologia");
+
+                //agregamos la columna faltante ....
+                entity.Property(e => e.NoInformacion)
+                    .HasColumnName("No_Informacion")
+                    .HasDefaultValueSql("((0))");
+
+
+
+                entity.Property(e => e.ObservacionesTrabajoSocial)
+                    .IsRequired(false)
+                    .HasColumnName("Observaciones_TrabajoSocial");
             });
 
 
@@ -1698,6 +1809,7 @@ namespace sicf_DataBase.Data
                     .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.aprobado).HasColumnName("aprobado");
+                entity.Property(e => e.esNecesarioRemitir).HasColumnName("es_necesario_remitir");
 
                 entity.Property(e => e.apelacion).HasColumnName("apelacion");
 
@@ -1944,6 +2056,9 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.IdTipoViolencia).HasColumnName("id_tipo_violencia");
 
                 entity.Property(e => e.Puntuacion).HasColumnName("puntuacion");
+                entity.Property(e => e.Nullable)
+                    .IsRequired(false)
+                    .HasColumnName("nullable");
             });
 
             modelBuilder.Entity<SicofaQuorum>(entity =>
@@ -2054,6 +2169,10 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.Mes).HasColumnName("mes");
 
                 entity.Property(e => e.Puntuacion).HasColumnName("puntuacion");
+
+                entity.Property(e => e.Nullable)
+                    .IsRequired(false)
+                    .HasColumnName("nullable");
 
                 entity.HasOne(d => d.IdQuestionarioNavigation)
                     .WithMany(p => p.SicofaRespuestaQuestionarioTipoViolencia)
@@ -2254,20 +2373,15 @@ namespace sicf_DataBase.Data
                 entity.ToTable("SICOFA_SolicitudPrueba");
 
                 entity.Property(e => e.IdSolicitudPrueba).HasColumnName("id_solicitud_prueba");
-
                 entity.Property(e => e.IdAnexo).HasColumnName("id_anexo");
-
                 entity.Property(e => e.IdInvolucrado).HasColumnName("id_involucrado");
-
+                entity.Property(e => e.IdPruebaPericial).HasColumnName("id_prueba_pericial");
                 entity.Property(e => e.IdSolicitudServicio).HasColumnName("id_solicitud_servicio");
-
                 entity.Property(e => e.IdTarea).HasColumnName("id_tarea");
-
                 entity.Property(e => e.NombreArchivo)
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasColumnName("nombre_archivo");
-
                 entity.Property(e => e.TipoPrueba)
                     .HasMaxLength(50)
                     .IsUnicode(false)
@@ -2289,7 +2403,14 @@ namespace sicf_DataBase.Data
                     .HasForeignKey(d => d.IdTarea)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__SICOFA_So__id_ta__3F073C79");
+
+                entity.HasOne(d => d.IdPruebaPericialNavigation)
+                    .WithMany()
+                    .HasForeignKey(d => d.IdPruebaPericial)
+                    .IsRequired(false) 
+                    .HasConstraintName("FK__SICOFA_So__id_pr__40EF7E0B");
             });
+
 
             modelBuilder.Entity<SicofaSolicitudServicio>(entity =>
             {
@@ -2372,6 +2493,12 @@ namespace sicf_DataBase.Data
                     .IsUnicode(false)
                     .HasColumnName("subestado_solicitud")
                     .HasDefaultValueSql("('EN PROCESO')");
+
+                entity.Property(e => e.SexoAfectado)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("SexoAfectado")
+                    .HasDefaultValueSql("('NA')");
 
                 entity.HasOne(d => d.IdCiudadanoNavigation)
                     .WithMany(p => p.SicofaSolicitudServicio)
@@ -2855,7 +2982,14 @@ namespace sicf_DataBase.Data
                     .HasColumnName("numero_documento");
 
                 entity.Property(e => e.TelefonoFijo).HasColumnName("telefono_fijo");
+
+                // ——— Aquí agregamos el mapeo de la nueva columna ———
+                entity.Property(e => e.NumeroTarjetaProfesional)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("numero_tarjeta_profesional");
             });
+
 
             modelBuilder.Entity<SicofaUsuarioSistemaPerfil>(entity =>
             {

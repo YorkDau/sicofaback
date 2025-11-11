@@ -170,4 +170,58 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Apelacion
             return tareas;
         }
     }
+
+
+    public class Apelacion_Service : IApelacion_Service
+    {
+        private readonly IApelacion_Repository apelacionRepository;
+        private readonly ITareaHandler tareaHandler;
+        private readonly ISendgridNotificaciones sendgridNotificaciones;
+
+        public Apelacion_Service(IApelacion_Repository apelacion_Repository, ITareaHandler tareaHandler, ISendgridNotificaciones sendgridNotificaciones)
+        {
+            this.apelacionRepository = apelacion_Repository;
+            this.tareaHandler = tareaHandler;
+            this.sendgridNotificaciones = sendgridNotificaciones;
+        }
+
+        public List<ApelacioneReponseDTO> ConsultarApelaciones(ConsultarApelacionObtencionDTO apelacion)
+        {
+            try
+            {
+                return apelacionRepository.ConsultarApelaciones(apelacion);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+
+        }
+
+        public List<SicofaObservacionSolicitudApelacion> ConsultarObservacionesApelaciones(int id_solicitud_servicio)
+        {
+            try
+            {
+                return apelacionRepository.ConsultarObservacionesApelaciones(id_solicitud_servicio);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+        }
+
+        public SicofaObservacionSolicitudApelacion GuardarObservacionesApelaciones(ObservacionSolicitudApelacionRequest request)
+        {
+            try
+            {
+                return apelacionRepository.GuardarObservacionesApelaciones(request);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+        }
+
+        
+    }
 }

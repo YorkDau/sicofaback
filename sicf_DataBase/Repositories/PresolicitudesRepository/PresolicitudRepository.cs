@@ -134,19 +134,24 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                 var nombreDenunciante = await _context.SicofaSolicitudServicioComplementaria.Where(com => com.IdSolicitudServicio == idPresolicitud).Select(se => se.NombresDenunciante).FirstOrDefaultAsync();
 
                 var comisario = await (from usuario in _context.SicofaUsuarioSistema
-                                 join usuper in _context.SicofaUsuarioSistemaPerfil on usuario.IdUsuarioSistema equals usuper.IdUsuarioSistema
-                                 join usuariocomi in _context.SicofaUsuarioComisaria on usuario.IdUsuarioSistema equals usuariocomi.IdUsuario
-                                 where usuper.IdPerfil == 2
-                                 select usuario.Nombres + usuario.Apellidos
-                                 ).FirstOrDefaultAsync();
+                                       join usuper in _context.SicofaUsuarioSistemaPerfil on usuario.IdUsuarioSistema equals usuper.IdUsuarioSistema
+                                       join usuariocomi in _context.SicofaUsuarioComisaria on usuario.IdUsuarioSistema equals usuariocomi.IdUsuario
+                                       where usuper.IdPerfil == 2
+                                       select new
+                                       {
+                                           Nombres = usuario.Nombres,
+                                           Apellidos = usuario.Apellidos
+                                       }).FirstOrDefaultAsync();
+
+                string nombreCompletoComisario = comisario != null ? $"{comisario.Nombres} {comisario.Apellidos}" : string.Empty;
 
 
                 PresolicitudInformeAbogado salida = new PresolicitudInformeAbogado();
-                salida.nombreComisario = comisario;
+                salida.nombreComisario = nombreCompletoComisario;
                 salida.ciudad = preview.Item1;
                 salida.codigoSolicitud = preview.Item2;
                 salida.nombreComisaria = preview.Item3;
-                salida.nombreVictima = $"{victima.PrimerNombre} {victima.SegundoNombre} {victima.PrimerNombre} {victima.SegundoApellido}";
+                salida.nombreVictima = $"{victima.PrimerNombre} {victima.SegundoNombre} {victima.PrimerApellido} {victima.SegundoApellido}";
                 salida.numeroDocumentoVictima = victima.NumeroDocumento;
                 salida.nombreDenunciante = nombreDenunciante;
 
@@ -348,7 +353,7 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                 }
                 else if ( (bool)!presolicitud.presolicitudABO.seRealizaraPard)
                 {
-                    if (presolicitud.presolicitudOUT.tipoPresolicitud == "DEN")
+                    if (presolicitud.presolicitudOUT.tipoPresolicitud == "DEN" || presolicitud.presolicitudOUT.tipoPresolicitud == "DENAM")
                     {
                         if (presolicitudCEA.idCita > 0)
                         {

@@ -24,6 +24,13 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
         /// <param name="requestConsultarCiudadano"></param>
         /// <returns></returns>
         public ResponseListaPaginada ObtenerCiudadanos(RequestCiudadano requestCiudadano);
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requestConsultarCiudadano"></param>
+        /// <returns></returns>
+        public ResponseListaPaginada ObtenerInvolucrados(RequestCiudadano requestCiudadano);
 
         /// <summary>
         /// 
@@ -57,6 +64,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
 
 
         public ResponseListaPaginada ObtenerCiudadano(int id);
+
+        public ResponseListaPaginada ObtenerInvolucrado(int id);
 
         /// <summary>
         /// 
@@ -98,7 +107,13 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
         /// <param name="id"></param>
         /// <returns></returns>
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int id, int idComisaria);
+        public ResponseListaPaginada ObtenerSolicitudServiciosInvolucrado(int id, int idComisaria);
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int idComisaria);
+
+        List<ConsultaGeneralSolicitudDTO> ConsultaSolicitudGeneral(ConsultaGeneralSolicitudDTO solicitud);
+        public ResponseListaPaginada ConsultarSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
+        public ResponseListaPaginada ConsultarPreSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
+
 
         /// <summary>
         /// 

@@ -12,9 +12,10 @@ namespace sicf_Models.Dto.ReporteSolicitud
         public DateTime? fechaSolicitudDesde { get; set; }
         public DateTime? fechaSolicitudHasta { get; set; }
         public long? id_comisaria { get; set; }
+        public bool pard_generar { get; set; }
 
         /// nuevos parametros para la consulta del reporte de solictudes
-      
+
         public string? NombreCompletoVictima { get; set; }
         public string? NombreCompletoVictimario { get; set; }
         public string? SexoVictima { get; set; }

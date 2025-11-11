@@ -17,6 +17,7 @@ namespace sicf_Models.Dto.Archivos
         public long idTarea { get; set; }
 
         public long? idInvolucrado { get; set; }
+        public int? idPruebaPericial { get; set; }
 
         public int idUsuario { get; set; }
     }

@@ -1,7 +1,5 @@
 ﻿using CoreApiResponse;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using sicf_Models.Dto.Cita;
 using sicf_Models.Dto.Solicitudes;
 using sicf_Models.Utility;
 using sicfExceptions.Exceptions;
@@ -9,9 +7,7 @@ using System.Net;
 using static sicf_Models.Constants.Constants;
 using sicf_BusinessHandlers.BusinessHandlers.Solicitudes;
 using FluentValidation;
-using Microsoft.AspNetCore.Cors;
-using sicf_Models.Core;
-using sicf_Models.Dto.Apelacion;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -95,6 +91,36 @@ namespace sicfServicesApi.Controllers
             }
         }
 
+
+        [HttpPost]
+        [Route("consultarInvolucrados")]
+        public IActionResult GetInvolucrados(RequestCiudadano requestCiudadano)
+        {
+            try
+            {
+                var response = new ResponseListaPaginada();
+                response = _solicitudesHandler.ValidarCiudadano(requestCiudadano);
+
+                if (response.TotalRegistros > 0)
+                    return CustomResult(Message.ErrorRequest, response, HttpStatusCode.BadRequest);
+
+                response = _solicitudesHandler.GetInvolucrados(requestCiudadano);
+
+                return CustomResult(Message.Ok, response);
+
+            }
+            catch (ControledException ex)
+            {
+                return CustomResult(Message.ErrorInterno, Message.ErrorGenerico, HttpStatusCode.InternalServerError);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorInterno, Message.ErrorGenerico, HttpStatusCode.InternalServerError);
+            }
+        }
+
+        
+        
         [HttpGet]
         [Route("consultarNumeroDocumentoCiudadano")]
         //[Authorize]   
@@ -176,12 +202,12 @@ namespace sicfServicesApi.Controllers
         [HttpPost]
         [Route("crearSolicitudCiudadano")]
         //[Authorize]   
-        public IActionResult CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud)
+        public async Task<IActionResult> CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud)
         {
             try
             {
                 long idSolicitud = 0;
-                idSolicitud = _solicitudesHandler.CrearSolicitudCiudadano(requestCrearSolicitud);
+                idSolicitud = await _solicitudesHandler.CrearSolicitudCiudadano(requestCrearSolicitud);
 
                 if (idSolicitud != 0)
                     return CustomResult(Message.Ok, idSolicitud, HttpStatusCode.OK);
@@ -201,12 +227,12 @@ namespace sicfServicesApi.Controllers
         [HttpPost]
         [Route("ActualizarSolicitudCiudadano")]
         //[Authorize]   
-        public IActionResult ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud)
+        public async Task<IActionResult> ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud)
         {
             try
             {
                 long idSolicitud = 0;
-                idSolicitud = _solicitudesHandler.ActualizarSolicitudCiudadano(requestActualizarSolicitud);
+                idSolicitud = await _solicitudesHandler.ActualizarSolicitudCiudadano(requestActualizarSolicitud);
 
                 if (idSolicitud != 0)
                     return CustomResult(Message.Ok, idSolicitud, HttpStatusCode.OK);
@@ -318,8 +344,6 @@ namespace sicfServicesApi.Controllers
         public IActionResult ObtenerCiudadano([FromRoute] int id)
         {
             try {
-
-
                 var response = _solicitudesHandler.ObtenerCiudadano(id);
 
                 return CustomResult(Message.Ok, response, HttpStatusCode.OK);
@@ -334,13 +358,27 @@ namespace sicfServicesApi.Controllers
                 return CustomResult("Error Interno", "En estos momentos presentamos inconvenientes en la comunicación del sistema, intenta más tarde o espera 5 minutos para volver a intentarlo", HttpStatusCode.InternalServerError);
             }
         }
+        
+        [HttpGet("ObtenerInvolucrado/{id?}")]
+        public IActionResult ObtenerInvolucrado([FromRoute] int id)
+        {
+            try
+            {
+                var response = _solicitudesHandler.ObtenerInvolucrado(id);
+                return CustomResult(Message.Ok, response);
+            }
+            catch (ControledException ex)
+            {
+                return CustomResult(Message.ErrorInterno, Message.ErrorGenerico, HttpStatusCode.InternalServerError);
+            }
+        }
 
         [HttpGet("ObtenerSolicitudes/{id?}/{idComisaria?}")]
 
         public IActionResult ObtenerSolicitudServiciosCiudadano([FromRoute] int id, int idComisaria) 
         {
             try {
-                var response = _solicitudesHandler.ObtenerSolicitudServiciosCiudadano(id, idComisaria);
+                 var response = _solicitudesHandler.ObtenerSolicitudServiciosCiudadano(id, idComisaria);
 
                 return CustomResult(Message.Ok, response, HttpStatusCode.OK);
 
@@ -351,6 +389,60 @@ namespace sicfServicesApi.Controllers
                 return CustomResult(Message.ErrorInterno, ex.Message, HttpStatusCode.OK);
             }
         }
+        
+        [HttpGet("ObtenerSolicitudesInvolucrado/{id?}/{idComisaria?}")]
+
+        public IActionResult ObtenerSolicitudServiciosInvolucrado([FromRoute] int id, int idComisaria) 
+        {
+            try {
+                var response = _solicitudesHandler.ObtenerSolicitudServiciosInvolucrado(id, idComisaria);
+
+                return CustomResult(Message.Ok, response);
+            }
+         
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorInterno, ex.Message, HttpStatusCode.OK);
+            }
+        }
+
+        [HttpPost("ConsultarSolicitudesFiltro")]
+        public IActionResult ConsultarSolicitudesGeneralesPorFiltros([FromBody] ConsultaGeneralSolicitudRequestDTO solicitud)
+        {
+            try
+            {
+                var resultado = _solicitudesHandler.ConsultarSolicitudesGeneralesPorFiltros(solicitud);
+                return CustomResult(Message.Ok, resultado, HttpStatusCode.OK);
+            }
+            catch (ControledException ex)
+            {
+                return BadRequest(new { mensaje = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error interno del servidor", detalle = ex.Message });
+            }
+        }
+
+        [HttpPost("ConsultarPreSolicitudesFiltro")]
+        public IActionResult ConsultarPreSolicitudesGeneralesPorFiltros([FromBody] ConsultaGeneralSolicitudRequestDTO solicitud)
+        {
+            try
+            {
+                var resultado = _solicitudesHandler.ConsultarPreSolicitudesGeneralesPorFiltros(solicitud);
+                return CustomResult(Message.Ok, resultado, HttpStatusCode.OK);
+            }
+            catch (ControledException ex)
+            {
+                return BadRequest(new { mensaje = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error interno del servidor", detalle = ex.Message });
+            }
+        }
+
+
 
         [HttpGet("ObtenerSolicitudes/{idComisaria?}")]
 
@@ -394,7 +486,6 @@ namespace sicfServicesApi.Controllers
 
         public IActionResult ObtenerDatosSolicitud([FromRoute] int idSolicitud)
         {
-
             try
             {
                 var response = _solicitudesHandler.ObtenerDatosSolicitud(idSolicitud);

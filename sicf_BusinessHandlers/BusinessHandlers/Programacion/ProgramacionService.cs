@@ -18,21 +18,28 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Programacion
         private readonly IProgramacionRepository _programacionRepository;
 
         public ProgramacionService(IProgramacionRepository programacionRepository)
-        { 
+        {
             _programacionRepository = programacionRepository;
         }
 
         public async Task<ProgramacionDTO> ObtenerProgramacion(long idTarea)
         {
-                ProgramacionDTO programacion = await _programacionRepository.ObtenerProgramacion(idTarea);
+            ProgramacionDTO programacion = await _programacionRepository.ObtenerProgramacion(idTarea);
 
-                programacion.listTiposAudiencia = _programacionRepository.ObtenerTiposAudiencia(programacion.etiqueta);
-                programacion.listaProgramaciones = await _programacionRepository.ObtenerAgenda(programacion.idSolicitudServicio, programacion.idTarea);
+            programacion.listTiposAudiencia = _programacionRepository.ObtenerTiposAudiencia(programacion.etiqueta);
+            programacion.listaProgramaciones =
+                await _programacionRepository.ObtenerAgenda(programacion.idSolicitudServicio, programacion.idTarea);
 
-                return programacion;
+            return programacion;
         }
 
-        public Task<bool> ActualizarProgramacion(ProgramacionGuardarDTO programacion)
+        public async Task<List<ProgramacionAgendaDTO>> ObtenerAgendaGeneral(long idComisaria)
+        {
+            var result = await _programacionRepository.ObtenerAgendaGeneral(idComisaria);
+            return result;
+        }
+
+    public Task<bool> ActualizarProgramacion(ProgramacionGuardarDTO programacion)
         {
             try
             {

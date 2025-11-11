@@ -21,6 +21,7 @@ using sicf_Models.Core;
 using Microsoft.EntityFrameworkCore;
 using sicf_Models.Constants;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace sicf_DataBase.Repositories.SolicitudesRepository
 {
@@ -212,6 +213,79 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 throw new ControledException(ex.HResult);
             }
         }
+        
+        public ResponseListaPaginada ObtenerInvolucrados(RequestCiudadano requestCiudadano)
+        {
+            var involucrados = new List<ResponseInvolucradoDto>();
+            try
+            {
+                string? mensaje = "";
+                using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+                {
+                    string query = "PR_SICOFA_OBTENER_INVOLUCRADOS";
+                    using (_command = new SqlCommand(query))
+                    {
+
+                        _command.CommandType = CommandType.StoredProcedure;
+                        _command.Parameters.AddWithValue("@nombres", BdValidation.ToDBNull((!string.IsNullOrEmpty(requestCiudadano.nombre_ciudadano)) ? requestCiudadano.nombre_ciudadano.Trim() : requestCiudadano.nombre_ciudadano));
+                        _command.Parameters.AddWithValue("@apellidos", BdValidation.ToDBNull((!string.IsNullOrEmpty(requestCiudadano.apellido_ciudadano)) ? requestCiudadano.apellido_ciudadano.Trim() : requestCiudadano.apellido_ciudadano));
+                        _command.Parameters.AddWithValue("@numero_documento", BdValidation.ToDBNull(requestCiudadano.numero_documento));
+
+                        _command.Connection = _connectionDb;
+                        _connectionDb.Open();
+
+
+                        using SqlDataReader reader = _command.ExecuteReader();
+                        if (reader.HasRows)
+                            while (reader.Read())
+                            {
+                                if (reader.FieldCount > 1)
+                                {
+
+                                    var involucrado = new ResponseInvolucradoDto();
+
+                                    involucrado.idInvolucrado = ConvertFDBVal.ConvertFromDBVal<long>(reader["ID Involucrado"]);
+                                    involucrado.nombres = ConvertFDBVal.ConvertFromDBVal<string>(reader["Nombres"]);
+                                    involucrado.apellidos = ConvertFDBVal.ConvertFromDBVal<string>(reader["Apellidos"]);
+                                    involucrado.tipo_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["Tipo Documento"]);
+                                    involucrado.numero_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["Numero Documento"]);
+                                    involucrado.numero_solicitudes = ConvertFDBVal.ConvertFromDBVal<int>(reader["Numero Solicitudes"]);
+                                    involucrado.fecha_ult_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["Ultima Solicitud"]);
+                                    
+                                    involucrados.Add(involucrado);
+                                }
+                                else
+                                {
+                                    mensaje = ConvertFDBVal.ConvertFromDBVal<string>(reader["Mensaje"]);
+                                }
+                            }
+
+                        _connectionDb.Close();
+                    }
+                }
+
+                ResponseListaPaginada responseListaPaginada = new ResponseListaPaginada();
+
+                if (mensaje != "")
+                    responseListaPaginada.DatosPaginados = mensaje;
+                else
+                {
+                    if (involucrados.Count == 0) return responseListaPaginada;
+                    responseListaPaginada.DatosPaginados = involucrados;
+                    responseListaPaginada.TotalRegistros = involucrados.Count;
+                }
+
+                return responseListaPaginada;
+            }
+            catch (ControledException ex)
+            {
+                throw new ControledException(Convert.ToInt32(ex.RespuestaApi.Status));
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+        } 
 
         public ResponseListaPaginada RegistrarCiudadano(RequestRegistrarCiudadano requestRegistrarCiudadano)
         {
@@ -231,15 +305,18 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@idTipoDocumento", BdValidation.ToDBNull(requestRegistrarCiudadano.idTipoDocumento));
                         _command.Parameters.AddWithValue("@numeroDocumento", BdValidation.ToDBNull(requestRegistrarCiudadano.numeroDocumento));
                         _command.Parameters.AddWithValue("@fechaExpedicion", BdValidation.ToDBNull((string.IsNullOrEmpty(requestRegistrarCiudadano.fechaExpedicion)) ? null : DateTime.ParseExact(requestRegistrarCiudadano.fechaExpedicion, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
-                        _command.Parameters.AddWithValue("@idlugarExpedicion", BdValidation.ToDBNull(requestRegistrarCiudadano.idlugarExpedicion));
+                        //_command.Parameters.AddWithValue("@idlugarExpedicion", BdValidation.ToDBNull(requestRegistrarCiudadano.idlugarExpedicion));
                         _command.Parameters.AddWithValue("@fechaNacimiento", BdValidation.ToDBNull((string.IsNullOrEmpty(requestRegistrarCiudadano.fechaNacimiento)) ? null : DateTime.ParseExact(requestRegistrarCiudadano.fechaNacimiento, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture))); ;
-
                         _command.Parameters.AddWithValue("@edad", BdValidation.ToDBNull(requestRegistrarCiudadano.edad));
-                        _command.Parameters.AddWithValue("@idPaisNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisNacimiento == 0) ? null : requestRegistrarCiudadano.idPaisNacimiento));
+                        /*
+                         *  @idPaisExpedicion int,
+                            @idDepartamentoExpedicion bigint,
+                            @idMunicipioExpedicion bigint,
+                         * */
                         _command.Parameters.AddWithValue("@idPaisExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisExpedicion == 0) ? null : requestRegistrarCiudadano.idPaisExpedicion));
                         _command.Parameters.AddWithValue("@idDepartamentoExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idDepartamentoExpedicion == 0) ? null : requestRegistrarCiudadano.idDepartamentoExpedicion));
-                        
-
+                        _command.Parameters.AddWithValue("@idMunicipioExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idMunicipioExpedicion == 0) ? null : requestRegistrarCiudadano.idMunicipioExpedicion));
+                        _command.Parameters.AddWithValue("@idPaisNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisNacimiento == 0) ? null : requestRegistrarCiudadano.idPaisNacimiento));
 
                         _command.Parameters.AddWithValue("@idDepartamentoNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idDepartamentoNacimiento == 0) ? null : requestRegistrarCiudadano.idDepartamentoNacimiento));
                         _command.Parameters.AddWithValue("@idMunicipioNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idMunicipioNacimiento == 0) ? null : requestRegistrarCiudadano.idMunicipioNacimiento));
@@ -247,6 +324,9 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@idIdentidadGenero", BdValidation.ToDBNull((requestRegistrarCiudadano.idIdentidadGenero == 0) ? null : requestRegistrarCiudadano.idIdentidadGenero));
                         _command.Parameters.AddWithValue("@idOrientacionSexual", BdValidation.ToDBNull((requestRegistrarCiudadano.idOrientacionSexual == 0) ? null : requestRegistrarCiudadano.idOrientacionSexual));
                         _command.Parameters.AddWithValue("@idNivelAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idNivelAcademico == 0) ? null : requestRegistrarCiudadano.idNivelAcademico));
+                        _command.Parameters.AddWithValue("@idEstadoAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idEstadoAcademico == 0) ? null : requestRegistrarCiudadano.idEstadoAcademico)); //agregado
+                        _command.Parameters.AddWithValue("@idEstrato", BdValidation.ToDBNull((requestRegistrarCiudadano.idEstrato == 0) ? null : requestRegistrarCiudadano.idEstrato)); //agregado
+                        _command.Parameters.AddWithValue("@idLocalidadComuna", BdValidation.ToDBNull((requestRegistrarCiudadano.idLocalidadComuna == 0) ? null : requestRegistrarCiudadano.idLocalidadComuna)); //agregado
                         _command.Parameters.AddWithValue("@direccionResidencia", BdValidation.ToDBNull(requestRegistrarCiudadano.direccionResidencia));
 
                         _command.Parameters.AddWithValue("@idLocalidad", BdValidation.ToDBNull((requestRegistrarCiudadano.idLocalidad == 0) ? null : requestRegistrarCiudadano.idLocalidad));
@@ -261,8 +341,12 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@estaAfiliado", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.estaAfiliado));
                         _command.Parameters.AddWithValue("@eps", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.eps));
                         _command.Parameters.AddWithValue("@ips", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.ips));
+                        _command.Parameters.AddWithValue("@mujerFamilia ", BdValidation.ToDBNull(requestRegistrarCiudadano.mujerFamilia)); // agregado
+
 
                         _command.Parameters.AddWithValue("@poblacionLgtbi", BdValidation.ToDBNull(requestRegistrarCiudadano.poblacionLgtbi));
+                        _command.Parameters.AddWithValue("@adultoMayor", BdValidation.ToDBNull(requestRegistrarCiudadano.adultoMayor));
+                        _command.Parameters.AddWithValue("@mujerEmbarazada", BdValidation.ToDBNull(requestRegistrarCiudadano.mujerEmbarazada));
                         _command.Parameters.AddWithValue("@ninoNinaAdolocente", BdValidation.ToDBNull(requestRegistrarCiudadano.ninoNinaAdolocente));
                         _command.Parameters.AddWithValue("@migrante", BdValidation.ToDBNull(requestRegistrarCiudadano.migrante));
                         _command.Parameters.AddWithValue("@victimaConflictoArmado", BdValidation.ToDBNull(requestRegistrarCiudadano.victimaConflictoArmado));
@@ -320,10 +404,17 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@idTipoDocumento", BdValidation.ToDBNull(requestRegistrarCiudadano.idTipoDocumento));
                         _command.Parameters.AddWithValue("@numeroDocumento", BdValidation.ToDBNull(requestRegistrarCiudadano.numeroDocumento));
                         _command.Parameters.AddWithValue("@fechaExpedicion", BdValidation.ToDBNull((string.IsNullOrEmpty(requestRegistrarCiudadano.fechaExpedicion)) ? null : DateTime.ParseExact(requestRegistrarCiudadano.fechaExpedicion, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
-                        _command.Parameters.AddWithValue("@idlugarExpedicion", BdValidation.ToDBNull(requestRegistrarCiudadano.idlugarExpedicion));
+                        //_command.Parameters.AddWithValue("@idlugarExpedicion", BdValidation.ToDBNull(requestRegistrarCiudadano.idlugarExpedicion));
                         _command.Parameters.AddWithValue("@fechaNacimiento", BdValidation.ToDBNull((string.IsNullOrEmpty(requestRegistrarCiudadano.fechaNacimiento)) ? null : DateTime.ParseExact(requestRegistrarCiudadano.fechaNacimiento, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture))); ;
-
                         _command.Parameters.AddWithValue("@edad", BdValidation.ToDBNull(requestRegistrarCiudadano.edad));
+                        /*
+                         *  @idPaisExpedicion int,
+                            @idDepartamentoExpedicion bigint,
+                            @idMunicipioExpedicion bigint,
+                         * */
+                        _command.Parameters.AddWithValue("@idPaisExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisExpedicion == 0) ? null : requestRegistrarCiudadano.idPaisExpedicion));
+                        _command.Parameters.AddWithValue("@idDepartamentoExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idDepartamentoExpedicion == 0) ? null : requestRegistrarCiudadano.idDepartamentoExpedicion));
+                        _command.Parameters.AddWithValue("@idMunicipioExpedicion", BdValidation.ToDBNull((requestRegistrarCiudadano.idMunicipioExpedicion == 0) ? null : requestRegistrarCiudadano.idMunicipioExpedicion));
                         _command.Parameters.AddWithValue("@idPaisNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idPaisNacimiento == 0) ? null : requestRegistrarCiudadano.idPaisNacimiento));
                         _command.Parameters.AddWithValue("@idDepartamentoNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idDepartamentoNacimiento == 0) ? null : requestRegistrarCiudadano.idDepartamentoNacimiento));
                         _command.Parameters.AddWithValue("@idMunicipioNacimiento", BdValidation.ToDBNull((requestRegistrarCiudadano.idMunicipioNacimiento == 0) ? null : requestRegistrarCiudadano.idMunicipioNacimiento));
@@ -331,6 +422,9 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@idIdentidadGenero", BdValidation.ToDBNull((requestRegistrarCiudadano.idIdentidadGenero == 0) ? null : requestRegistrarCiudadano.idIdentidadGenero));
                         _command.Parameters.AddWithValue("@idOrientacionSexual", BdValidation.ToDBNull((requestRegistrarCiudadano.idOrientacionSexual == 0) ? null : requestRegistrarCiudadano.idOrientacionSexual));
                         _command.Parameters.AddWithValue("@idNivelAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idNivelAcademico == 0) ? null : requestRegistrarCiudadano.idNivelAcademico));
+                        _command.Parameters.AddWithValue("@idEstadoAcademico", BdValidation.ToDBNull((requestRegistrarCiudadano.idEstadoAcademico == 0) ? null : requestRegistrarCiudadano.idEstadoAcademico)); //agregado
+                        _command.Parameters.AddWithValue("@idEstrato", BdValidation.ToDBNull((requestRegistrarCiudadano.idEstrato == 0) ? null : requestRegistrarCiudadano.idEstrato)); //agregado
+                        _command.Parameters.AddWithValue("@idLocalidadComuna", BdValidation.ToDBNull((requestRegistrarCiudadano.idLocalidadComuna == 0) ? null : requestRegistrarCiudadano.idLocalidadComuna)); //agregado
                         _command.Parameters.AddWithValue("@direccionResidencia", BdValidation.ToDBNull(requestRegistrarCiudadano.direccionResidencia));
 
                         _command.Parameters.AddWithValue("@idLocalidad", BdValidation.ToDBNull((requestRegistrarCiudadano.idLocalidad == 0) ? null : requestRegistrarCiudadano.idLocalidad));
@@ -345,8 +439,12 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@estaAfiliado", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.estaAfiliado));
                         _command.Parameters.AddWithValue("@eps", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.eps));
                         _command.Parameters.AddWithValue("@ips", BdValidation.ToDBNull(requestRegistrarCiudadano.afiliadoSeguridadSocial.ips));
+                        _command.Parameters.AddWithValue("@mujerFamilia ", BdValidation.ToDBNull(requestRegistrarCiudadano.mujerFamilia)); // agregado
+
 
                         _command.Parameters.AddWithValue("@poblacionLgtbi", BdValidation.ToDBNull(requestRegistrarCiudadano.poblacionLgtbi));
+                        _command.Parameters.AddWithValue("@adultoMayor", BdValidation.ToDBNull(requestRegistrarCiudadano.adultoMayor));
+                        _command.Parameters.AddWithValue("@mujerEmbarazada", BdValidation.ToDBNull(requestRegistrarCiudadano.mujerEmbarazada));
                         _command.Parameters.AddWithValue("@ninoNinaAdolocente", BdValidation.ToDBNull(requestRegistrarCiudadano.ninoNinaAdolocente));
                         _command.Parameters.AddWithValue("@migrante", BdValidation.ToDBNull(requestRegistrarCiudadano.migrante));
                         _command.Parameters.AddWithValue("@victimaConflictoArmado", BdValidation.ToDBNull(requestRegistrarCiudadano.victimaConflictoArmado));
@@ -384,8 +482,6 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 throw new ControledException(ex.HResult);
             }
         }
-
-
 
         public bool ConsultarNumeroDocumentoCiudadano(string numeroDocuemnto, int idtipoDocumento)
         {
@@ -489,7 +585,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@horaSolicitud", BdValidation.ToDBNull(DateTime.ParseExact(requestCrearSolicitud.horaSolicitud, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                         _command.Parameters.AddWithValue("@descripcionHechos", BdValidation.ToDBNull(requestCrearSolicitud.descripcionHechos));
                         _command.Parameters.AddWithValue("@esVictima", BdValidation.ToDBNull(requestCrearSolicitud.esVictima));
-
+                        _command.Parameters.AddWithValue("@id_tipo_entidad", BdValidation.ToDBNull(requestCrearSolicitud.id_tipo_entidad));
 
                         _command.Parameters.AddWithValue("@fechaHechoViolento", BdValidation.ToDBNull(DateTime.ParseExact(requestCrearSolicitud.fechaHechoViolento, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                         _command.Parameters.AddWithValue("@conviveConAgresor", BdValidation.ToDBNull(requestCrearSolicitud.conviveConAgresor));
@@ -502,6 +598,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@relacionParentescoAgresor", BdValidation.ToDBNull(requestCrearSolicitud.relacionParentescoAgresor));
 
                         _command.Parameters.AddWithValue("@justificacionRemision", BdValidation.ToDBNull(requestCrearSolicitud.justificacionRemision));
+                        _command.Parameters.AddWithValue("@sexoAfectado", BdValidation.ToDBNull(requestCrearSolicitud.SexoAfectado));
                         _command.Parameters.AddWithValue("@idUsuarioSistema", BdValidation.ToDBNull((requestCrearSolicitud.idUsuarioSistema == 0) ? null : requestCrearSolicitud.idUsuarioSistema));
 
                         _command.Connection = _connectionDb;
@@ -554,6 +651,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@horaSolicitud", BdValidation.ToDBNull(DateTime.ParseExact(requestModificarSolicitud.horaSolicitud, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
                         _command.Parameters.AddWithValue("@descripcionHechos", BdValidation.ToDBNull(requestModificarSolicitud.descripcionHechos));
                         _command.Parameters.AddWithValue("@esVictima", BdValidation.ToDBNull(requestModificarSolicitud.esVictima));
+                        _command.Parameters.AddWithValue("@id_tipo_entidad", BdValidation.ToDBNull(requestModificarSolicitud.id_tipo_entidad));
 
 
                         _command.Parameters.AddWithValue("@fechaHechoViolento", BdValidation.ToDBNull(DateTime.ParseExact(requestModificarSolicitud.fechaHechoViolento, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture)));
@@ -567,6 +665,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@relacionParentescoAgresor", BdValidation.ToDBNull(requestModificarSolicitud.relacionParentescoAgresor));
 
                         _command.Parameters.AddWithValue("@justificacionRemision", BdValidation.ToDBNull(requestModificarSolicitud.justificacionRemision));
+                        _command.Parameters.AddWithValue("@sexoAfectado", BdValidation.ToDBNull(requestModificarSolicitud.SexoAfectado));
                         _command.Parameters.AddWithValue("@idUsuarioSistema", BdValidation.ToDBNull((requestModificarSolicitud.idUsuarioSistema == 0) ? null : requestModificarSolicitud.idUsuarioSistema));
 
                         _command.Connection = _connectionDb;
@@ -610,7 +709,6 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Connection = _connectionDb;
                         _connectionDb.Open();
 
-
                         using SqlDataReader reader = _command.ExecuteReader();
                         if (reader.HasRows)
                             while (reader.Read())
@@ -621,7 +719,9 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 responseEditar.idTipoDocumento = ConvertFDBVal.ConvertFromDBVal<int>(reader["idTipoDocumento"]);
                                 responseEditar.numeroDocumento = ConvertFDBVal.ConvertFromDBVal<string>(reader["numeroDocumento"]);
                                 responseEditar.fechaExpedicion = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fechaExpedicion"]).ToShortDateString();
-                                responseEditar.idlugarExpedicion = ConvertFDBVal.ConvertFromDBVal<long>(reader["idlugarExpedicion"]);
+                                responseEditar.idPaisExpedicion = ConvertFDBVal.ConvertFromDBVal<int>(reader["idPaisExpedicion"]);
+                                responseEditar.idDepartamentoExpedicion = ConvertFDBVal.ConvertFromDBVal<long>(reader["idDepartamentoExpedicion"]);
+                                responseEditar.idMunicipioExpedicion = ConvertFDBVal.ConvertFromDBVal<long>(reader["idMunicipioExpedicion"]);
                                 responseEditar.fechaNacimiento = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fechaNacimiento"]).ToShortDateString();
                                 responseEditar.edad = ConvertFDBVal.ConvertFromDBVal<int>(reader["edad"]);
                                 responseEditar.idPaisNacimiento = ConvertFDBVal.ConvertFromDBVal<int>(reader["idPaisNacimiento"]);
@@ -631,34 +731,38 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 responseEditar.idIdentidadGenero = ConvertFDBVal.ConvertFromDBVal<int>(reader["idIdentidadGenero"]);
                                 responseEditar.idOrientacionSexual = ConvertFDBVal.ConvertFromDBVal<int>(reader["idOrientacionSexual"]);
                                 responseEditar.idNivelAcademico = ConvertFDBVal.ConvertFromDBVal<int>(reader["idNivelAcademico"]);
+                                responseEditar.idEstadoAcademico = ConvertFDBVal.ConvertFromDBVal<int>(reader["idEstadoAcademico"]);
                                 responseEditar.direccionResidencia = ConvertFDBVal.ConvertFromDBVal<string>(reader["direccionResidencia"]);
+                                responseEditar.idLocalidad = ConvertFDBVal.ConvertFromDBVal<int>(reader["idLocalidad"]);
+                                responseEditar.idEstrato = ConvertFDBVal.ConvertFromDBVal<int>(reader["idEstrato"]);
+                                responseEditar.idLocalidadComuna = ConvertFDBVal.ConvertFromDBVal<int>(reader["idLocalidadComuna"]);
                                 responseEditar.barrio = ConvertFDBVal.ConvertFromDBVal<string>(reader["barrio"]);
                                 responseEditar.telefono = ConvertFDBVal.ConvertFromDBVal<string>(reader["telefono"]);
                                 responseEditar.celular = ConvertFDBVal.ConvertFromDBVal<string>(reader["celular"]);
                                 responseEditar.correoElectronico = ConvertFDBVal.ConvertFromDBVal<string>(reader["correoElectronico"]);
                                 responseEditar.idDiscapasidad = ConvertFDBVal.ConvertFromDBVal<int>(reader["idDiscapasidad"]);
 
-
                                 responseEditar.estadoEmbarazo.estadoEmbarazo = ConvertFDBVal.ConvertFromDBVal<string>(reader["estadoEmbarazo"]);
                                 responseEditar.estadoEmbarazo.mesesEmbarazo = ConvertFDBVal.ConvertFromDBVal<int>(reader["mesesEmbarazo"]);
                                 responseEditar.afiliadoSeguridadSocial.estaAfiliado = ConvertFDBVal.ConvertFromDBVal<string>(reader["estaAfiliado"]);
                                 responseEditar.afiliadoSeguridadSocial.eps = ConvertFDBVal.ConvertFromDBVal<string>(reader["eps"]);
                                 responseEditar.afiliadoSeguridadSocial.ips = ConvertFDBVal.ConvertFromDBVal<string>(reader["ips"]);
+
                                 responseEditar.poblacionLgtbi = ConvertFDBVal.ConvertFromDBVal<bool>(reader["poblacionLgtbi"]);
+                                responseEditar.adultoMayor = ConvertFDBVal.ConvertFromDBVal<bool>(reader["adultoMayor"]);
+                                responseEditar.mujerEmbarazada = ConvertFDBVal.ConvertFromDBVal<bool>(reader["mujerEmbarazada"]);
                                 responseEditar.ninoNinaAdolocente = ConvertFDBVal.ConvertFromDBVal<bool>(reader["ninoNinaAdolocente"]);
                                 responseEditar.migrante = ConvertFDBVal.ConvertFromDBVal<bool>(reader["migrante"]);
                                 responseEditar.victimaConflictoArmado = ConvertFDBVal.ConvertFromDBVal<bool>(reader["victimaConflictoArmado"]);
                                 responseEditar.personasLideresDefensorasDH = ConvertFDBVal.ConvertFromDBVal<bool>(reader["personasLideresDefensorasDH"]);
                                 responseEditar.personasHabitalidadCalle = ConvertFDBVal.ConvertFromDBVal<bool>(reader["personasHabitalidadCalle"]);
                                 responseEditar.puebloIndigena = ConvertFDBVal.ConvertFromDBVal<string>(reader["puebloIndigena"]);
-
+                                responseEditar.requiereModificacion = ConvertFDBVal.ConvertFromDBVal<bool>(reader["requiereModificacion"]);
                             }
 
                         _connectionDb.Close();
-
                     }
                 }
-
                 return responseEditar;
             }
             catch (ControledException ex)
@@ -704,7 +808,13 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@barrio", BdValidation.ToDBNull(data.barrio));
                         _command.Parameters.AddWithValue("@direccion", BdValidation.ToDBNull(data.direccion));
                         _command.Parameters.AddWithValue("@es_victima", data.tipoInvolucrado);
-                        _command.Parameters.AddWithValue("@principal", data.principal ? true : false);
+                        _command.Parameters.AddWithValue("@principal", data.principal);
+                        
+                        //es un menor de edad
+                        _command.Parameters.AddWithValue("@tieneSalud", data.tieneSalud);
+                        _command.Parameters.AddWithValue("@tieneEducacion", data.tieneEducacion);
+                        _command.Parameters.AddWithValue("@lugarEstudio", data.lugarEstudio);
+                        _command.Parameters.AddWithValue("@vacunacionCompleta", data.vacunacionCompleta);
 
                         // cambio añadido para idenficiar agresor y victima principal
                         _command.Connection = _connectionDb;
@@ -733,7 +843,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 string? mensaje = "";
                 using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
                 {
-                    string query = "PR_SICOFA_CREAR_SERVICIO_INVOLUCRADO";
+                    var query = "PR_SICOFA_CREAR_SERVICIO_INVOLUCRADO";
                     using (_command = new SqlCommand(query))
                     {
                         _command.CommandType = CommandType.StoredProcedure;
@@ -790,9 +900,12 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 ciudadano.registro_completo = ConvertFDBVal.ConvertFromDBVal<bool>(reader["requiereModificacion"]);
 
                                 ciudadano.poblacion_lgtbi = reader["poblacion_lgtbi"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["poblacion_lgtbi"]);
+                                ciudadano.adulto_mayor = reader["adulto_mayor"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["adulto_mayor"]);
+                                ciudadano.mujer_embarazada = reader["mujer_embarazada"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["mujer_embarazada"]);
                                 ciudadano.nino_nina_adolecente = reader["nino_nina_adolecente"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["nino_nina_adolecente"]);
                                 ciudadano.victima_conflicto_armado = reader["victima_conflicto_armado"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["victima_conflicto_armado"]);
                                 ciudadano.persona_lider_defensor_DH = reader["persona_lider_defensor_DH"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["persona_lider_defensor_DH"]);
+                                ciudadano.persona_habitalidad_calle = reader["persona_habitalidad_calle"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["persona_habitalidad_calle"]);
                                 ciudadano.pueblo_indigena = reader["pueblo_indigena"].ToString() == String.Empty ? "No" : ConvertFDBVal.ConvertFromDBVal<string>(reader["pueblo_indigena"]);
                                 ciudadano.migrante = reader["migrante"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["migrante"]);
                             }
@@ -808,25 +921,18 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 }
             }
         }
-
-        /// <summary>
-        ///  el metodo regresa los procesos activos que tiene el ciudadano.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int id, int idComisaria)
+        
+         public ResponseListaPaginada ObtenerInvolucrado(int id)
         {
-            string? mensaje = "";
-            List<SolicitudServicioDTO> solicitudes = new List<SolicitudServicioDTO>();
+            var involucrado = new InvolucradoSimpleDTO();
             using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
             {
-                string query = "PR_SICOFA_CONSULTA_PROCESO_POR_CIUDADANO";
+                string query = "PR_SICOFA_OBTENER_INVOLUCRADO";
                 using (_command = new SqlCommand(query))
                 {
                     _command.CommandType = CommandType.StoredProcedure;
 
-                    _command.Parameters.AddWithValue("@id_ciudadano", BdValidation.ToDBNull(id));
-                    _command.Parameters.AddWithValue("@id_comisaria", BdValidation.ToDBNull(idComisaria));
+                    _command.Parameters.AddWithValue("@id_involucrado", BdValidation.ToDBNull(id));
 
                     _command.Connection = _connectionDb;
                     _connectionDb.Open();
@@ -838,31 +944,143 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         {
                             if (reader.FieldCount > 1)
                             {
-                                SolicitudServicioDTO solicitud = new SolicitudServicioDTO();
-                                solicitud.id_solicitud_servicio = ConvertFDBVal.ConvertFromDBVal<Int64>(reader["id_solicitud_servicio"]);
-                                solicitud.fecha_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_solicitud"]);
-                                solicitud.hora_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["hora_solicitud"]);
-                                solicitud.descripcion_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_de_hechos"]);
-                                solicitud.estado_de_la_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_solicitud"]);
-                                solicitud.codigo_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_solicitud"]);
-                                solicitud.proceso = ConvertFDBVal.ConvertFromDBVal<string>(reader["proceso"]);
-                                solicitud.retormar_solicitud = ConvertFDBVal.ConvertFromDBVal<bool>(reader["retomar_solicitud"]);
+                               involucrado.id = ConvertFDBVal.ConvertFromDBVal<Int64>(reader["id"]);
+                               involucrado.nombres = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombres"]);
+                               involucrado.primer_apellido = ConvertFDBVal.ConvertFromDBVal<string>(reader["primer_apellido"]);
+                               involucrado.segundo_apellido = ConvertFDBVal.ConvertFromDBVal<string>(reader["segundo_apellido"]);
+                               involucrado.tipo_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["tipo_documento"]);
+                               involucrado.telefono = ConvertFDBVal.ConvertFromDBVal<string>(reader["telefono"]);
+                               involucrado.edad = reader["edad"].ToString() == string.Empty ? null : ConvertFDBVal.ConvertFromDBVal<int>(reader["edad"]);
+                               involucrado.fecha_nacimiento = reader["fecha_nacimiento"].ToString() == string.Empty ? null : ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_nacimiento"]);
+                               involucrado.correo_electronico = ConvertFDBVal.ConvertFromDBVal<string>(reader["correo_electronico"]);
+                               involucrado.numero_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento"]);
 
-                                solicitudes.Add(solicitud);
+                               involucrado.poblacion_lgtbi = reader["poblacion_lgtbi"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["poblacion_lgtbi"]);
+                               involucrado.nino_nina_adolecente = reader["nino_nina_adolecente"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["nino_nina_adolecente"]);
+                               involucrado.victima_conflicto_armado = reader["victima_conflicto_armado"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["victima_conflicto_armado"]);
+                               involucrado.persona_lider_defensor_DH = reader["persona_lider_defensor_DH"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["persona_lider_defensor_DH"]);
+                               involucrado.persona_habitalidad_calle = reader["persona_habitalidad_calle"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["persona_habitalidad_calle"]);
+                               involucrado.pueblo_indigena = reader["pueblo_indigena"].ToString() == String.Empty ? "No" : ConvertFDBVal.ConvertFromDBVal<string>(reader["pueblo_indigena"]);
+                               involucrado.migrante = reader["migrante"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["migrante"]);
                             }
+
                         }
 
                         _connectionDb.Close();
                         ResponseListaPaginada responseListaPaginada = new ResponseListaPaginada();
-                        responseListaPaginada.DatosPaginados = solicitudes;
-                        responseListaPaginada.TotalRegistros = solicitudes.Count;
+                        responseListaPaginada.DatosPaginados = involucrado;
                         return responseListaPaginada;
                     }
                     throw new Exception("no existen datos");
                 }
             }
         }
+        
 
+        /// <summary>
+        ///  el metodo regresa los procesos activos que tiene el ciudadano.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int id, int idComisaria)
+        {
+            List<SolicitudServicioDTO> solicitudes = new List<SolicitudServicioDTO>();
+
+            using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+            {
+                string query = "PR_SICOFA_CONSULTA_PROCESO_POR_CIUDADANO";
+                using (_command = new SqlCommand(query, _connectionDb))
+                {
+                    _command.CommandType = CommandType.StoredProcedure;
+                    _command.Parameters.AddWithValue("@id_ciudadano", BdValidation.ToDBNull(id));
+                    _command.Parameters.AddWithValue("@id_comisaria", BdValidation.ToDBNull(idComisaria));
+
+                    _connectionDb.Open();
+
+                    using (SqlDataReader reader = _command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                if (reader.FieldCount > 1)
+                                {
+                                    SolicitudServicioDTO solicitud = new SolicitudServicioDTO
+                                    {
+                                        id_solicitud_servicio = ConvertFDBVal.ConvertFromDBVal<Int64>(reader["id_solicitud_servicio"]),
+                                        fecha_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_solicitud"]),
+                                        hora_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["hora_solicitud"]),
+                                        descripcion_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_de_hechos"]),
+                                        estado_de_la_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_solicitud"]),
+                                        codigo_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_solicitud"]),
+                                        proceso = ConvertFDBVal.ConvertFromDBVal<string>(reader["proceso"]),
+                                        perfil = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_perfil"]),
+                                        retormar_solicitud = ConvertFDBVal.ConvertFromDBVal<bool>(reader["retomar_solicitud"])
+                                    };
+                                    solicitudes.Add(solicitud);
+                                }
+                            }
+                        }
+                        return new ResponseListaPaginada
+                        {
+                            DatosPaginados = solicitudes,
+                            TotalRegistros = solicitudes.Count
+                        };
+                    }
+                }
+            }
+        }
+        
+         public ResponseListaPaginada ObtenerSolicitudServiciosInvolucrado(int id, int idComisaria)
+        {
+            List<SolicitudServicioDTO> solicitudes = new List<SolicitudServicioDTO>();
+
+            using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+            {
+                string query = "PR_SICOFA_CONSULTA_PROCESO_POR_INVOLUCRADO";
+                using (_command = new SqlCommand(query, _connectionDb))
+                {
+                    _command.CommandType = CommandType.StoredProcedure;
+                    _command.Parameters.AddWithValue("@id_involucrado", BdValidation.ToDBNull(id));
+                    _command.Parameters.AddWithValue("@id_comisaria", BdValidation.ToDBNull(idComisaria));
+
+                    _connectionDb.Open();
+
+                    using (SqlDataReader reader = _command.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                if (reader.FieldCount > 1)
+                                {
+                                    SolicitudServicioDTO solicitud = new SolicitudServicioDTO
+                                    {
+                                        id_solicitud_servicio = ConvertFDBVal.ConvertFromDBVal<Int64>(reader["id_solicitud_servicio"]),
+                                        fecha_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_solicitud"]),
+                                        hora_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["hora_solicitud"]),
+                                        descripcion_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_de_hechos"]),
+                                        estado_de_la_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_solicitud"]),
+                                        codigo_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_solicitud"]),
+                                        proceso = ConvertFDBVal.ConvertFromDBVal<string>(reader["proceso"]),
+                                        perfil = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_perfil"]),
+                                        retormar_solicitud = ConvertFDBVal.ConvertFromDBVal<bool>(reader["retomar_solicitud"])
+                                    };
+                                    solicitudes.Add(solicitud);
+                                }
+                            }
+                        }
+                        return new ResponseListaPaginada
+                        {
+                            DatosPaginados = solicitudes,
+                            TotalRegistros = solicitudes.Count
+                        };
+                    }
+                }
+            }
+        }
+        
+        
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int idComisaria)
         {
             string? mensaje = "";
@@ -908,47 +1126,191 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
         }
         
 
-
-        public SolicitudServicioDetalleDTO ObtenerSolicitudServiciosCiudadanoDetalle(int id)
+        public ResponseListaPaginada ConsultarSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
         {
-            string? mensaje = "";
-            SolicitudServicioDetalleDTO solicitud = new SolicitudServicioDetalleDTO();
+            List<ConsultaGeneralSolicitudDTO> resultados = new List<ConsultaGeneralSolicitudDTO>();
+
             using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
             {
-                string query = "PR_SICOFA_CONSULTA_PROCESO_DETALLE_POR_ID";
-                using (_command = new SqlCommand(query))
+                using (_command = new SqlCommand("PR_SICOFA_CONSULTA_GENERAL_SOLICITUDES", _connectionDb))
                 {
                     _command.CommandType = CommandType.StoredProcedure;
 
-                    _command.Parameters.AddWithValue("@id", BdValidation.ToDBNull(id));
+                    _command.Parameters.AddWithValue("@numeroDocumento",
+                        string.IsNullOrEmpty(solicitud.NumeroDocumento) ? DBNull.Value : (object)solicitud.NumeroDocumento);
 
-                    _command.Connection = _connectionDb;
+                    _command.Parameters.AddWithValue("@codigoSolicitud",
+                        string.IsNullOrEmpty(solicitud.CodigoSolicitud) ? DBNull.Value : (object)solicitud.CodigoSolicitud);
+
+                    _command.Parameters.AddWithValue("@idComisaria",
+                        BdValidation.ToDBNull(solicitud.IdComisaria));
+
                     _connectionDb.Open();
+
                     using SqlDataReader reader = _command.ExecuteReader();
 
                     if (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            if (reader.FieldCount > 1)
+                            ConsultaGeneralSolicitudDTO item = new ConsultaGeneralSolicitudDTO
                             {
-                                solicitud.codigo_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_solicitud"]);
-                                solicitud.nombre_ciudaddano = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_ciudadano"]);
-                                solicitud.fecha_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_solicitud"]);
-                                solicitud.hora_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["hora_solicitud"]);
-                                solicitud.descripcion_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_de_hechos"]);
-                                solicitud.es_victima = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_victima"]);
-                                solicitud.fecha_hecho_violento = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_hecho_violento"]);
-                            }
+                                IdSolicitudServicio = Convert.ToInt32(reader["id_solicitud_servicio"]),
+                                FechaSolicitud = Convert.ToDateTime(reader["fecha_solicitud"]),
+                                IdComisaria = Convert.ToInt32(reader["id_comisaria"]),
+                                EstadoSolicitud = Convert.ToString(reader["estado_solicitud"]),
+                                CodigoSolicitud = Convert.ToString(reader["codigo_solicitud"]),
+                                NumeroDocumento = Convert.ToString(reader["numero_documento"]),
+                                NombreCiudadano = Convert.ToString(reader["nombre_ciudadano"]),
+                                PrimerApellido = Convert.ToString(reader["primer_apellido"]),
+                                SegundoApellido = Convert.ToString(reader["segundo_apellido"]),
+                                CodigoDocumento = Convert.ToString(reader["CodigoDocumento"]),
+                                Perfil = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_perfil"]),
+                                NombreDocumento = Convert.ToString(reader["NombreDocumento"]),
+                                Proceso = Convert.ToString(reader["Proceso"])
+                            };
+
+                            resultados.Add(item);
                         }
-                        _connectionDb.Close();
-                        return solicitud;
                     }
+
+                    _connectionDb.Close();
+
+                    ResponseListaPaginada response = new ResponseListaPaginada
+                    {
+                        DatosPaginados = resultados,
+                        TotalRegistros = resultados.Count,
+                        Message = resultados.Count > 0 ? "Datos obtenidos correctamente" : "No se encontraron registros"
+                    };
+
+                    return response;
                 }
             }
-            throw new Exception("no existen datos");
+        }
+        public ResponseListaPaginada ConsultarPreSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
+        {
+            List<ConsultaGeneralPreSolicitudDTO> resultados = new();
+
+            using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+            using (_command = new SqlCommand("PR_SICOFA_CONSULTA_GENERAL_PRE_SOLICITUDES", _connectionDb))
+            {
+                _command.CommandType = CommandType.StoredProcedure;
+
+                _command.Parameters.AddWithValue("@fechaSolicitud",
+                    solicitud.FechaSolicitud.HasValue
+                        ? solicitud.FechaSolicitud.Value
+                        : DBNull.Value);
+                _command.Parameters.AddWithValue("@fechaSolicitudFinal",
+                     solicitud.FechaSolicitudFinal.HasValue
+                        ? solicitud.FechaSolicitudFinal.Value
+                        : DBNull.Value);
+
+
+                _command.Parameters.AddWithValue("@codigoSolicitud",
+                    string.IsNullOrEmpty(solicitud.CodigoSolicitud)
+                        ? DBNull.Value
+                        : (object)solicitud.CodigoSolicitud);
+
+                _command.Parameters.AddWithValue("@idComisaria",
+                    BdValidation.ToDBNull(solicitud.IdComisaria));
+
+                _connectionDb.Open();
+
+                using SqlDataReader reader = _command.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var item = new ConsultaGeneralPreSolicitudDTO
+                        {
+                            IdSolicitudServicio = Convert.ToInt32(reader["id_solicitud_servicio"]),
+                            FechaSolicitud = Convert.ToDateTime(reader["fecha_solicitud"]),
+                            IdComisaria = Convert.ToInt32(reader["id_comisaria"]),
+                            EstadoSolicitud = Convert.ToString(reader["estado_solicitud"]),
+                            CodigoSolicitud = Convert.ToString(reader["codigo_solicitud"]),
+                            EsCompetenciaComisaria = Convert.ToInt32(reader["esCompetenciaComisaria"]), 
+                            EsVictima = Convert.ToInt32(reader["es_victima"]),              
+                            DescripcionHechos = Convert.ToString(reader["descripcion_de_hechos"]),
+                            TipoSolicitud = Convert.ToString(reader["tipoSolicitud"]),
+                            NombreInvolucradoVictima = Convert.ToString(reader["NombreVictima"]),
+                            DocumentoInvolucradoVictima = ConvertFDBVal.ConvertFromDBVal<string>(reader["DocumentoVictima"]),
+                            TipoDocumentoInvolucradoVictima = ConvertFDBVal.ConvertFromDBVal<string>(reader["TipoDocumentoVictima"]),
+                        };
+
+                        resultados.Add(item);
+                    }
+                }
+
+                _connectionDb.Close();
+
+                return new ResponseListaPaginada
+                {
+                    DatosPaginados = resultados,
+                    TotalRegistros = resultados.Count,
+                    Message = resultados.Count > 0 ? "Datos obtenidos correctamente" : "No se encontraron registros"
+                };
+            }
         }
 
+        public SolicitudServicioDetalleDTO ObtenerSolicitudServiciosCiudadanoDetalle(int id)
+        {
+            var solicitud = new SolicitudServicioDetalleDTO();
+            string parentescoVictima = null;
+
+            using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+            {
+                string query = "PR_SICOFA_CONSULTA_PROCESO_DETALLE_POR_ID";
+                using (_command = new SqlCommand(query))
+                {
+                    _command.CommandType = CommandType.StoredProcedure;
+                    _command.Parameters.AddWithValue("@id", BdValidation.ToDBNull(id));
+                    _command.Connection = _connectionDb;
+
+                    _connectionDb.Open();
+                    using SqlDataReader reader = _command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        bool esVictima = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_victima"]);
+
+                        if (solicitud.codigo_solicitud == null)
+                        {
+                            solicitud.codigo_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_solicitud"]);
+                            solicitud.nombre_ciudaddano = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_ciudadano"]);
+                            solicitud.fecha_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_solicitud"]);
+                            solicitud.hora_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["hora_solicitud"]);
+                            solicitud.descripcion_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_de_hechos"]);
+                            solicitud.es_victima = esVictima;
+                            solicitud.fecha_hecho_violento = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_hecho_violento"]);
+                        }
+
+                        if (esVictima && parentescoVictima == null)
+                        {
+                            parentescoVictima = ConvertFDBVal.ConvertFromDBVal<string>(reader["parentesco"]) ?? "NO TIENE ASIGNADO";
+                        }
+
+                        if (!esVictima && !reader.IsDBNull(reader.GetOrdinal("nombre_completo")))
+                        {
+                            var involucrado = new InvolucradoDetalleDTO
+                            {
+                                nombre_completo = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_completo"]),
+                                numero_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento"]),
+                                parentesco = parentescoVictima ?? "NO TIENE ASIGNADO"
+                            };
+
+                            solicitud.involucrados.Add(involucrado);
+                        }
+                    }
+                    _connectionDb.Close();
+
+                    if (solicitud.codigo_solicitud != null)
+                        return solicitud;
+                }
+            }
+
+            throw new Exception("No existen datos");
+        }
 
         public SolicitudServicioDatosDTO ObtenerDatosSolicitud(int idSolicitud)
         {
@@ -972,7 +1334,10 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         esNecesarioRemitir = solicitud.EsNecesarioRemitir,
                         idtipoTramite = solicitud.IdTipoTramite.ToString(),
                         idContextofamiliar = solicitud.IdContextoFamiliar.ToString(),
-                        noCompetenciaDescripcion = solicitud.NoCompetenciaDescrip
+                        noCompetenciaDescripcion = solicitud.NoCompetenciaDescrip,
+                        sexoAfectado = solicitud.SexoAfectado,
+                        estado_solicitud = solicitud.EstadoSolicitud,
+                        subestado_solicitud = solicitud.SubestadoSolicitud
                     }).FirstOrDefault()!;
 
         }
@@ -1077,6 +1442,14 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 int idInsercion = 0;
                 using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
                 {
+                    var solicitud = (from s in _context.SicofaSolicitudServicio
+                                     where s.IdSolicitudServicio ==  data.id_solicitud_servicio
+                                     select new SolicitudServicioDTO
+                                     {
+                                         id_solicitud_servicio = s.IdSolicitudServicio,
+                                         codigo_solicitud = s.CodigoSolicitud
+                                     }).FirstOrDefault();
+
                     string query = "PR_SICOFA_CREAR_REMISION_SOLICITUD_SERVICIO";
                     using (_command = new SqlCommand(query))
                     {
@@ -1496,6 +1869,13 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 involucrado.direccion = ConvertFDBVal.ConvertFromDBVal<string>(reader["direccion_recidencia"]);
                                 involucrado.tipoInvolucrado = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_victima"]);
                                 involucrado.principal = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_principal"]);
+                                
+                                 //es menor de edad
+                                involucrado.tieneSalud  = ConvertFDBVal.ConvertFromDBVal<bool>(reader["tiene_salud"]); 
+                                involucrado.tieneEducacion = ConvertFDBVal.ConvertFromDBVal<bool>(reader["tiene_educacion"]);
+                                involucrado.lugarEstudio = ConvertFDBVal.ConvertFromDBVal<string>(reader["lugar_estudio"]);
+                                involucrado.vacunacionComplete = ConvertFDBVal.ConvertFromDBVal<bool>(reader["vacunacion_completa"]);
+                                    
                                 involucrado.id_tipo_discapacidad = 1;
                                 involucrado.estado_embarazo = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_embarazo"]);
                                 involucrado.afiliado_seguridad_social = ConvertFDBVal.ConvertFromDBVal<string>(reader["afiliado_seguridad_social"]);
@@ -1675,6 +2055,11 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
             {
                 throw new ControledException(ex.HResult);
             }
+        }
+
+        List<ConsultaGeneralSolicitudDTO> ISolicitudesRepository.ConsultaSolicitudGeneral(ConsultaGeneralSolicitudDTO solicitud)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion Diana Ariza

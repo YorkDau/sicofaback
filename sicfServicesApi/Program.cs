@@ -77,6 +77,7 @@ using sicf_BusinessHandlers.BusinessHandlers.ReporteSolicitud;
 using sicf_DataBase.Repositories.ReporteSolicitud;
 using sicf_BusinessHandlers.BusinessHandlers.PruebasPARD;
 using sicf_BusinessHandlers.BusinessHandlers.AzureBlogStorage;
+using sicf_BusinessHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -204,6 +205,9 @@ builder.Services.AddTransient<IEvaluacionPsicologicaRepository, EvaluacionPsicol
 builder.Services.AddTransient<ISeguimientosServicioRepository, SeguimientosServicioRepository>();
 builder.Services.AddTransient<ISeguimientosService, SeguimientosService>();
 
+builder.Services.AddTransient<IApelacion_Repository, Apelacion_Repository>();
+builder.Services.AddTransient<IApelacion_Service, Apelacion_Service>();
+
 
 builder.Services.AddTransient<IArchivosRepository, ArchivosRepository>();
 
@@ -237,7 +241,8 @@ builder.Services.AddScoped<IReporteSolicitudRepository, ReporteSolicitudReposito
 builder.Services.AddTransient<IPruebasPardService, PruebasPardService>();
 builder.Services.AddTransient<IPruebasPardRepository, PruebasPardRepository>();
 
-
+// Layer dependencies
+builder.Services.AgregarBussinessDependencias(builder.Configuration);
 
 
 // Adding Authentication

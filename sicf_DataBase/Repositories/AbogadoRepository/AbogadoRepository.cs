@@ -332,9 +332,9 @@ namespace sicf_DataBase.Repositories.AbogadoRepository
 
         public async Task<DocumentoRemisionDTO> OficioMedicinaLegal(long idVictima, long idSolicitudServicio)
         {
-
+            //join municipio in context.SicofaCiudadMunicipio on invo.IdLugarExpedicion equals municipio.IdCiudadMunicipio
             var salida = await (from invo in context.SicofaInvolucrado
-                                join municipio in context.SicofaCiudadMunicipio on invo.IdLugarExpedicion equals municipio.IdCiudadMunicipio
+                                join municipio in context.SicofaCiudadMunicipio on invo.IdMunicipioExpedicion equals municipio.IdCiudadMunicipio
                                 into invoMunicipio
                                 from iMun in invoMunicipio.DefaultIfEmpty()
                                 join dominio in context.SicofaDominio on invo.TipoDocumento equals dominio.IdDominio
@@ -358,7 +358,7 @@ namespace sicf_DataBase.Repositories.AbogadoRepository
         public async Task<DocumentoRemisionDTO> SecretariaMujer(long idVictima, long idSolicitudServicio)
         {
             var salida = await (from invo in context.SicofaInvolucrado
-                                join municipio in context.SicofaCiudadMunicipio on invo.IdLugarExpedicion equals municipio.IdCiudadMunicipio
+                                join municipio in context.SicofaCiudadMunicipio on invo.IdMunicipioExpedicion equals municipio.IdCiudadMunicipio
                                 into invoMunicipio
                                 from iMun in invoMunicipio.DefaultIfEmpty()
                                 join dominio in context.SicofaDominio on invo.TipoDocumento equals dominio.IdDominio
@@ -466,7 +466,7 @@ namespace sicf_DataBase.Repositories.AbogadoRepository
                                                            join tipodoc in context.SicofaDominio on involu.TipoDocumento equals tipodoc.IdDominio
                                                            join genero in context.SicofaDominio on involu.IdGenero equals genero.IdDominio into gj
                                                            from sub in gj.DefaultIfEmpty()
-                                                           join municipio in context.SicofaCiudadMunicipio on involu.IdLugarExpedicion equals municipio.IdCiudadMunicipio
+                                                           join municipio in context.SicofaCiudadMunicipio on involu.IdMunicipioExpedicion equals municipio.IdCiudadMunicipio
                                                             into invoMunicipio
                                                            from iMun in invoMunicipio.DefaultIfEmpty()
                                                            where involucrados.Contains(involu.IdInvolucrado)
@@ -1103,9 +1103,8 @@ namespace sicf_DataBase.Repositories.AbogadoRepository
         {
             try
             {
-
                 var lugar = await (from invo in context.SicofaInvolucrado
-                                   join ciudad in context.SicofaCiudadMunicipio on invo.IdLugarExpedicion equals ciudad.IdCiudadMunicipio
+                                   join ciudad in context.SicofaCiudadMunicipio on invo.IdMunicipioExpedicion equals ciudad.IdCiudadMunicipio
                                    where invo.IdInvolucrado == idInvolucrado
 
                                    select ciudad.Nombre).FirstOrDefaultAsync();

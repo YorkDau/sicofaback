@@ -3,6 +3,7 @@ using sicf_DataBase.Compartido;
 using sicfExceptions.Exceptions;
 using AutoMapper;
 using System.Globalization;
+using sicf_BusinessHandlers.BusinessHandlers.Archivos;
 using sicf_Models.Constants;
 using sicf_Models.Dto.Archivos;
 using static sicf_Models.Constants.Constants;
@@ -12,11 +13,11 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Compartido
     public class CompartidoHandler: ICompartidoHandler
     {
         readonly private ICompartidoRepository _compartidoRepository;
-        public CompartidoHandler(ICompartidoRepository compartidoRepository) {
+        readonly private IArchivoService _archivoService;
+        public CompartidoHandler(ICompartidoRepository compartidoRepository, IArchivoService archivoService) {
 
             _compartidoRepository = compartidoRepository;
-
-
+            _archivoService = archivoService;
         }
 
         // Eliminado public List<TipoDocumentoDto> GetTipoDocumento()
@@ -200,6 +201,29 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Compartido
             bool response = false;
             try
             {
+                if (involucrado.InfoAdicional?.Adjunto is not null)
+                {
+                    var archivoDto = new CargaArchivoDTO
+                    {
+                        entrada = involucrado.InfoAdicional.Adjunto,
+                        idSolicitudServicio = involucrado.IdSolicitudServicio,
+                        tipoDocumento = "Archivo_Estado_De_Salud",
+                    };
+                    await _archivoService.Carga(archivoDto);    
+                }
+
+                if (involucrado.InfoAdicional?.Consetimiento is not null)
+                {
+                    var archivoDto = new CargaArchivoDTO()
+                    {
+                        entrada = involucrado.InfoAdicional.Adjunto,
+                        idSolicitudServicio = involucrado.IdSolicitudServicio,
+                        tipoDocumento = "Anexo_Consentimiento_Informado",
+                    };
+                    await _archivoService.Carga(archivoDto);    
+                }
+
+                //guardar el documento
                 response = await this._compartidoRepository.GuardarInvolucrado(involucrado);
             }
             catch (Exception ex)
@@ -210,8 +234,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Compartido
         }
 
         public async Task<List<InvolucradoInfoListaDTO>> ListarInvolucradosComplementariaInfo(long IdSolicitudServicio)
-        {
-            
+        {            
             try
             {
                 var ListaInvolucrados = await this._compartidoRepository.ListarInvolucradosComplementariaInfo(IdSolicitudServicio);

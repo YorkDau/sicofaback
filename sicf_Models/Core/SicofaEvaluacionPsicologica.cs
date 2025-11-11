@@ -22,5 +22,10 @@ namespace sicf_Models.Core
         public DateTime? FechaElaboracionInforme { get; set; }
         public string? ConclusionesEntrevista { get; set; }
         public string? RecomendacionesEntrevista { get; set; }
+
+        public bool? HayMenores { get; set; } = false;
+        public string? ValoracionPsicologica { get; set; }
+        
+        public string? ValoracionEntorno {get; set;}
     }
 }

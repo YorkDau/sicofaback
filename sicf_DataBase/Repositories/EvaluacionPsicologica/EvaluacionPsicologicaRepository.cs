@@ -1,20 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
 using sicf_DataBase.Data;
 using sicf_Models.Core;
 using sicf_Models.Dto;
 using sicf_Models.Dto.EvaluacionPsicologica;
-using sicf_Models.Dto.Solicitudes;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using static sicf_Models.Constants.Constants;
 
 namespace sicf_DataBase.Repositories.EvaluacionPsicologica
@@ -45,7 +33,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             //var dem = context.SicofaSolicitudServicioEstadoSolicitud.Where(s => s.IdSolicitudServicio == idSolicitudProceso).OrderByDescending(s => s.IdSolicitudServicio).First();
 
            
-            var involucrados = context.SicofaSolicitudServicio.Include(se => se.IdInvolucrado).Where(s => s.IdSolicitudServicio == idSolicitudProceso).First();
+            var involucrados = context.SicofaSolicitudServicio.Include(se => se.IdInvolucrado).Where(s => s.IdSolicitudServicio == idSolicitudProceso).FirstOrDefault();
 
            AccionanteDTO salida = new AccionanteDTO();
             salida.codigoSolicitudServicio = solicitud.CodigoSolicitud;
@@ -92,7 +80,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
 
                 var involucrado = solicitud.IdInvolucrado.Where(s => s.EsPrincipal == principal && s.EsVictima == esvictima).First();
 
-                InformacionVictimaDTO salida = new InformacionVictimaDTO();
+                var salida = new InformacionVictimaDTO();
 
                 if ((bool)involucrado.EsPrincipal! & (bool)involucrado.EsVictima)
                 {
@@ -115,6 +103,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.sexo = involucrado.IdSexo;
                     salida.idGenero = involucrado.IdGenero;
                     salida.idEscolaridad = involucrado.IdNivelAcademico;
+                    salida.idRegimen = involucrado.IdRegimen;
                     salida.ocupacion = complementario != null ? complementario.Ocupacion : null;
                     salida.numeroHijos = complementario != null ? complementario.NumeroHijos : null;
                     salida.agresorConflicto = complementario != null ? complementario.AgresorGrupoArmado : null;
@@ -132,8 +121,16 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.edadAproximadaAgresor = involucrado.Edad;
                     salida.DireccionRecidencia = involucrado.DireccionRecidencia;
                     salida.Telefono = involucrado.Telefono;
-                    salida.lugarExpedicion = involucrado.IdLugarExpedicion;
 
+                    //salida.lugarExpedicion = involucrado.IdLugarExpedicion;
+                    salida.paisExp = involucrado.IdPaisExpedicion;
+                    salida.departamentoExp = involucrado.IdDepartamentoExpedicion;
+                    salida.municipioExp = involucrado.IdMunicipioExpedicion;
+                    
+                    //salida.lugarNacimiento = involucrado.IdLugarNacimiento;
+                    salida.paisNacimiento= involucrado.IdPaisNacimiento;
+                    salida.departamentoNacimiento= involucrado.IdDepartamentoNacimiento;
+                    salida.municipioNacimiento = involucrado.IdMunicipioNacimiento;
 
                     salida.relacionAgresor = involucrado.IdTipoRelacion;
                     salida.relacionPareja = complementario != null ? complementario.RelacionPareja : null;
@@ -146,7 +143,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                         {
 
                             informacionHijo hijoSalida = new informacionHijo();
+                            hijoSalida.nombres = hijo.Nombres;
                             hijoSalida.edad = hijo.Edad;
+                            hijoSalida.edadEn = hijo.EdadEn;
                             hijoSalida.sexo = hijo.IdSexo;
                             hijoSalida.custodia = hijo.Custodia;
                             hijoSalida.relacionParental = (int) hijo.IdRelacionParental;
@@ -154,16 +153,13 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             salida.hijos.Add(hijoSalida);
                         }
                     }
-
-
                 }
                 else
                 {
-
                     // flujo para agresor
                     //TODO: Eliminar nombres y apellidos
                     var complementario = context.SicofaComplementoInvolucrado.Where(s => s.IdInvolucrado == involucrado.IdInvolucrado).FirstOrDefault();
-
+                    
                     salida.id = involucrado.IdInvolucrado;
                     salida.nombres = involucrado.Nombres;
                     salida.primerNombre = involucrado.PrimerNombre;
@@ -185,20 +181,36 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.agresorConflicto = complementario != null ? complementario.AgresorGrupoArmado : null;
                     salida.relacionPareja = involucrado.IdTipoRelacion;
                     salida.edadAproximadaAgresor = complementario != null ? complementario.EdadAproximadaAgresor : involucrado.Edad;
+                    
                     var hijos = context.SicofaHijoinvolucrado.Where(s => s.IdInvolucrado == involucrado.IdInvolucrado).ToList();
                     salida.numeroHijos = hijos.Count();
-                    salida.lugarExpedicion = involucrado.IdLugarExpedicion;
+
+                    //salida.lugarExpedicion = involucrado.IdLugarExpedicion;
+                    salida.paisExp = involucrado.IdPaisExpedicion;
+                    salida.departamentoExp = involucrado.IdDepartamentoExpedicion;
+                    salida.municipioExp = involucrado.IdMunicipioExpedicion;
+                    
+                    //es menor edad
+                    salida.tieneEducacion = involucrado.tieneEducacion;
+                    salida.tieneSalud = involucrado.tieneSalud;
+                    salida.lugarEstudio = involucrado.lugarEstudio;
+                    salida.vacunacionCompleta = involucrado.vacunacionCompleta;
+                    
 
                     if (hijos.Count >= 1)
                     {
                         foreach (var hijo in hijos)
                         {
 
-                            informacionHijo hijoSalida = new informacionHijo();
-                            hijoSalida.edad = hijo.Edad;
-                            hijoSalida.sexo = hijo.IdSexo;
-                            hijoSalida.custodia = hijo.Custodia;
-                            hijoSalida.relacionParental = hijo.IdRelacionParental;
+                            var hijoSalida = new informacionHijo
+                            {
+                                nombres = hijo.Nombres,
+                                edad = hijo.Edad,
+                                edadEn = hijo.EdadEn,
+                                sexo = hijo.IdSexo,
+                                custodia = hijo.Custodia,
+                                relacionParental = hijo.IdRelacionParental
+                            };
 
                             salida.hijos.Add(hijoSalida);
                         }
@@ -208,30 +220,20 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     salida.agresorconflictoDescripcion = complementario != null ? complementario.DescripcionGrupoArmado : null;
 
                     context.SaveChanges();
-
-
-
                 }
 
-
                 return salida;
-
             }
             catch (Exception ex) {
 
-                throw new Exception(ex.Message);
-            
+                throw new Exception(ex.Message);            
             }
-            }
+        }
             
 
 
         public SicofaInvolucrado ConsultarInvolucrado(long id) {
-
-            
-
             return context.SicofaInvolucrado.Where(s => s.IdInvolucrado == id).First();
-
         }
         public void ActualizarInvolucrado(ActualizacionInvolucradoDTO data) {
 
@@ -252,16 +254,24 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 involucrado.Eps = data.eps;
                 involucrado.Ips = data.ips;
                 involucrado.VictimaConflictoArmado = data.victimaConflicto;
+                involucrado.VictimaDesplazamiento = data.victimaDesplazamiento;
                 involucrado.IdGenero = data.idIdentidadGenero;
                 involucrado.IdTipoRelacion = data.RelacionAgresor;
                 involucrado.IdNivelAcademico = data.Escolidad;
-                involucrado.IdLugarExpedicion = data.lugarExpedicion;
                 involucrado.FechaExpedicion = data.fechaExpedicion;
+                involucrado.IdRegimen = data.idRegimen;
 
-
+                //involucrado.IdLugarExpedicion = data.lugarExpedicion;
+                involucrado.IdPaisExpedicion = data.paisExp;
+                involucrado.IdDepartamentoExpedicion = data.departamentoExp;
+                involucrado.IdMunicipioExpedicion = data.municipioExp;
+                
+                //involucrado.IdLugarNacimiento = data.lugarNacimiento;
+                involucrado.IdPaisNacimiento = data.paisNacimiento;
+                involucrado.IdDepartamentoNacimiento = data.departamentoNacimiento;
+                involucrado.IdMunicipioNacimiento = data.municipioNacimiento;
 
                 var actualizacion = context.SicofaComplementoInvolucrado.Where(s => s.IdInvolucrado == data.IdInvolucrado).FirstOrDefault();
-
 
                 // evitar duplicidad en registros de complementos
                 if (actualizacion == null)
@@ -290,7 +300,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             {
 
                                 SicofaHijoinvolucrado hijoSalida = new SicofaHijoinvolucrado();
+                                hijoSalida.Nombres = hijo.nombres;
                                 hijoSalida.Edad = (int)hijo.edad!;
+                                hijoSalida.EdadEn = hijo.edadEn;
                                 hijoSalida.IdSexo = (int)hijo.sexo!;
                                 hijoSalida.Custodia = hijo.custodia;
                                 hijoSalida.IdInvolucrado = involucrado.IdInvolucrado;
@@ -335,7 +347,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             {
                                 SicofaHijoinvolucrado hijo = new SicofaHijoinvolucrado();
                                 hijo.IdInvolucrado = data.IdInvolucrado;
+                                hijo.Nombres = datahijo.nombres;
                                 hijo.Edad = (int)datahijo.edad;
+                                hijo.EdadEn = datahijo.edadEn;
                                 hijo.Custodia = datahijo.custodia;
                                 hijo.IdSexo = datahijo.sexo;
                                 hijo.IdRelacionParental = (int)datahijo.relacionParental;
@@ -369,12 +383,14 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 involucrado.NumeroDocumento = data.numeroDocumento;              
                 involucrado.IdGenero = data.idIdentidadGenero;
                 involucrado.IdNivelAcademico = data.Escolidad;
-                involucrado.IdLugarExpedicion = data.lugarExpedicion;
                 involucrado.FechaExpedicion = data.fechaExpedicion;
 
+                //involucrado.IdLugarExpedicion = data.lugarExpedicion;
+                involucrado.IdPaisExpedicion = data.paisExp;
+                involucrado.IdDepartamentoExpedicion = data.departamentoExp;
+                involucrado.IdMunicipioExpedicion = data.municipioExp;
+
                 involucrado.Edad = data.edad != null ? data.edad : (data.edadAproximadaAgresor != null ? data.edadAproximadaAgresor : involucrado.Edad);
-
-
 
                 //
                 var actualizacion = context.SicofaComplementoInvolucrado.Where(s => s.IdInvolucrado == data.IdInvolucrado).FirstOrDefault();
@@ -391,12 +407,14 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     ingreso.IdCultura = data.Cultura;
                     ingreso.EdadAproximadaAgresor = data.edadAproximadaAgresor;
                     context.SicofaComplementoInvolucrado.Add(ingreso);
-                    involucrado.IdLugarExpedicion = data.lugarExpedicion;
 
+                    //involucrado.IdLugarExpedicion = data.lugarExpedicion;
+                    involucrado.IdPaisExpedicion = data.paisExp;
+                    involucrado.IdDepartamentoExpedicion = data.departamentoExp;
+                    involucrado.IdMunicipioExpedicion = data.municipioExp;
 
                     var remover=context.SicofaHijoinvolucrado.Where(s => s.IdInvolucrado == involucrado.IdInvolucrado).ToList();
                     context.SicofaHijoinvolucrado.RemoveRange(remover);
-
 
                     if (data.numeroHijos >= 1)
                     {
@@ -407,7 +425,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             {
                                 SicofaHijoinvolucrado hijo = new SicofaHijoinvolucrado();
                                 hijo.IdInvolucrado = data.IdInvolucrado;
+                                hijo.Nombres = hijodata.nombres;
                                 hijo.Edad = (int)hijodata.edad!;
+                                hijo.EdadEn = hijodata.edadEn;
                                 hijo.Custodia = hijodata.custodia;
                                 hijo.IdSexo = hijodata.sexo;
                                 hijo.IdRelacionParental = hijodata.relacionParental;
@@ -442,7 +462,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                             {
                                 SicofaHijoinvolucrado hijo = new SicofaHijoinvolucrado();
                                 hijo.IdInvolucrado = data.IdInvolucrado;
+                                hijo.Nombres = hijodata.nombres;
                                 hijo.Edad = (int)hijodata.edad!;
+                                hijo.EdadEn = hijodata.edadEn;
                                 hijo.Custodia = hijodata.custodia;
                                 hijo.IdSexo = hijodata.sexo;
                                 hijo.IdRelacionParental = hijodata.relacionParental;
@@ -478,7 +500,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             var respuestas = (from res in context.SicofaRespuestaQuestionarioTipoViolencia
                               join quesionario in context.SicofaQuestionarioTipoViolencia on res.IdQuestionario equals quesionario.IdQuestionario
                               where res.IdEvaluacionPsicologica == evaluacion.IdEvaluacion & quesionario.IdTipoViolencia == tipoViolencia
-                              select Tuple.Create(res.IdQuestionario, res.Mes, res.Puntuacion)
+                              select Tuple.Create(res.IdQuestionario, res.Mes, res.Puntuacion, res.Nullable)
                               ).ToList();
 
             List<QuestionarioRespuestaPreviaDTO> salida = new List<QuestionarioRespuestaPreviaDTO>();
@@ -491,11 +513,18 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     previo.Puntuacion = pregunta.Puntuacion;
                     previo.EsCerrada = pregunta.EsCerrada;
                     previo.Descripcion = pregunta.Descripcion;
+                    previo.Nullable = pregunta.Nullable;
 
                     if (respuestas.Count() == preguntas.Count())
                     {
                         var respuesta = respuestas.Where(s => s.Item1 == pregunta.IdQuestionario).First();
-                        previo.PuntuacionPrevio = respuesta.Item3;
+
+                        int? puntuacionPrevia = respuesta.Item3;
+                        if (respuesta.Item4 is not null)
+                        {
+                            puntuacionPrevia = null;
+                        }
+                        previo.PuntuacionPrevio = puntuacionPrevia;
                         previo.mesPrevio = respuesta.Item2;
                     }
                     salida.Add(previo);
@@ -528,6 +557,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 {
                     SicofaRespuestaQuestionarioTipoViolencia entrada = new SicofaRespuestaQuestionarioTipoViolencia();
                     entrada.Puntuacion = 0;
+                    entrada.Nullable = null;
                     entrada.IdQuestionario = respuesta.IdCuestionario;
                     entrada.IdSolicitudServicio = data.idSolicitudServicio;
                  
@@ -538,15 +568,17 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     entrada.Mes = respuesta.mes;
                     entrada.IdEvaluacionPsicologica = evaluacion.IdEvaluacion;
 
-                    if (respuesta.puntuacion)
+                    if (respuesta is { puntuacion: true })
                     {
-
                         entrada.Puntuacion = (int)violencia.Puntuacion;
                     }
 
-                  
-                    insercion.Add(entrada);
+                    if (respuesta is { puntuacion: null })
+                    {
+                        entrada.Nullable = (int)violencia.Puntuacion;
+                    }
 
+                    insercion.Add(entrada);
                 }
 
                 context.SicofaRespuestaQuestionarioTipoViolencia.AddRange(insercion);
@@ -561,31 +593,32 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     SicofaRespuestaQuestionarioTipoViolencia previa = 
                         context.SicofaRespuestaQuestionarioTipoViolencia.Where(s => s.IdQuestionario == lista.IdCuestionario & s.IdSolicitudServicio == data.idSolicitudServicio & s.IdEvaluacionPsicologica == evaluacion.IdEvaluacion).FirstOrDefault()!;
                    
-                    previa.Puntuacion = 0;
-                    previa.Mes = lista.mes;
-
-                    if (lista.puntuacion)
+                    if (previa is not null)
                     {
+                        previa.Puntuacion = 0;
+                        previa.Nullable = null;
+                        previa.Mes = lista.mes;
 
-                        previa.Puntuacion = (int)violencia.Puntuacion!;
-                        
+                        if (lista is { puntuacion: true })
+                        {
+                            previa.Puntuacion = (int)violencia.Puntuacion!;
+                        }
+
+                        if (lista is { puntuacion: null })
+                        {
+                            previa.Nullable = (int)violencia.Puntuacion;
+                        }
+
+                        // TODO : correcion de bug donde por no se debe guardar mes en circunstancia agrevantes ni persecipcion victima, luego de probado se borra y se certifique el bug se elimina este comentario
+                        if (data.IdTipoViolencia == Cuestionario.circunstanciaAgrevantes || data.IdTipoViolencia == Cuestionario.persepcionVictima)
+                        {
+                            previa.Mes = null;
+                        }
                     }
 
-
-                    // TODO : correcion de bug donde por no se debe guardar mes en circunstancia agrevantes ni persecipcion victima, luego de probado se borra y se certifique el bug se elimina este comentario
-                    if (data.IdTipoViolencia == Cuestionario.circunstanciaAgrevantes || data.IdTipoViolencia == Cuestionario.persepcionVictima) 
-                    {
-                        previa.Mes = null;
-                    }
                     context.SaveChanges();
-
                 }
-
-
             }
-
-
-
         }
 
         public async Task<EvaluacionRiegoDTO> EvaluacionRiesgosPorSolicitud(long idSolicitud , long? Idtarea)
@@ -661,13 +694,14 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
 
             DescripcionHechosDTO salida = new DescripcionHechosDTO();
 
-            salida.fecha = solicitud.FechaHechoViolento.ToString();
-            var fechaparse = (DateTime)solicitud.FechaHechoViolento;
+            var fecha = solicitud.FechaHechoViolento ?? DateTime.Now;
+            salida.fecha = fecha.ToString("dd/MM/yyyy");
+            var fechaparse = fecha;
          
-            salida.hora = fechaparse.ToString("hh:mm:ss tt");
+            salida.hora = fechaparse.ToString("HH:mm");
             salida.descripcionHechos = solicitud.DescripcionDeHechos;
             salida.idSolicitudServicio = solicitud.IdSolicitudServicio;
-            salida.lugarHechos = solicitud.LugarHechoViolento;
+            salida.lugarHechos = solicitud.LugarHechoViolento ?? "No asignado";
 
 
             return salida;
@@ -743,7 +777,6 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             switch (data.tipoDominio) {
 
                 case Evaluacion.motivo:
-
                     evaluacion.MotivoDescripcion = data.descripcionA;
                     break;
 
@@ -785,12 +818,25 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     evaluacion.ConclusionesEntrevista = data.descripcionA;
                     evaluacion.RecomendacionesEntrevista = data.descripcionB;
                     break;
-
-
+                
+                case Evaluacion.informacionMenores:
+                    evaluacion.ValoracionPsicologica = data.descripcionA;
+                    evaluacion.ValoracionEntorno = data.descripcionB;
+                    
+                    RegistrarEvaluacionOrientacion(evaluacion.IdEvaluacion,data.respuestas); 
+                    break;
 
             }
         
                     context.SaveChanges();
+        }
+
+        public async Task ActualizarEvaluacionInfoMenores(RegistroEvaluacionInfoMenoresDTO data, long idTarea)
+        {
+            var evaluacion = await context.SicofaEvaluacionPsicologica.Where(s => s.IdSolicitudServicio == data.IdSolicitudServicio & s.IdTarea == idTarea).FirstOrDefaultAsync();
+            evaluacion.ValoracionPsicologica = data.valoracionPsicologica;
+            evaluacion.ValoracionEntorno = data.valoracionEntornoFamiliar;
+            context.SaveChanges();
         }
 
         public void RegistrarRecomendacion(long idSolicitudServicio, string descripcion , long? idTarea) 
@@ -798,26 +844,16 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             SicofaEvaluacionPsicologica evaluacion = context.SicofaEvaluacionPsicologica.Where(s => s.IdSolicitudServicio == idSolicitudServicio & s.IdTarea == idTarea ).First();
             if (evaluacion == null)
             {
-
                 throw new Exception(ErrorRespuestaEvaluacionRiesgo.errorEvaluacionPsicologica);
             }
-
             try
             {
-
                 evaluacion.Recomendaciones = descripcion;
-
                 context.SaveChanges();
-
             }
             catch (Exception ex) {
-
                 throw new Exception(ex.Message);
-            
-            
             }
-        
-        
         }
 
         public List<EvaluacionOrientacionRespuesta> EvaluacionOrientacion(long idSolicitudServicio , string data, long? idTarea) 
@@ -852,22 +888,14 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                     {
                         var cruce = respuestaPrevias.Where(s => s.IdDominio == dominio.IdDominio).FirstOrDefault();
                         salida.respuesta = cruce.Respuesta;
-
-
                     }
                     listadoSalida.Add(salida);
-
                 }
-
-
+                
                 return listadoSalida;
-
-
             }
             catch (Exception ex) {
-
                 throw new Exception(ex.Message);
-            
             }
         }
 
@@ -1043,8 +1071,11 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                                                   telefono = involucrado.Telefono,
                                                   barrio = involucrado.Barrio,
                                                   escolaridad = dominioEscolaridad.NombreDominio,
-                                                  direccion = involucrado.DireccionRecidencia
-
+                                                  direccion = involucrado.DireccionRecidencia,
+                                                  tieneSalud = involucrado.tieneSalud,
+                                                  tieneEducacion = involucrado.tieneEducacion,
+                                                  lugarEstudio = involucrado.lugarEstudio,
+                                                  vacunacionCompleta = involucrado.vacunacionCompleta
                                               }).First();
 
                 return salida; 
@@ -1123,10 +1154,13 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 salida.direccionContacto = involucrado.DireccionContactoConfianza;
                 salida.telefonoContacto = involucrado.TelefonoContactoConfianza;
                 salida.nombreContacto = involucrado.NombreContactoConfianza;
-
+                
+                //es menor de edad
+                salida.HayMenores = evaluacion.HayMenores;
+                salida.ValoracionPsicologica = evaluacion.ValoracionPsicologica;
+                salida.ValoracionEntorno = evaluacion.ValoracionEntorno;
+                    
                 return salida;
-
-
 
             }
             catch (Exception ex) {
@@ -1140,9 +1174,9 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
         private void RegistrarEvaluacionOrientacion( long idEvaluacionPsicologica, List<RespuestaEvaluacionEmocionalDTO> data) 
         {
 
-               int[] elementos=  data.Select(s => s.idDominio).ToArray();
+            int[] elementos=  data.Select(s => s.idDominio).ToArray();
 
-             var identicarNucleo = context.SicofaEvaluacionPsicologicaLista.Where(s => elementos.Contains((int)s.IdDominio)).ToList();
+            var identicarNucleo = context.SicofaEvaluacionPsicologicaLista.Where(s => elementos.Contains((int)s.IdDominio)).ToList();
 
             context.SicofaEvaluacionPsicologicaLista.RemoveRange(identicarNucleo);
 
@@ -1177,14 +1211,14 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
                 var tipodocumentoAgresor = context.SicofaDominio.Where(s => s.IdDominio == agresor.TipoDocumento).FirstOrDefault();
 
                 var ciudadano =  context.SicofaCiudadano.Where(c => c.NumeroDocumento == victima.NumeroDocumento).FirstOrDefault();
-                var LugarExpedicionVictima =  context.SicofaCiudadMunicipio.Where(s => s.IdCiudadMunicipio == ciudadano.IdLugarExpedicion).FirstOrDefault();
+                //var LugarExpedicionVictima =  context.SicofaCiudadMunicipio.Where(s => s.IdCiudadMunicipio == ciudadano.IdLugarExpedicion).FirstOrDefault();
 
                 salida.nombreVictima = $"{victima.PrimerNombre} {victima.SegundoNombre} {victima.PrimerApellido} {victima.SegundoApellido}";
                 salida.documentoVictima = victima.NumeroDocumento;
 
                 //TODO :se debe hacer una revision en el registro el ciudadano ese dato esta intermitente.
                 // luego de realizada la verificacion de ciudadano se elimina esto.
-                salida.lugarExpedicionVictima = LugarExpedicionVictima != null ? LugarExpedicionVictima.Nombre : "Bogota";
+                //salida.lugarExpedicionVictima = LugarExpedicionVictima != null ? LugarExpedicionVictima.Nombre : "Bogota";
                 salida.nombreAgresor = $"{agresor.PrimerNombre} {agresor.SegundoNombre} {agresor.PrimerApellido} {agresor.SegundoApellido}";
                 salida.documentoAgresor = agresor.NumeroDocumento;
                 salida.tipoDocumentoVictima = tipodocumentoVictima != null ? tipodocumentoVictima.Codigo : String.Empty;

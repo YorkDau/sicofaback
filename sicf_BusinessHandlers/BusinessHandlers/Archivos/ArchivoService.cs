@@ -227,8 +227,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
 
 
                 }
-
-                await fileManagerLogic.DeleteBLOBFile(comisariaCarpeta + "/" + archivo.NombreDocumento);
+                var fullPath = System.IO.Path.Combine(comisariaCarpeta, archivo.NombreDocumento);
+                await fileManagerLogic.DeleteBLOBFile(fullPath);
 
 
             }
@@ -270,7 +270,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
                 var remision = await abogadoRepository.ObtenerRemision(data.tipoDocumento);
                 var reponse = await Carga(data);
 
-                if (!await notificacionRepository.NotificacionPrevia(data.idInvolucrado, data.tipoDocumento))
+                //if (!await notificacionRepository.NotificacionPrevia(data.idInvolucrado, data.tipoDocumento))
                 {
 
                     await abogadoRepository.RegistrarSolicitudRemision(data.idInvolucrado, remision, data.idSolicitudServicio, reponse);
@@ -388,16 +388,25 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
         {
             if (archivoDTO == null)
             {
-
-                throw new ArgumentNullException(nameof(archivoDTO.entrada));
-
+                throw new ArgumentNullException(nameof(archivoDTO));
             }
+
+            if (string.IsNullOrEmpty(archivoDTO.entrada))
+            {
+                throw new ArgumentException("El campo 'entrada' no puede ser nulo o vacío.", nameof(archivoDTO.entrada));
+            }
+
             FileModel file = new FileModel();
 
             string fileName = archivoDTO.Nombrearchivo!;
             byte[] archivoBits = Convert.FromBase64String(archivoDTO.entrada);
             MemoryStream stream = new MemoryStream(archivoBits);
-            IFormFile archivo = new FormFile(stream, 0, archivoBits.Length, fileName, fileName);
+            IFormFile archivo = new FormFile(stream, 0, archivoBits.Length, fileName, fileName)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/pdf",
+                ContentDisposition = $"inline; filename={fileName}"
+            };
 
             file.PdfFile = archivo;
 
@@ -414,6 +423,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
                 carga.Nombrearchivo = data.Nombrearchivo;
                 carga.tipoDocumento = data.tipoDocumento;
                 carga.idUsuario = data.idUsuario;
+                carga.idPruebaPericial = data.idPruebaPericial ?? 1;
 
                 return carga;
             }
@@ -427,18 +437,16 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
         {
             try
             {
-                CargaArchivoDTO carga= CargaFormatoBlop(data);
+                CargaArchivoDTO carga = CargaFormatoBlop(data);
 
                 var respuestaCarga = await Carga(carga);
 
-                await pruebaSolicitudServicioRepository.RegistrarPruebaSolicitud(data.idSolicitudServicio, data.idTarea, data.tipoDocumento, respuestaCarga, data.idInvolucrado, data.Nombrearchivo);
+                await pruebaSolicitudServicioRepository.RegistrarPruebaSolicitud(data.idSolicitudServicio, data.idTarea, data.tipoDocumento, respuestaCarga, data.idInvolucrado, data.Nombrearchivo,  data.idPruebaPericial ?? 1 );
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
-
+                throw new Exception(ex.Message); 
             }
-
         }
 
         public async Task EliminarPruebaSolicitud(EliminarPruebaDTO data)

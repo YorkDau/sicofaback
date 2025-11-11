@@ -29,6 +29,13 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="requestConsultarCiudadano"></param>
+        /// <returns></returns>
+        public ResponseListaPaginada GetInvolucrados(RequestCiudadano requestConsultarCiudadano);
+        
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="requestSolicitudDto"></param>
         /// <returns></returns>
         public ResponseListaPaginada ValidarSolicitudes(RequestSolicitudDto requestSolicitudDto);
@@ -72,6 +79,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 
         public ResponseListaPaginada ObtenerCiudadano(int id);
 
+        public ResponseListaPaginada ObtenerInvolucrado(int id);
         /// <summary>
         /// 
         /// </summary>
@@ -89,14 +97,14 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         /// </summary>
         /// <param name="requestCrearSolicitud"></param>
         /// <returns></returns>
-        public long CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud);
+        public Task<long> CrearSolicitudCiudadano(RequestCrearSolicitud requestCrearSolicitud);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="requestActualizarSolicitud"></param>
         /// <returns></returns>
-        public long ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud);
+        public Task<long> ActualizarSolicitudCiudadano(RequestActualizarSolicitud requestActualizarSolicitud);
 
         /// <summary>
         /// 
@@ -111,6 +119,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         /// <returns></returns>
         /// 
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int id, int idComisaria);
+        public ResponseListaPaginada ObtenerSolicitudServiciosInvolucrado(int id, int idComisaria);
+        
         public ResponseListaPaginada ObtenerSolicitudServiciosCiudadano(int idComisaria);
         /// <summary>
         /// 
@@ -200,6 +210,10 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         public string ObtenerNumeroSolicitud(long idComisaria);
 
         public Task<SolicitudGeneralDTO> ConsultaGeneralSolicitud(long idSolicitudServicio);
+        ResponseListaPaginada ConsultarSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
+        ResponseListaPaginada ConsultarPreSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
+        
+
 
         public List<RemisionSolicitudServicioComisariaAnteriorDTO> ObtenerRemisionSolicitudServicio(int idSolicitudServicio);
     }

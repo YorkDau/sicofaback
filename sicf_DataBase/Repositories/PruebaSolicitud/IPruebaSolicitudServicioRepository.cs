@@ -14,7 +14,7 @@ namespace sicf_DataBase.Repositories.PruebaSolicitud
 
         public Task<IEnumerable<PruebaAsociadaDTO>> PruebaAsociadas(long idSolitiudServicio, long idTarea);
 
-        public  Task RegistrarPruebaSolicitud(long idsolicitudServicio, long idTarea, string tipoPrueba, long idAnexo, long? idinvolucrado, string nombre);
+        public  Task RegistrarPruebaSolicitud(long idsolicitudServicio, long idTarea, string tipoPrueba, long idAnexo, long? idinvolucrado, string nombre,int IdPruebaPericial);
 
         public  Task EliminarPruebaSolicitud(long idPrueba);
 

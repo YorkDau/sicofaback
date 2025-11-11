@@ -135,6 +135,10 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Presolicitud
                 await _presolicitudRepository.CrearPresolicitudServicioComplementaria(solicitudServicioComplementaria);
 
                 await _tareaHandler.IniciarProceso(idSolicitud, "PRESOL");
+                //if (solicitudServicioComplementaria.TipoPresolicitud == "DENAM")
+                //    await _tareaHandler.IniciarProceso(idSolicitud, "PRESOLAM");
+                //else
+                //    await _tareaHandler.IniciarProceso(idSolicitud, "PRESOL");
 
 
                 return idSolicitud;

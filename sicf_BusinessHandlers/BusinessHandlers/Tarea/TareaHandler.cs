@@ -1,26 +1,27 @@
 ﻿using sicf_DataBase.Repositories.EvaluacionPsicologica;
+using sicf_DataBase.Repositories.SolicitudesRepository;
 using sicf_DataBase.Repositories.Tarea;
 using sicf_Models.Constants;
 using sicf_Models.Core;
 using sicf_Models.Dto.Compartido;
+using sicf_Models.Dto.EvaluacionPsicologica;
 using sicf_Models.Dto.Tarea;
 using sicfExceptions.Exceptions;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace sicf_BusinessHandlers.BusinessHandlers.Tarea
 {
     public class TareaHandler : ITareaHandler
     {
         private readonly ITareaRepository tareaRepository;
+        private readonly ISolicitudesRepository _solicitud;
+        private readonly IEvaluacionPsicologicaRepository _evaluacion;
 
-        public TareaHandler(ITareaRepository tareaRepository)
+        public TareaHandler(ITareaRepository tareaRepository, ISolicitudesRepository solicitud, IEvaluacionPsicologicaRepository evaluacion)
         {
             this.tareaRepository = tareaRepository;
+            _solicitud = solicitud;
+            _evaluacion = evaluacion;
         }
 
         /// <summary>
@@ -44,6 +45,14 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Tarea
             }
         }
 
+        private enum TiposViolenciaPreguntaTabs {
+            Psicologia = 2,
+            Economica = 5,
+            Patrimonial = 4,
+            CoercionAmenaza = 6,
+            Fisica = 1,
+            Sexual = 3
+        }
         /// <summary>
         /// AsignarTareaAsync
         /// </summary>
@@ -51,17 +60,122 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Tarea
         /// <returns></returns>
         public async Task<long> AsignarTareaAsync(RequestAsignarTarea asignarTarea)
         {
+            long tareaID = 0;
+
             try
             {
-                var tareaID = await this.tareaRepository.AsignarTareaAsync(asignarTarea);
+                var tarea = tareaRepository.ConsultarTarea(asignarTarea.tareaID);
+                if (tarea is null)
+                {
+                    throw new ControledException(Constants.Tarea.Mensajes.errorConsultaTarea);
+                }
+
+                tareaID = await this.tareaRepository.AsignarTareaAsync(asignarTarea);
+
+                var actividad = tareaRepository.ConsultarActividad(tareaID);
+                if (actividad is null)
+                {
+                    return tareaID;
+                }
+                
+                // Consultar la solicitud de servicio para saber si es contra hombres
+                const string actividadIdentificationRiesgo = "PSIEVA";
+                int solicitudId = Convert.ToInt32(tarea.IdSolicitudServicio ?? 0);
+                var solicitud = _solicitud.ObtenerDatosSolicitud(solicitudId);
+                // Y validar que el proceso esté en Caso de violencia Intrafamiliar - Identificación del riesgo
+                if (
+                    solicitud is { sexoAfectado: not "HOMBRE" } ||
+                    solicitud is { estado_solicitud: not "ABIERTO" } ||
+                    solicitud is { subestado_solicitud: not "EN PROCESO" } ||
+                    actividad is { Etiqueta: not actividadIdentificationRiesgo }) 
+                {
+                    return tareaID;
+                }
+
+                // Si es abuso a hombre debo precargar la data por cada tab de pregunta
+
+                // Tab 1 de descripcion de los hechos
+                // Se puede actualziar desde acá https://localhost:7162/api/EvaluacionPsicologica/ActualizarDescripcioHechosPorSolicitud
+
+
+                // Tab 2 de tipos de violencia
+                var tareaId = (int)tareaID;
+                List<int> preguntaTabIds = new List<int>()
+                {
+                    TiposViolenciaPreguntaTabs.Psicologia.GetHashCode(),
+                    TiposViolenciaPreguntaTabs.Economica.GetHashCode(),
+                    TiposViolenciaPreguntaTabs.Patrimonial.GetHashCode(),
+                    TiposViolenciaPreguntaTabs.CoercionAmenaza.GetHashCode(),
+                    TiposViolenciaPreguntaTabs.Fisica.GetHashCode(),
+                    TiposViolenciaPreguntaTabs.Sexual.GetHashCode()
+                };
+
+                // Se obtienen de aqui https://localhost:7162/api/EvaluacionPsicologica/ObtenerEvaluacion/3/32/10527
+                // negar todos los tabs de tipos de violencia y guardar
+                // Se guardan las preguntas aqui https://localhost:7162/api/EvaluacionPsicologica/RegistrarCuestionario
+
+                for (int i = 0; i < preguntaTabIds.Count; i++)
+                {
+                    var tipoViolenciaId = preguntaTabIds[i];
+                    await ConfigurarValorPorDefectoCuestionarios(tipoViolenciaId, solicitudId, tareaId);
+                }
+
+                // Tab 3 Circustancias agravantes (Tipo de violencia 7)
+                // Se obtiene desde aquí https://localhost:7162/api/EvaluacionPsicologica/ObtenerEvaluacion/7/32/10527
+                // Se guardan las preguntas aquí https://localhost:7162/api/EvaluacionPsicologica/RegistrarCuestionario
+
+                await ConfigurarValorPorDefectoCuestionarios(7, solicitudId, tareaId);
+
+
+                // Tab 4 Percención de la victima (Tipo de violencia 8)
+                // Se obtienen desde aquí https://localhost:7162/api/EvaluacionPsicologica/ObtenerEvaluacion/8/32/10527
+                // Se guardan las pregunats aquí https://localhost:7162/api/EvaluacionPsicologica/RegistrarCuestionario
+
+                await ConfigurarValorPorDefectoCuestionarios(8, solicitudId, tareaId);
+
+                // Tab 5 Valoración
+                // Se obtiene desde aquí https://localhost:7162/api/File/ConsultarArchivos/32/identificacion_del_riesgo
+                // Se deben guardar "Recomendaciones generales para la violencia contra un hombre" en recomendaciones y
+                // Cargar un pdf generico en la opción de Subir un documento firmado (Validar si es opcional para ignorarlo)
+                // Se finaliza todo el precargue aquí https://localhost:7162/api/EvaluacionPsicologica/RegistrarRecomendaciones
+
+                var descripcion = "Recomendaciones generales para la violencia contra un hombre";
+                _evaluacion.RegistrarRecomendacion(solicitudId, descripcion, tareaId);
+
+                // Validar en Front como omitir la tab precargada (Identification del riesgo) y colocar automaticamente
+                // la tab de (Entrevista psicologica y emocional) esto lo hare cuando el sexo afectado del servicio sea "HOMBRE"
 
                 return tareaID;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw ;
             }
+        }
 
+        private async Task ConfigurarValorPorDefectoCuestionarios(int tipoViolenciaId, int solicitudId, int tareaId)
+        {
+            var tabPreguntas = await _evaluacion.ObtenerCuestionarioViolencia(tipoViolenciaId, solicitudId, tareaId);
+
+            var respuestas = new List<RespuestaPorPreguntaDTO>();
+            tabPreguntas.ForEach(tp =>
+            {
+                respuestas.Add(new RespuestaPorPreguntaDTO()
+                {
+                    IdCuestionario = tp.IdQuestionario,
+                    mes = false,
+                    puntuacion = false
+                });
+
+                var tabCompletado = new RespuestaCuestionarioDTO()
+                {
+                    idSolicitudServicio = solicitudId,
+                    idTarea = tareaId,
+                    IdTipoViolencia = tipoViolenciaId,
+                    listadoRespuestas = respuestas
+                };
+                _evaluacion.RegistrarCuestionario(tabCompletado, tareaId);
+            });
         }
 
         /// <summary>

@@ -40,9 +40,15 @@ namespace sicf_BusinessHandlers.BusinessHandlers.AzureBlogStorage
         public Task DeleteBLOBFile(string filename)
         {
             var filePath = Path.Combine(_storagePath, filename);
+           // Console.WriteLine($"Intentando eliminar: {filePath}");
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
+               // Console.WriteLine("Archivo eliminado.");
+            }
+            else
+            {
+                //Console.WriteLine("Archivo NO encontrado.");
             }
             return Task.CompletedTask;
         }

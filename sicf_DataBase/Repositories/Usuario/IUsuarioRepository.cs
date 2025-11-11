@@ -40,6 +40,7 @@ namespace sicf_DataBase.Repositories.Usuario
         public  Task AgregarhistorialContrasena(int usuario, string pass);
 
         public  Task<int> ComisariaUsuario(string email);
+        public  Task<int> ComisariaUsuarioPorId(string email,long id_comisaria);
 
         public Task<Tuple<int, int, bool?>> InformacionUsuario(string email);
 

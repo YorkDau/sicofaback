@@ -68,6 +68,7 @@ namespace sicf_Models.Dto.Seguimientos
             medidas = new List<MedidaSeguimientoDTO>();
 
         }
+
     }
 
 }

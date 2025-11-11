@@ -22,6 +22,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Usuario
         public  Task CrearUsuario(CrearUsuarioDTO data);
 
         public  Task<int> ComisariaUsuario(string email);
+        public  Task<int> ComisariaUsuarioPorId(string email,long idComisaria);
 
         public Task<bool> ActualizarUsuario(UsuarioDTO data);
 

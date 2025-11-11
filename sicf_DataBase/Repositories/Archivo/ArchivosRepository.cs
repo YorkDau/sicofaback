@@ -127,26 +127,25 @@ namespace sicf_DataBase.Repositories.Archivo
 
         }
 
-        public async Task<string> ComisariaAsociada(long idSolicidServicio)
+        public async Task<string> ComisariaAsociada(long idSolicitudServicio)
         {
             try
             {
-                 string? nombre = await (from soli in context.SicofaSolicitudServicio
-                                 join comi in context.SicofaComisaria on soli.IdComisaria equals comi.IdComisaria
-                                 select comi.Nombre ).FirstOrDefaultAsync();
+                string? nombre = await (
+                    from soli in context.SicofaSolicitudServicio
+                    join comi in context.SicofaComisaria on soli.IdComisaria equals comi.IdComisaria
+                    where soli.IdSolicitudServicio == idSolicitudServicio
+                    select comi.Nombre
+                ).FirstOrDefaultAsync();
 
-                var salida = nombre == null ? string.Empty : nombre; 
-                return salida ;
-
-                
+                return nombre ?? string.Empty;
             }
-            catch (Exception ex) {
-
-                throw new Exception(ex.Message);
-            
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al obtener la comisaría asociada: {ex.Message}", ex);
             }
-        
         }
+
 
         public async Task<Tuple<bool,bool>> ValidarActualizacion(long idSolicitud, string tipoDocumento, long idTarea)
         {

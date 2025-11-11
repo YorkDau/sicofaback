@@ -197,6 +197,7 @@ namespace sicf_DataBase.Repositories.Plantilla
                 
                 plantilla = _context.SicofaSolicitudServicioPlantillas.Where(p => p.IdSolPlantilla == idplantilla).First();
                 plantilla.observacion = secciones.observacion;
+                plantilla.esNecesarioRemitir= secciones.esNecesarioRemitir;
                 plantilla.aprobado = secciones.aprobado == null ? false : secciones.aprobado;
 
                 // Actualizo la tabla SicofaSolicitudServicioPSecciones

@@ -42,7 +42,7 @@ namespace sicf_DataBase.Repositories.Programacion
                              {
                                  idTarea = t.IdTarea,
                                  IdSolicitudServicio = t.IdSolicitudServicio,
-                                 etiqueta = f.EtiquetaDocumento
+                                 etiqueta = f.EtiquetaDocumento ?? "AUDINC"
                              }).Single();
 
                 ProgramacionDTO programacion = (from p in _context.SicofaProgramacion
@@ -122,6 +122,33 @@ namespace sicf_DataBase.Repositories.Programacion
                 return (from t in _context.SicofaTipoAudiencia
                         where t.Etiqueta == etiqueta
                         select new ProgramacionTipoAudienciaDTO { idTipoAudiencia = t.IdTipoAudiencia, descripcion = t.Descripcion, etiqueta = t.Etiqueta }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+        }
+
+        public Task<List<ProgramacionAgendaDTO>> ObtenerAgendaGeneral(long idComisaria)
+        {
+            try
+            {
+                var agenda = (from p in _context.SicofaProgramacion
+                    join s in _context.SicofaSolicitudServicio on p.IdSolicitud equals s.IdSolicitudServicio
+                    join a in _context.SicofaTipoAudiencia on p.IdTipoAudiencia equals a.IdTipoAudiencia 
+                    where  p.Estado == Constants.programacion.estadoDisponible && s.IdComisaria == idComisaria
+                    where s.IdComisaria == idComisaria
+                    select new ProgramacionAgendaDTO
+                    { 
+                        IdProgramacion = p.IdProgramacion,
+                        codigoSolicitud = s.CodigoSolicitud,
+                        FechaHoraInicial = p.FechaHoraInicial,
+                        FechaHoraFinal = p.FechaHoraFinal,
+                        Audiencia = a.Descripcion,
+                        esAgendaTarea = true
+                    }).ToList();
+
+                return Task.FromResult(agenda);
             }
             catch (Exception ex)
             {

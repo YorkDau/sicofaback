@@ -35,6 +35,7 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
         public int? identidadGenero { get; set; }
 
         public int? idGenero { get; set; }
+        public int? idRegimen { get; set; }
 
         public string ocupacion { get; set; }
 
@@ -75,8 +76,20 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
         public string? Telefono { get; set; }
         public string? Firma { get; set; }
 
-        public long? lugarExpedicion { get; set; }
+        //public long? lugarExpedicion { get; set; }
+        public long? paisExp { get; set; }
+        public long? departamentoExp { get; set; }
+        public long? municipioExp { get; set; }
+        
+        public long? paisNacimiento { get; set; }
+        public long? departamentoNacimiento { get; set; }
+        public long? municipioNacimiento { get; set; }
 
+        public bool? tieneSalud { get; set; } = false;
+        public bool? tieneEducacion { get; set; } = false;
+        public bool? vacunacionCompleta { get; set; } = false;
+        public string? lugarEstudio { get; set; } = string.Empty;
+        
         public List<informacionHijo> hijos { get; set; } = new List<informacionHijo>();
 
 

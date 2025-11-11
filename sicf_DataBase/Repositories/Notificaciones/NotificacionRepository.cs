@@ -251,7 +251,7 @@ namespace sicf_DataBase.Repositories.Notificaciones
             {
                 var salida = string.Empty;
                  salida = await (from involu in context.SicofaInvolucrado
-                              join ciudad in context.SicofaCiudadMunicipio on involu.IdLugarExpedicion equals ciudad.IdCiudadMunicipio
+                              join ciudad in context.SicofaCiudadMunicipio on involu.IdMunicipioExpedicion equals ciudad.IdCiudadMunicipio
                            where involu.IdInvolucrado == idInvolucrado
                            select ciudad.Nombre
                               ).FirstOrDefaultAsync();
