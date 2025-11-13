@@ -96,6 +96,7 @@ namespace sicf_Models.Constants
             public const string seguimiento = "SEGUIMIENTO";
             public const string levantada = "LEVANTADA";
             public const string icbf = "COMPETENCIA ICBF";
+            public const string adulto_mayor = "COMPETENCIA PSI";
         }
 
         public struct FlujoEstados
