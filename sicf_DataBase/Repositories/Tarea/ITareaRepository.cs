@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace sicf_DataBase.Repositories.Tarea
 {
+
     public interface ITareaRepository
     {
         /// <summary>
@@ -24,6 +25,8 @@ namespace sicf_DataBase.Repositories.Tarea
         /// <param name="codigo"></param>
         /// <returns></returns>
         public int ObtenerFlujoInicial(string evento, string codigo);
+
+        public Task<bool> ActualizarComisariaTrasladoRemision(long idComisariaTraslado, long idSolitudServicio, int idUsuario);
         /// <summary>
         /// 
         /// </summary>

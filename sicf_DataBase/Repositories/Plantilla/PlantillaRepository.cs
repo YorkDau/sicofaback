@@ -38,6 +38,11 @@ namespace sicf_DataBase.Repositories.Plantilla
         {
             try
             {
+                var esNecesarioRemitir = await _context.SicofaSolicitudServicioPlantillas
+                    .Where(s => s.IdSolicitudServicio == idSolicitudServicio)
+                    .Select(s => s.esNecesarioRemitir)
+                    .FirstOrDefaultAsync();
+
                 FormattableString strQuery = $"EXEC PR_SICOFA_OBTENER_SECCIONES @pi_SolicitudServicio={idSolicitudServicio}";
 
                 var resul = await _context.SicofaObtenerSeccionesSP.FromSqlInterpolated(strQuery).ToListAsync();
@@ -46,6 +51,9 @@ namespace sicf_DataBase.Repositories.Plantilla
                     List<PlantillaSPDTO> secciones = new List<PlantillaSPDTO>();
 
                     secciones = resul;
+
+                    foreach (var item in secciones)
+                        item.esNecesarioRemitir = esNecesarioRemitir;
 
                     return secciones;
                 }

@@ -58,6 +58,44 @@ namespace sicf_DataBase.Repositories.Tarea
             }   
         }
 
+        public async Task<bool> ActualizarComisariaTrasladoRemision(long idComisariaTraslado, long idSolitudServicio, int idUsuario)
+        {
+            try
+            {
+                var solicitud = await _context.SicofaSolicitudServicio
+                    .FirstOrDefaultAsync(s => s.IdSolicitudServicio == idSolitudServicio);
+
+                if (solicitud == null)
+                    return false;
+
+                long idComisariaOrigen = solicitud.IdComisaria;
+
+                using (var connection = new SqlConnection(_context.Database.GetConnectionString()))
+                using (var command = new SqlCommand("PR_SICOFA_CREAR_REMISION_SOLICITUD_SERVICIO", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    command.Parameters.AddWithValue("@id_solicitud_servicio", idSolitudServicio);
+                    command.Parameters.AddWithValue("@id_comisaria_origen", idComisariaOrigen);
+                    command.Parameters.AddWithValue("@tipo_remision", 1);
+                    command.Parameters.AddWithValue("@id_comisaria_destino", idComisariaTraslado);
+                    command.Parameters.AddWithValue("@id_entidad_externa", DBNull.Value);
+                    command.Parameters.AddWithValue("@justificacion", "COMPETENCIA A PREVENCION");
+                    command.Parameters.AddWithValue("@usuario", idUsuario);
+
+                    connection.Open();
+                    var result = await command.ExecuteScalarAsync();
+                    connection.Close();
+
+                    return result != null && Convert.ToInt64(result) > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al registrar la remisión: {ex.Message}", ex);
+            }
+        }
+
         public int ObtenerFlujoInicial(string evento, string codigo)
         {
             try
