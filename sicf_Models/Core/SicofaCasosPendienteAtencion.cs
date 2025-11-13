@@ -21,5 +21,8 @@ namespace sicf_Models.Core
         public string? pathRetorno { get; set; }
         public int remision { get; set; }
         public string sexoAfectado { get; set; } = string.Empty;
+        public string? tipo_presolicitud { get; set; } = string.Empty;
+        public long id_comisaria { get; set; }
+        
     }
 }

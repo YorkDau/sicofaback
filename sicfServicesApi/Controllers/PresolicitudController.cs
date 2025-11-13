@@ -61,8 +61,15 @@ namespace sicfServicesApi.Controllers
 
                 idPresolicitud = _presolicitudService.CrearPresolicitud(requestCrearPresolicitud, id_comisaria_usuario , usuario.IdUsuarioSistema).Result;
 
+
                 if (idPresolicitud != 0)
-                    return CustomResult(Message.Ok, idPresolicitud, HttpStatusCode.OK);
+                {
+                    PresolicitudDTO presolicitud = await _presolicitudService.ObtenerPresolicitud(idPresolicitud);
+                    if ((presolicitud?.presolicitudOUT?.tipoPresolicitud ?? "DEN") == "DENAM")
+                        return CustomResult("El caso ha sido enviado al área correspondiente, para la determinación de su competencia.", idPresolicitud, HttpStatusCode.OK);
+                    else
+                        return CustomResult("El caso ha sido enviado al área legal, para la determinación de su competencia.", idPresolicitud, HttpStatusCode.OK);
+                }
                 else
                     return CustomResult("Error obtenidendo codigo solicitud", idPresolicitud, HttpStatusCode.FailedDependency);
 

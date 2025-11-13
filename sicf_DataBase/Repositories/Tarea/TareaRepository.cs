@@ -169,6 +169,8 @@ namespace sicf_DataBase.Repositories.Tarea
                     response1.pathRetorno = caso.pathRetorno;
                     response1.remision = caso.remision;
                     response1.sexoAfectado = caso.sexoAfectado;
+                    response1.tipo_presolicitud = caso.tipo_presolicitud;
+                    response1.id_comisaria = caso.id_comisaria;
 
                     listRestono.Add(response1);
 

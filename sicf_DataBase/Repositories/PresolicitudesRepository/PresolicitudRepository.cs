@@ -353,7 +353,7 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                 }
                 else if ( (bool)!presolicitud.presolicitudABO.seRealizaraPard)
                 {
-                    if (presolicitud.presolicitudOUT.tipoPresolicitud == "DEN")
+                    if (presolicitud.presolicitudOUT.tipoPresolicitud == "DEN" || presolicitud.presolicitudOUT.tipoPresolicitud == "DENAM")
                     {
                         if (presolicitudCEA.idCita > 0)
                         {

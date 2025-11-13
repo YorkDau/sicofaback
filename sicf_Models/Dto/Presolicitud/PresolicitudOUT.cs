@@ -12,7 +12,7 @@ namespace sicf_Models.Dto.Presolicitud
     {
         public long id_solicitud { get; set; }
         public long? idCiudadano { get; set; }
-        public DateTime fecha_solicitud { get; set; }        
+        public DateTime fecha_solicitud { get; set; }
         public string descripcion_hechos { get; set; }
         public string? tipo_documento_denunciante { get; set; }
         public string? numero_documento_denunciante { get; set; }
@@ -30,6 +30,7 @@ namespace sicf_Models.Dto.Presolicitud
         public string? telefono_victima { get; set; }
         public string? direccion_victima { get; set; }
         public string? datos_adicionales_victima { get; set; }
+        public DateTime? fecha_nacimiento_victima { get; set; }
         public string tipoPresolicitud { get; set; }
         public string? archivoAdjunto { get; set; }
         public long? id_anexo { get; set; }
