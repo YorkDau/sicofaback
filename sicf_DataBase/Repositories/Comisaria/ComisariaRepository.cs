@@ -12,12 +12,8 @@ using sicf_Models.Dto.EvaluacionPsicologica;
 using sicf_Models.Dto.Token;
 using sicf_Models.Utility;
 using sicfExceptions.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Mail;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using static sicf_Models.Constants.Constants;
 
@@ -84,47 +80,93 @@ namespace sicf_DataBase.Repositories.Comisaria
         private async Task EntregarContrasena(string correo, string passs)
         {
             var email = new MimeMessage();
+
             try
             {
-                email.From.Add(MailboxAddress.Parse(Configuration.GetSection("Email:UserName").Value));
+                var host = Configuration["Email:Host"];
+                var port = int.Parse(Configuration["Email:Port"]);
+                var user = Configuration["Email:UserName"];
+                var pass = Configuration["Email:PassWord"];
+
+                email.From.Add(new MailboxAddress("SIGFA", user));
                 email.To.Add(MailboxAddress.Parse(correo));
-                email.Subject = "CONTRASEÑA SICOFA";
-                email.Body = new TextPart(TextFormat.Html) {Text = @"
-                    <html>
-                        <body style='font-family: Arial, sans-serif; color: #333;'>
-                            <h2 style='color: #0066cc;'>Nueva contraseña Sicofa</h2>
-                            <p>Estimado usuario,</p>
-                            <p>Tu nueva contraseña para acceder a Sicofa es: <strong>" + passs + @"</strong></p>
-                            <p>Por razones de seguridad, te recomendamos cambiar esta contraseña después de tu próximo inicio de sesión.</p>
-                            <p>Si no has solicitado este cambio, por favor contacta con nuestro equipo de soporte inmediatamente.</p>
-                            <p>Saludos cordiales,<br>El equipo de Sicofa</p>
+                email.Subject = "Nueva Contraseña SIGFA";
+
+                email.Body = new TextPart(TextFormat.Html)
+                {
+                    Text = $@"
+                        <!DOCTYPE html>
+                        <html lang='es'>
+                        <head>
+                            <meta charset='UTF-8' />
+                            <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+                        </head>
+                        <body style='margin: 0; padding: 0; background-color: #f3f4f6; font-family: Arial, sans-serif;'>
+
+                            <table width='100%' cellpadding='0' cellspacing='0' style='background-color:#f3f4f6; padding: 20px 0;'>
+                                <tr>
+                                    <td align='center'>
+
+                                        <table width='600' cellpadding='0' cellspacing='0' style='background-color:#ffffff; border-radius:10px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.08);'>
+
+                                            <tr>
+                                                <td style='background-color:#005bbd; padding:20px 30px; text-align:center;'>
+                                                    <h1 style='color:#ffffff; margin:0; font-size:20px; font-weight:600;'>SIGFA - Sistema de Información</h1>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style='padding:30px 40px; color:#333333; font-size:15px; line-height:1.6;'>
+
+                                                    <p>Estimado usuario,</p>
+
+                                                    <p>Se ha generado una nueva contraseña para acceder al sistema <strong>SIGFA</strong>. A continuación encontrarás tu nueva clave de acceso:</p>
+
+                                                    <div style='margin:25px 0; text-align:center;'>
+                                                        <span style='font-size:22px; font-weight:bold; color:#d32f2f; background:#fbeaea; padding:12px 25px; border-radius:8px; display:inline-block;'>
+                                                            {passs}
+                                                        </span>
+                                                    </div>
+
+                                                    <p>Por motivos de seguridad, te recomendamos cambiar esta contraseña una vez inicies sesión.</p>
+
+                                                    <p>Si no solicitaste este cambio, por favor contacta inmediatamente con el equipo de soporte para revisar tu cuenta.</p>
+
+                                                    <br />
+
+                                                    <p>Saludos cordiales,<br><strong>Equipo SIGFA</strong></p>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td style='background-color:#f3f4f6; text-align:center; padding:15px; font-size:12px; color:#777;'>
+                                                    © SIGFA - Sistema de Información. Todos los derechos reservados.
+                                                </td>
+                                            </tr>
+
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+
                         </body>
-                    </html>" 
+                        </html>"
                 };
 
-                var smtp = new MailKit.Net.Smtp.SmtpClient();
 
-                var host = Configuration.GetSection("Email:Host").Value;
-                var port = Convert.ToInt32(Configuration.GetSection("Email:Port").Value);
-                var user = Configuration.GetSection("Email:UserName").Value;
-                var pass = Configuration.GetSection("Email:PassWord").Value;
+                using (var smtp = new MailKit.Net.Smtp.SmtpClient())
+                {
+                    await smtp.ConnectAsync(host, port, SecureSocketOptions.SslOnConnect);
 
-                smtp.Connect(host, port, SecureSocketOptions.StartTls);
-
-                smtp.Authenticate(user, pass);
-                smtp.Send(email);
-                smtp.Disconnect(true);
-
-
-
+                    await smtp.AuthenticateAsync(user, pass);
+                    await smtp.SendAsync(email);
+                    await smtp.DisconnectAsync(true);
+                }
             }
-            catch (Exception ex)
+            catch
             {
-
-                throw ex;
+                throw; // preserva stack original
             }
-
-
         }
 
         private bool AsignacionComisaria(int idComisaria, int idUsuario, string perfil)
