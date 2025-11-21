@@ -36,6 +36,8 @@ namespace sicf_DataBase.Repositories.Tarea
                              where proceso.CodigoProceso == codigoProceso && flujo.Evento == "INICIO"
                                select Tuple.Create(flujo.IdFlujo)).FirstOrDefaultAsync();
 
+
+
                 if (query == null)
                     throw new Exception(Constants.Tarea.Mensajes.errorConfiguracionflujo);
 

@@ -28,5 +28,12 @@ namespace sicf_Models.Core
         public string? ObservacionesCompetenciaIcbf { get; set; }
 
         public virtual SicofaSolicitudServicio IdSolicitudServicioNavigation { get; set; } = null!;
+
+
+        public long? IdEntidadTraslado { get; set; }
+        public long? IdAdjuntoConstanciaTraslado { get; set; }
+        public string? HechosExistentes { get; set; }
+        public string? JustificacionTraslado { get; set; }
+        public bool? SeguirTramitePrevencion { get; set; }
     }
 }

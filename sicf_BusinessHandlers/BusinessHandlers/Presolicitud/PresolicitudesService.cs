@@ -234,7 +234,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Presolicitud
 
                 if (guardoPresolicitud)
                 {
-                    var autoTramite = await _presolicitudRepository.ObtenerSolicitudComplementario(presolicitudABO.idSolicitudServicio);
+                    var complementario = await _presolicitudRepository.ComplementariaPorId(presolicitudABO.idSolicitudServicio);
+                    var autoTramite = complementario.IdAnexoAutoTramite == null ? 0 : complementario.IdAnexoAutoTramite.Value;
 
                     if (autoTramite == 0 && presolicitudABO.adjuntoAutoTramite.Length > 0)
                     {
@@ -263,6 +264,35 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Presolicitud
                     else
                     {
                         presolicitudABO.idAnexoAutoTramite = autoTramite;
+                    }
+
+                    // Constancia de traslado
+                    var constanciaTraslado = complementario.IdAdjuntoConstanciaTraslado == null ? 0 : complementario.IdAdjuntoConstanciaTraslado.Value;
+                    if (constanciaTraslado == 0 && presolicitudABO.adjuntoConstanciaTraslado.Length > 0)
+                    {
+                        string tipoDocumento = "Archivo_Constancia_Traslado"; // Crear en BD en la tabla SICOFA_Documento
+                        Task<long> idAnexo = null;
+
+                        sicf_Models.Dto.Archivos.CargaArchivoDTO cargaArchivo = new sicf_Models.Dto.Archivos.CargaArchivoDTO();
+                        cargaArchivo.entrada = presolicitudABO.adjuntoConstanciaTraslado;
+                        cargaArchivo.idSolicitudServicio = presolicitudABO.idSolicitudServicio;
+                        cargaArchivo.tipoDocumento = tipoDocumento;
+                        idAnexo = _archivoService.Carga(cargaArchivo);
+                        presolicitudABO.idAdjuntoConstanciaTraslado = idAnexo.Result;
+                    }
+                    else if (presolicitudABO.adjuntoConstanciaTraslado.Length > 0)
+                    {
+                        EditarArchivoDTO editarArchivoDTO = new EditarArchivoDTO();
+
+                        editarArchivoDTO.entrada = presolicitudABO.adjuntoConstanciaTraslado;
+                        editarArchivoDTO.idSolicitudServicio = presolicitudABO.idSolicitudServicio;
+                        editarArchivoDTO.idSolicitudServicioAnexo = constanciaTraslado;
+                        presolicitudABO.idAdjuntoConstanciaTraslado = constanciaTraslado;
+                        await _archivoService.EditarArchivo(editarArchivoDTO);
+                    }
+                    else
+                    {
+                        presolicitudABO.idAdjuntoConstanciaTraslado = constanciaTraslado;
                     }
 
                     await _presolicitudRepository.GuardarDecisionJuridicaComplementaria(presolicitudABO);
