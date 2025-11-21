@@ -211,6 +211,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 
         public Task<SolicitudGeneralDTO> ConsultaGeneralSolicitud(long idSolicitudServicio);
         ResponseListaPaginada ConsultarSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
+        ResponseListaPaginada ConsultarSolicitudesTrasladoFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
         ResponseListaPaginada ConsultarPreSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud);
         
 

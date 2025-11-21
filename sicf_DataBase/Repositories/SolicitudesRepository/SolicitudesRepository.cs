@@ -1187,6 +1187,72 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                 }
             }
         }
+        public ResponseListaPaginada ConsultarSolicitudesTrasladoFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
+        {
+            List<ConsultaTrasladoDto> resultados = new List<ConsultaTrasladoDto>();
+
+            using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+            {
+                using (_command = new SqlCommand("PR_SICOFA_CONSULTA_TRASLADOS", _connectionDb))
+                {
+                    _command.CommandType = CommandType.StoredProcedure;
+
+                    _command.Parameters.AddWithValue("@codigo_solicitud",
+                        string.IsNullOrEmpty(solicitud.CodigoSolicitud) ? DBNull.Value : (object)solicitud.CodigoSolicitud);
+
+                    _connectionDb.Open();
+
+                    using SqlDataReader reader = _command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var item = new ConsultaTrasladoDto
+                            {
+                                CodigoSolicitud = reader["codigo_solicitud"].ToString(),
+                                FechaSolicitud = Convert.ToDateTime(reader["fecha_solicitud"]),
+
+                                NumeroDocumento = reader["numero_documento"].ToString(),
+                                NombreCiudadano = reader["nombre_ciudadano"].ToString(),
+                                PrimerApellido = reader["primer_apellido"].ToString(),
+                                SegundoApellido = reader["segundo_apellido"].ToString(),
+
+                                ComisariaActual = reader["comisaria_actual"].ToString(),
+                                DescripcionDeHechos = reader["descripcion_de_hechos"].ToString(),
+
+                                EsCompetenciaComisaria = Convert.ToInt32(reader["esCompetenciaComisaria"]),
+                                JustificacionRemision = reader["justificacion_remision"].ToString(),
+
+                                EstadoSolicitud = reader["estado_solicitud"].ToString(),
+                                SubestadoSolicitud = reader["subestado_solicitud"].ToString(),
+
+                                ComisariaOrigen = reader["comisaria_origen"].ToString(),
+                                ComisariaDestino = reader["comisaria_destino"].ToString(),
+                                EntidadExterna = reader["entidad_externa"].ToString(),
+
+                                JustificacionTraslado = reader["justificacion_traslado"].ToString(),
+                                EsNecesarioRemitir = Convert.ToInt32(reader["es_necesario_remitir"])
+                            };
+
+                            resultados.Add(item);
+                        }
+                    }
+
+
+                    _connectionDb.Close();
+
+                    ResponseListaPaginada response = new ResponseListaPaginada
+                    {
+                        DatosPaginados = resultados,
+                        TotalRegistros = resultados.Count,
+                        Message = resultados.Count > 0 ? "Datos obtenidos correctamente" : "No se encontraron registros"
+                    };
+
+                    return response;
+                }
+            }
+        }
         public ResponseListaPaginada ConsultarPreSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
         {
             List<ConsultaGeneralPreSolicitudDTO> resultados = new();
