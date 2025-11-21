@@ -29,6 +29,8 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
         {
 
             var solicitud = context.SicofaSolicitudServicio.Where(s => s.IdSolicitudServicio == idSolicitudProceso).FirstOrDefault()!;
+            var esNecesarioRemiitir = context.SicofaSolicitudServicioPlantillas.Where(s => s.IdSolicitudServicio == idSolicitudProceso).FirstOrDefault()!;
+
 
             //var dem = context.SicofaSolicitudServicioEstadoSolicitud.Where(s => s.IdSolicitudServicio == idSolicitudProceso).OrderByDescending(s => s.IdSolicitudServicio).First();
 
@@ -37,7 +39,8 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
 
            AccionanteDTO salida = new AccionanteDTO();
             salida.codigoSolicitudServicio = solicitud.CodigoSolicitud;
-            salida.estadoCaso = solicitud.EstadoSolicitud!; ;
+            salida.estadoCaso = solicitud.EstadoSolicitud!;
+            salida.esNecesarioRemitir = esNecesarioRemiitir?.esNecesarioRemitir??false; // PROBOCA BLOQUEOS, CONFIGURACION NO PARAMETRIZADA
             salida.nombreAccionante = involucrados.IdInvolucrado.Where(s => s.EsPrincipal == true && s.EsVictima == true).Select(s => $"{s.PrimerNombre} {s.SegundoNombre} {s.PrimerApellido} {s.SegundoApellido}").First();
 
 ;           foreach (var victima in involucrados.IdInvolucrado) {
@@ -836,6 +839,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             var evaluacion = await context.SicofaEvaluacionPsicologica.Where(s => s.IdSolicitudServicio == data.IdSolicitudServicio & s.IdTarea == idTarea).FirstOrDefaultAsync();
             evaluacion.ValoracionPsicologica = data.valoracionPsicologica;
             evaluacion.ValoracionEntorno = data.valoracionEntornoFamiliar;
+            evaluacion.HayMenores = data.hayMenores;
             context.SaveChanges();
         }
 

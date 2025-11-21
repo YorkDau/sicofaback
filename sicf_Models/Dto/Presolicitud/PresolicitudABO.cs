@@ -21,5 +21,12 @@ namespace sicf_Models.Dto.Presolicitud
             observacionesLegalidad = String.Empty;
             adjuntoAutoTramite = String.Empty;
         }
+        
+        public long? idEntidadTraslado { get; set; }
+        public string? adjuntoConstanciaTraslado { get; set; } 
+        public long? idAdjuntoConstanciaTraslado { get; set; }
+        public string? hechosExistentes { get; set; }
+        public string? justificacionTraslado { get; set; }
+        public bool? seguirTramitePrevencion { get; set; }
     }
 }

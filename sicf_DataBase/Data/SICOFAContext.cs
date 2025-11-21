@@ -2684,6 +2684,20 @@ namespace sicf_DataBase.Data
                     .HasForeignKey<SicofaSolicitudServicioComplementaria>(d => d.IdSolicitudServicio)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SICOFA_SolicitudServicio_Complementaria_SICOFA_SolicitudServicio");
+
+
+                entity.Property(e => e.HechosExistentes)
+                    .HasMaxLength(100)
+                    .HasColumnName("hechos_existentes");
+                entity.Property(e => e.IdEntidadTraslado)
+                    .HasColumnName("id_entidad_traslado");
+                entity.Property(e => e.IdAdjuntoConstanciaTraslado)
+                    .HasColumnName("id_adjunto_constancia_traslado");
+                entity.Property(e => e.JustificacionTraslado)
+                    .IsUnicode(false)
+                    .HasColumnName("justificacion_traslado");
+                entity.Property(e => e.SeguirTramitePrevencion)
+                    .HasColumnName("seguir_tramite_prevencion");
             });
 
             modelBuilder.Entity<SicofaSolicitudServicioEstadoSolicitud>(entity =>

@@ -206,7 +206,14 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                                             esCompetenciaComisaria = ss.EsCompetenciaComisaria == null ? true : ss.EsCompetenciaComisaria,
                                             seRealizaraPard = sc.EsPard == null ? false : sc.EsPard,
                                             observacionesLegalidad = sc.ObservacionLegal,
-                                            idAnexoAutoTramite = sc.IdAnexoAutoTramite
+                                            idAnexoAutoTramite = sc.IdAnexoAutoTramite,
+
+                                            hechosExistentes = sc.HechosExistentes,
+                                            idAdjuntoConstanciaTraslado = sc.IdAdjuntoConstanciaTraslado,
+                                            idEntidadTraslado = sc.IdEntidadTraslado,
+                                            justificacionTraslado = sc.JustificacionTraslado,
+                                            seguirTramitePrevencion = sc.SeguirTramitePrevencion
+
                                         },
                                         presolicitudVERDE = new PresolicitudVERDE
                                         {
@@ -283,6 +290,12 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                     solicitudServicioComplementario.EsPard = presolicitudABO.seRealizaraPard;
                     solicitudServicioComplementario.ObservacionLegal = presolicitudABO.observacionesLegalidad;
                     solicitudServicioComplementario.IdAnexoAutoTramite = presolicitudABO.idAnexoAutoTramite;
+
+                    solicitudServicioComplementario.HechosExistentes = presolicitudABO.hechosExistentes;
+                    solicitudServicioComplementario.IdEntidadTraslado = presolicitudABO.idEntidadTraslado;
+                    solicitudServicioComplementario.IdAdjuntoConstanciaTraslado = presolicitudABO.idAdjuntoConstanciaTraslado;
+                    solicitudServicioComplementario.SeguirTramitePrevencion= presolicitudABO.seguirTramitePrevencion;
+                    solicitudServicioComplementario.JustificacionTraslado = presolicitudABO.justificacionTraslado;
                 }
 
                 await _context.SaveChangesAsync();

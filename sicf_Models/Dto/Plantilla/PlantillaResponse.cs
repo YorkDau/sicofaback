@@ -16,6 +16,7 @@ namespace sicf_Models.Dto.Plantilla
         public bool? apelacion { get; set; } 
         public long? idAnexo { get; set; }
         public bool? aplicaRevision { get; set; }
+        public bool? esNecesarioRemitir { get; set; }
         public List<PlantillaSeccionesDTO> secciones { get; set; }
         public object tree { get; set; }
         public PlantillaResponse()

@@ -20,6 +20,7 @@ namespace sicf_DataBase.Repositories.Archivo
         public Task<List<SicofaSolicitudServicioAnexo>> ConsultarRegistroArchivo(long idSolicitudServicio, int idDocumento, long idTarea);
 
         public Task<string> ComisariaAsociada(long idSolicidServicio);
+        public Task<bool> ActualizarComisariaTrasladoRemision(long idComisariaTraslado, long idSolitudServicio, int idUsuario);
         public Task<Tuple<bool, bool>> ValidarActualizacion(long idSolicitud, string tipoDocumento, long idTarea);
 
         public Task<string> ObtenerCodigoSolicitud(long idSolicitudServicio);

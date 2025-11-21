@@ -53,6 +53,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Plantilla
                     response.apelacion = seccion.apelacion;
                     response.idAnexo = seccion.idAnexo;
                     response.aplicaRevision = secciones.First().aplicaRevision;
+                    response.esNecesarioRemitir = secciones.First().esNecesarioRemitir;
                     response.secciones = plantillaRepository.AsignarInvolucrados(secciones, involucrados);
                     response.tree = tree;
                     response.aplicaMedidas = validarMedidas.Item1;

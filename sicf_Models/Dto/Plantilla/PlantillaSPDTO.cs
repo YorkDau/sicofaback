@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,8 @@ namespace sicf_Models.Dto.Plantilla
         public string? textoInvolucrado { get; set; }
         public int? orden { get; set; }
         public bool? estadoSeccion { get; set; }
+        [NotMapped]
+        public bool? esNecesarioRemitir { get; set; }
         public bool? aplicaRevision { get; set; }
     }
 }

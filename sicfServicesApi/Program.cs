@@ -83,20 +83,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 var policyName = "_myAllowSpecificOrigins";
 
-/* TODO: Ìmplementar seguridad AZURE B2C*/
-
-//La seguridad cors se puede habilitar en el app service del api en azure.
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: policyName,
-                      policy =>
-                      {
-                          policy.WithOrigins("http://localhost:4200");
-                          policy.AllowAnyHeader();
-                          policy.AllowAnyMethod();
-                          policy.AllowAnyOrigin();
-                          policy.SetIsOriginAllowed(x => x == "http://localhost:4200");
-                      });
+    options.AddPolicy(name: policyName, policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:4200",
+                "https://sigfa.cali.gov.co"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
 
 // Add services to the container.
