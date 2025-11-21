@@ -29,18 +29,17 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
         {
 
             var solicitud = context.SicofaSolicitudServicio.Where(s => s.IdSolicitudServicio == idSolicitudProceso).FirstOrDefault()!;
-            var esNecesarioRemiitir = context.SicofaSolicitudServicioPlantillas.Where(s => s.IdSolicitudServicio == idSolicitudProceso).FirstOrDefault()!;
-
+            var esNecesarioRemitir = context.SicofaSolicitudServicioPlantillas.Where(s => s.IdSolicitudServicio == idSolicitudProceso)
+                .Select(s => s.esNecesarioRemitir)
+                .FirstOrDefault() ?? false;
 
             //var dem = context.SicofaSolicitudServicioEstadoSolicitud.Where(s => s.IdSolicitudServicio == idSolicitudProceso).OrderByDescending(s => s.IdSolicitudServicio).First();
-
-           
             var involucrados = context.SicofaSolicitudServicio.Include(se => se.IdInvolucrado).Where(s => s.IdSolicitudServicio == idSolicitudProceso).FirstOrDefault();
 
            AccionanteDTO salida = new AccionanteDTO();
             salida.codigoSolicitudServicio = solicitud.CodigoSolicitud;
             salida.estadoCaso = solicitud.EstadoSolicitud!;
-            salida.esNecesarioRemitir = esNecesarioRemiitir.esNecesarioRemitir;
+            salida.esNecesarioRemitir = esNecesarioRemitir;
             salida.nombreAccionante = involucrados.IdInvolucrado.Where(s => s.EsPrincipal == true && s.EsVictima == true).Select(s => $"{s.PrimerNombre} {s.SegundoNombre} {s.PrimerApellido} {s.SegundoApellido}").First();
 
 ;           foreach (var victima in involucrados.IdInvolucrado) {

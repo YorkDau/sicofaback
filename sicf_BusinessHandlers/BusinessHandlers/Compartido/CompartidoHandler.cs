@@ -212,11 +212,11 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Compartido
                     await _archivoService.Carga(archivoDto);    
                 }
 
-                if (involucrado.InfoAdicional?.Consetimiento is not null)
+                if (involucrado.InfoAdicional?.Consentimiento is not null)
                 {
                     var archivoDto = new CargaArchivoDTO()
                     {
-                        entrada = involucrado.InfoAdicional.Adjunto,
+                        entrada = involucrado.InfoAdicional.Consentimiento,
                         idSolicitudServicio = involucrado.IdSolicitudServicio,
                         tipoDocumento = "Anexo_Consentimiento_Informado",
                     };
@@ -251,6 +251,27 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Compartido
             bool response = false;
             try
             {
+                if (involucrado.InfoAdicional?.Adjunto is not null)
+                {
+                    var archivoDto = new CargaArchivoDTO
+                    {
+                        entrada = involucrado.InfoAdicional.Adjunto,
+                        idSolicitudServicio = involucrado.IdSolicitudServicio,
+                        tipoDocumento = "Archivo_Estado_De_Salud",
+                    };
+                    await _archivoService.Carga(archivoDto);
+                }
+
+                if (involucrado.InfoAdicional?.Consentimiento is not null)
+                {
+                    var archivoDto = new CargaArchivoDTO()
+                    {
+                        entrada = involucrado.InfoAdicional.Consentimiento,
+                        idSolicitudServicio = involucrado.IdSolicitudServicio,
+                        tipoDocumento = "Anexo_Consentimiento_Informado",
+                    };
+                    await _archivoService.Carga(archivoDto);
+                }
                 response = await this._compartidoRepository.ActualizarInvolucradoComplementaria(involucrado);
             }
             catch (Exception ex)
