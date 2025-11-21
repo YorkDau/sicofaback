@@ -1256,7 +1256,6 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
         public SolicitudServicioDetalleDTO ObtenerSolicitudServiciosCiudadanoDetalle(int id)
         {
             var solicitud = new SolicitudServicioDetalleDTO();
-            string parentescoVictima = null;
 
             using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
             {
@@ -1272,8 +1271,6 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
 
                     while (reader.Read())
                     {
-                        bool esVictima = ConvertFDBVal.ConvertFromDBVal<bool>(reader["es_victima"]);
-
                         if (solicitud.codigo_solicitud == null)
                         {
                             solicitud.codigo_solicitud = ConvertFDBVal.ConvertFromDBVal<string>(reader["codigo_solicitud"]);
@@ -1281,27 +1278,19 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                             solicitud.fecha_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_solicitud"]);
                             solicitud.hora_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["hora_solicitud"]);
                             solicitud.descripcion_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_de_hechos"]);
-                            solicitud.es_victima = esVictima;
                             solicitud.fecha_hecho_violento = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_hecho_violento"]);
                         }
 
-                        if (esVictima && parentescoVictima == null)
+                        var involucrado = new InvolucradoDetalleDTO
                         {
-                            parentescoVictima = ConvertFDBVal.ConvertFromDBVal<string>(reader["parentesco"]) ?? "NO TIENE ASIGNADO";
-                        }
+                            nombre_completo = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_completo"]),
+                            numero_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento"]),
+                            parentesco = ConvertFDBVal.ConvertFromDBVal<string>(reader["parentesco"]) ?? "NO TIENE ASIGNADO"
+                        };
 
-                        if (!esVictima && !reader.IsDBNull(reader.GetOrdinal("nombre_completo")))
-                        {
-                            var involucrado = new InvolucradoDetalleDTO
-                            {
-                                nombre_completo = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_completo"]),
-                                numero_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento"]),
-                                parentesco = parentescoVictima ?? "NO TIENE ASIGNADO"
-                            };
-
-                            solicitud.involucrados.Add(involucrado);
-                        }
+                        solicitud.involucrados.Add(involucrado);
                     }
+
                     _connectionDb.Close();
 
                     if (solicitud.codigo_solicitud != null)

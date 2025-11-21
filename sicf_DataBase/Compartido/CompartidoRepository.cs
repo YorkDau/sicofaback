@@ -808,8 +808,6 @@ namespace sicf_DataBase.Compartido
                     deta.ObservacionesSalud = involucrado.ObservacionesSalud;
                     deta.ObservacionesPsicologia = involucrado.ObservacionesPsicologia;
                     deta.ObservacionesTrabajoSocial = involucrado.ObservacionesTrabajoSocial;
-
-
                     await context.SaveChangesAsync();
                     return true;
 
