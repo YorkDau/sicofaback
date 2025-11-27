@@ -294,6 +294,27 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Presolicitud
                     {
                         presolicitudABO.idAdjuntoConstanciaTraslado = constanciaTraslado;
                     }
+                    if (presolicitudABO.trasladoPard == true)
+                    {
+                        var data = new RequestRemisionSolicitud
+                        {
+                            id_solicitud_servicio = presolicitudABO.idSolicitudServicio,
+                            justificacion = string.IsNullOrWhiteSpace(presolicitudABO.justificacionTraslado)
+                                ? "TRASLADO POR COMPETENCIA A PREVENCION"
+                                : presolicitudABO.justificacionTraslado,
+                            id_comisaria_origen = presolicitudABO.idComisariaUsuario,
+                            id_comisaria_destino = presolicitudABO.comisariaSeleccionada,
+                            id_entidad_externa = presolicitudABO.idEntidadTraslado ?? 0,
+                            idUsuarioSistema = presolicitudABO.idUsuario,
+                            tipo_remision = presolicitudABO.comisariaSeleccionada != 0 // true = comisaría, false = entidad externa
+
+
+
+                        };
+
+                         _solicitudesHandler.RegistroRemisionSolicitud(data);
+
+                    }
 
                     await _presolicitudRepository.GuardarDecisionJuridicaComplementaria(presolicitudABO);
 
