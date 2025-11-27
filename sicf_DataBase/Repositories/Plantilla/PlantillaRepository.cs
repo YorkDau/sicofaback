@@ -39,7 +39,7 @@ namespace sicf_DataBase.Repositories.Plantilla
             try
             {
                 var esNecesarioRemitir = await _context.SicofaSolicitudServicioPlantillas
-                    .Where(s => s.IdSolicitudServicio == idSolicitudServicio)
+                    .Where(s => s.IdSolicitudServicio == idSolicitudServicio && s.EstadoPlantilla == "EJECUCION")
                     .Select(s => s.esNecesarioRemitir)
                     .FirstOrDefaultAsync();
 
