@@ -52,5 +52,44 @@ namespace sicf_Models.Dto.Solicitudes
         public string? TipoDocumentoInvolucradoVictima { get; set; }
     }
 
+    public class ConsultaTrasladoDto
+    {
+        // Datos de la solicitud
+        public string CodigoSolicitud { get; set; }
+        public DateTime FechaSolicitud { get; set; }
+
+        // Datos del ciudadano (ya transformados según el SP)
+        public string NumeroDocumento { get; set; }
+        public string NombreCiudadano { get; set; }
+        public string PrimerApellido { get; set; }
+        public string SegundoApellido { get; set; }
+
+        // Comisaría donde se radica
+        public string ComisariaActual { get; set; }
+
+        // Descripción de hechos
+        public string DescripcionDeHechos { get; set; }
+
+        // 0 o 1
+        public int EsCompetenciaComisaria { get; set; }
+
+        // "NO TIENE" si aplica
+        public string JustificacionRemision { get; set; }
+
+        public string EstadoSolicitud { get; set; }
+        public string SubestadoSolicitud { get; set; }
+
+        // Traslados
+        public string ComisariaOrigen { get; set; }
+        public string ComisariaDestino { get; set; }
+        public string EntidadExterna { get; set; }
+
+        // "NO TIENE" si aplica
+        public string JustificacionTraslado { get; set; }
+
+        // 0 o 1
+        public int EsNecesarioRemitir { get; set; }
+    }
+
 
 }

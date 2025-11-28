@@ -423,6 +423,23 @@ namespace sicfServicesApi.Controllers
                 return StatusCode(500, new { mensaje = "Error interno del servidor", detalle = ex.Message });
             }
         }
+        [HttpPost("ConsultarSolicitudesTrasladoFiltro")]
+        public IActionResult ConsultarSolicitudesTrasladoFiltros([FromBody] ConsultaGeneralSolicitudRequestDTO solicitud)
+        {
+            try
+            {
+                var resultado = _solicitudesHandler.ConsultarSolicitudesTrasladoFiltros(solicitud);
+                return CustomResult(Message.Ok, resultado, HttpStatusCode.OK);
+            }
+            catch (ControledException ex)
+            {
+                return BadRequest(new { mensaje = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { mensaje = "Error interno del servidor", detalle = ex.Message });
+            }
+        }
 
         [HttpPost("ConsultarPreSolicitudesFiltro")]
         public IActionResult ConsultarPreSolicitudesGeneralesPorFiltros([FromBody] ConsultaGeneralSolicitudRequestDTO solicitud)

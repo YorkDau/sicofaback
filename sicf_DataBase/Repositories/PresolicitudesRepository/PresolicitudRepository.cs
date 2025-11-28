@@ -261,15 +261,32 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
         {
             try
             {
-                var solicitudServicio = await _context.SicofaSolicitudServicio.Where(c => c.IdSolicitudServicio == presolicitudABO.idSolicitudServicio).FirstOrDefaultAsync();
+                var solicitudServicio = await _context.SicofaSolicitudServicio
+                    .FirstOrDefaultAsync(c => c.IdSolicitudServicio == presolicitudABO.idSolicitudServicio);
 
-                if (solicitudServicio != null)
+                if (solicitudServicio == null)
+                    return false;
+
+                solicitudServicio.EsCompetenciaComisaria = presolicitudABO.esCompetenciaComisaria;
+
+                switch (presolicitudABO.hechosExistentes)
                 {
-                    solicitudServicio.IdSolicitudServicio = presolicitudABO.idSolicitudServicio;
-                    solicitudServicio.EsCompetenciaComisaria = presolicitudABO.esCompetenciaComisaria;
+                    case "Inobservancia":
+                        solicitudServicio.EstadoSolicitud = Constants.SolicitudServicioEstados.cerrado;
+                        solicitudServicio.SubestadoSolicitud = Constants.SolicitudServicioSubEstados.icbf;
+                        break;
 
-                    await _context.SaveChangesAsync();
+                    case "Amenaza o vulneración de derechos":
+                        solicitudServicio.EstadoSolicitud = Constants.SolicitudServicioEstados.abierto;
+                        solicitudServicio.SubestadoSolicitud = Constants.SolicitudServicioSubEstados.proceso;
+                        //solicitudServicio.IdComisaria = (long)presolicitudABO.comisariaSeleccionada;
+                        break;
+
+                    default:
+                        break;
                 }
+
+                await _context.SaveChangesAsync();
                 return true;
             }
             catch (ControledException ex)
@@ -286,6 +303,8 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
 
                 if (solicitudServicioComplementario != null)
                 {
+
+
                     solicitudServicioComplementario.IdSolicitudServicio = presolicitudABO.idSolicitudServicio;
                     solicitudServicioComplementario.EsPard = presolicitudABO.seRealizaraPard;
                     solicitudServicioComplementario.ObservacionLegal = presolicitudABO.observacionesLegalidad;
@@ -296,6 +315,7 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                     solicitudServicioComplementario.IdAdjuntoConstanciaTraslado = presolicitudABO.idAdjuntoConstanciaTraslado;
                     solicitudServicioComplementario.SeguirTramitePrevencion= presolicitudABO.seguirTramitePrevencion;
                     solicitudServicioComplementario.JustificacionTraslado = presolicitudABO.justificacionTraslado;
+                    solicitudServicioComplementario.TrasladoPard = presolicitudABO.trasladoPard;
                 }
 
                 await _context.SaveChangesAsync();

@@ -558,6 +558,18 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
             }
 
         }
+        public ResponseListaPaginada ConsultarSolicitudesTrasladoFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
+        {
+            try
+            {
+                return _solicitudesRepository.ConsultarSolicitudesTrasladoFiltros(solicitud);
+            }
+            catch (Exception ex)
+            {
+                throw new ControledException(ex.HResult);
+            }
+
+        }
         public ResponseListaPaginada ConsultarPreSolicitudesGeneralesPorFiltros(ConsultaGeneralSolicitudRequestDTO solicitud)
         {
             try

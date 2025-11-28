@@ -13,6 +13,7 @@ namespace sicf_Models.Core
         public string? CorreoDenunciante { get; set; }
         public string? TelefonoDenunciante { get; set; }
         public bool? EsPard { get; set; }
+        public bool? TrasladoPard { get; set; }
         public long? IdAnexo { get; set; }
         public string? TipoPresolicitud { get; set; }
         public string? ObservacionLegal { get; set; }

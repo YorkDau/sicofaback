@@ -28,6 +28,5 @@ namespace sicf_Models.Dto.Solicitudes
             justificacion = String.Empty;
 
         }
-
     }
 }

@@ -2698,6 +2698,7 @@ namespace sicf_DataBase.Data
                     .HasColumnName("justificacion_traslado");
                 entity.Property(e => e.SeguirTramitePrevencion)
                     .HasColumnName("seguir_tramite_prevencion");
+                entity.Property(e => e.TrasladoPard).HasColumnName("traslado_pard");
             });
 
             modelBuilder.Entity<SicofaSolicitudServicioEstadoSolicitud>(entity =>
