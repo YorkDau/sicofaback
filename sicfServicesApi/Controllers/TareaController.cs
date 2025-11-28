@@ -138,7 +138,7 @@ namespace sicfServicesApi.Controllers
                 //TODO: auditoria de errores
                 return CustomResult(Message.ErrorInterno, Message.ErrorGenerico, HttpStatusCode.InternalServerError);
             }
-        }
+            }
 
 
         [HttpPost]
