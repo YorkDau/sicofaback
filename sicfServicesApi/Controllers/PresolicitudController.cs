@@ -1,19 +1,20 @@
 ﻿using CoreApiResponse;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using sicf_BusinessHandlers.BusinessHandlers.Presolicitud;
+using sicf_BusinessHandlers.BusinessHandlers.Solicitudes;
+using sicf_BusinessHandlers.BusinessHandlers.Usuario;
+using sicf_Models.Dto.Archivos;
 using sicf_Models.Dto.Cita;
+using sicf_Models.Dto.Presolicitud;
 using sicf_Models.Dto.Solicitudes;
 using sicf_Models.Utility;
 using sicfExceptions.Exceptions;
+using sicfServicesApi.Utility;
 using System.Net;
 using static sicf_Models.Constants.Constants;
-using sicf_BusinessHandlers.BusinessHandlers.Solicitudes;
-using FluentValidation;
-using Microsoft.AspNetCore.Cors;
-using sicf_BusinessHandlers.BusinessHandlers.Presolicitud;
-using sicf_Models.Dto.Presolicitud;
-using sicf_BusinessHandlers.BusinessHandlers.Usuario;
-using sicfServicesApi.Utility;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

@@ -164,6 +164,35 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Presolicitud
                 bool guardoPresolicitud = false;
                 var previa = await _presolicitudRepository.ComplementariaPorId(presolicitudVERDE.idSolicitudServicio);
 
+                var adjuntoInstrumento = previa.IdAdjuntoInstrumento == null ? 0 : previa.IdAdjuntoInstrumento.Value;
+                if (adjuntoInstrumento == 0 && presolicitudVERDE.adjuntoInstrumento.Length > 0)
+                {
+                    string tipoDocumento = "Archivo_Formato_Instrumento"; // Crear en BD en la tabla SICOFA_Documento
+                    Task<long> idAnexo = null;
+
+                    sicf_Models.Dto.Archivos.CargaArchivoDTO cargaArchivo = new sicf_Models.Dto.Archivos.CargaArchivoDTO();
+                    cargaArchivo.entrada = presolicitudVERDE.adjuntoInstrumento;
+                    cargaArchivo.idSolicitudServicio = presolicitudVERDE.idSolicitudServicio;
+                    cargaArchivo.tipoDocumento = tipoDocumento;
+
+                    idAnexo = _archivoService.Carga(cargaArchivo);
+                    presolicitudVERDE.idAdjuntoInstrumento = idAnexo.Result;
+                }
+                else if (presolicitudVERDE.adjuntoInstrumento.Length > 0)
+                {
+                    EditarArchivoDTO editarArchivoDTO = new EditarArchivoDTO();
+
+                    editarArchivoDTO.entrada = presolicitudVERDE.adjuntoInstrumento;
+                    editarArchivoDTO.idSolicitudServicio = presolicitudVERDE.idSolicitudServicio;
+                    editarArchivoDTO.idSolicitudServicioAnexo = adjuntoInstrumento;
+                    presolicitudVERDE.idAdjuntoInstrumento = adjuntoInstrumento;
+
+                    await _archivoService.EditarArchivo(editarArchivoDTO);
+                }
+                else
+                {
+                    presolicitudVERDE.idAdjuntoInstrumento = adjuntoInstrumento;
+                }
 
                 if (previa.IdCita == null || previa.IdCita == 0)
                 {
