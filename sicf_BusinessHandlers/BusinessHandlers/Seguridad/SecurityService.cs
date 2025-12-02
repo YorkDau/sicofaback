@@ -225,7 +225,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Seguridad
             {
                 var pass = await usuariorepository.AsignacionClaveTemporal(email);
 
-                 sendgridNotificaciones.EnviarCambioContrasena(email,pass);
+                 await sendgridNotificaciones.EnviarCambioContrasena(email,pass);
 
                 return  true;
             }
