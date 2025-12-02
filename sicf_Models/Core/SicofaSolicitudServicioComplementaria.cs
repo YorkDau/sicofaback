@@ -36,5 +36,8 @@ namespace sicf_Models.Core
         public string? HechosExistentes { get; set; }
         public string? JustificacionTraslado { get; set; }
         public bool? SeguirTramitePrevencion { get; set; }
+
+        public long? IdAdjuntoInstrumento { get; set; }
+        
     }
 }

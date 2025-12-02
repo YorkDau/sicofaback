@@ -74,8 +74,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
                 string codigoSolicitud = await archivosRepository.ObtenerCodigoSolicitud(archivoDTO.idSolicitudServicio);
 
 
-                if(archivoDTO.idComisariaTraslado > 0){
-                    await archivosRepository.ActualizarComisariaTrasladoRemision(archivoDTO.idComisariaTraslado, archivoDTO.idSolicitudServicio, archivoDTO.idUsuario);
+                if(archivoDTO.idComisariaTraslado.HasValue && archivoDTO.idComisariaTraslado > 0){
+                    await archivosRepository.ActualizarComisariaTrasladoRemision(archivoDTO.idComisariaTraslado.Value, archivoDTO.idSolicitudServicio, archivoDTO.idUsuario);
                 }
 
                 var preview = await archivosRepository.ValidarActualizacion(archivoDTO.idSolicitudServicio, archivoDTO.tipoDocumento, idTarea);

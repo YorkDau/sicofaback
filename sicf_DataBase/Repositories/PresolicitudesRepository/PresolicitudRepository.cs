@@ -3,25 +3,26 @@ using Microsoft.Extensions.Configuration;
 using sicf_DataBase.BDConnection;
 using sicf_DataBase.Compartido;
 using sicf_DataBase.Data;
-using sicf_Models.Core;
-using System.Linq;
-using sicf_Models.Dto.Abogado;
-using sicf_Models.Dto.Presolicitud;
+using sicf_DataBase.Repositories.Cita;
+using sicf_DataBase.Repositories.Tarea;
 using sicf_DataBase.Repositories.TestEntity;
+using sicf_Models.Constants;
+using sicf_Models.Core;
+using sicf_Models.Dto.Abogado;
+using sicf_Models.Dto.Archivos;
+using sicf_Models.Dto.Cita;
+using sicf_Models.Dto.Ciudadano;
+using sicf_Models.Dto.Presolicitud;
+using sicf_Models.Dto.Tarea;
 using sicf_Models.Utility;
 using sicfExceptions.Exceptions;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
-using static sicf_Models.Constants.Constants;
-using sicf_Models.Dto.Ciudadano;
-using sicf_Models.Dto.Cita;
-using sicf_DataBase.Repositories.Tarea;
-using sicf_Models.Constants;
-using sicf_DataBase.Repositories.Cita;
-using sicf_Models.Dto.Tarea;
+using System.Linq;
 using System.Security.Cryptography;
+using static sicf_Models.Constants.Constants;
 
 namespace sicf_DataBase.Repositories.PresolicitudesRepository
 {
@@ -221,10 +222,11 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                                             continuaDenuncia = (bool)(sc.ContinuaDenuncia == null ? true : sc.ContinuaDenuncia),
                                             observacionesVerificacion = sc.ObservacionVerificacion,
                                             denunciaVerificada = (bool)(sc.DenunciaVerificada == null ? true : sc.DenunciaVerificada),
-                                            idCita = (long)sc.IdCita
+                                            idCita = (long)sc.IdCita,
+                                            idAdjuntoInstrumento = sc.IdAdjuntoInstrumento
                                         },
                                         idCiudadano = ss.IdCiudadano,
-                                        idComisaria = ss.IdComisaria
+                                        idComisaria = ss.IdComisaria,
                                     }).Single();
 
                 presolicitud.presolicitudVERDE.listaTiposViolencia = ObtenerTiposViolenciaSolicitud(idPresolicitud).Result;
@@ -340,6 +342,7 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                     solicitudServicioComplementario.ContinuaDenuncia = presolicitudVERDE.continuaDenuncia;
                     solicitudServicioComplementario.ObservacionVerificacion = presolicitudVERDE.observacionesVerificacion;
                     solicitudServicioComplementario.IdCita = presolicitudVERDE.idCita;
+                    solicitudServicioComplementario.IdAdjuntoInstrumento = presolicitudVERDE.idAdjuntoInstrumento;
                 }
 
                 await _context.SaveChangesAsync();

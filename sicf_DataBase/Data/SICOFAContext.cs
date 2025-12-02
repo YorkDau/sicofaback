@@ -2693,6 +2693,8 @@ namespace sicf_DataBase.Data
                     .HasColumnName("id_entidad_traslado");
                 entity.Property(e => e.IdAdjuntoConstanciaTraslado)
                     .HasColumnName("id_adjunto_constancia_traslado");
+                entity.Property(e => e.IdAdjuntoInstrumento)
+                    .HasColumnName("id_adjunto_instrumento");
                 entity.Property(e => e.JustificacionTraslado)
                     .IsUnicode(false)
                     .HasColumnName("justificacion_traslado");

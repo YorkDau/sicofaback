@@ -15,7 +15,7 @@ namespace sicf_Models.Dto.Archivos
         public long idSolicitudServicio { get; set; }
         public int idUsuario { get; set; }
         public long idComisaria { get; set; }
-        public long idComisariaTraslado { get; set; }
+        public long? idComisariaTraslado { get; set; }
         public int ? idPruebaPericial { get; set; }
 
     }

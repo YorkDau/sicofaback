@@ -17,7 +17,10 @@ namespace sicf_Models.Dto.Presolicitud
         public DateTime? fechaCita { get; set; }
         public List<PresolicitudTipoViolencia>? listaTiposViolencia { get; set; }
         public List<CitaDto>? listaCitasDisponibles { get; set; }
-          
+
+        public string? adjuntoInstrumento { get; set; }
+        public long? idAdjuntoInstrumento { get; set; }
+
 
         public PresolicitudVERDE()
         {
