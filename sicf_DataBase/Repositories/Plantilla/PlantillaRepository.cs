@@ -205,8 +205,11 @@ namespace sicf_DataBase.Repositories.Plantilla
                 
                 plantilla = _context.SicofaSolicitudServicioPlantillas.Where(p => p.IdSolPlantilla == idplantilla).First();
                 plantilla.observacion = secciones.observacion;
+                plantilla.cierre = secciones.cierre;
+                plantilla.observacionCierre = secciones.observacionCierre;
                 plantilla.esNecesarioRemitir= secciones.esNecesarioRemitir;
                 plantilla.aprobado = secciones.aprobado == null ? false : secciones.aprobado;
+                plantilla.idAnexo = secciones.idAdjunto;
 
                 // Actualizo la tabla SicofaSolicitudServicioPSecciones
                 var desSecciones = secciones.secciones.Select(s => s.idSolPSeccion).ToList();
