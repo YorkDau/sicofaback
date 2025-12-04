@@ -7,11 +7,14 @@ using sicf_DataBase.Repositories.Incumplimiento;
 using sicf_DataBase.Repositories.Notificaciones;
 using sicf_DataBase.Repositories.PruebaSolicitud;
 using sicf_DataBase.Repositories.Quorum;
+using sicf_DataBase.Repositories.ReporteSolicitud;
 using sicf_Models.Core;
 using sicf_Models.Dto.Archivos;
 using sicf_Models.Dto.Incumplimiento;
 using sicf_Models.Dto.Quorum;
+using sicf_Models.Dto.Solicitudes;
 using static sicf_Models.Constants.Constants;
+using sicf_DataBase.Repositories.SolicitudesRepository;
 
 namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
 {
@@ -26,6 +29,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
         private IIncumplimientoRepository incumplimientoRepository;
         private IQuorumServicioRepository quorumRepository;
         private ITareaHandler tareaHandler;
+        private ISolicitudesRepository solicitudesRepository;
 
 
         public ArchivoService(IFileManagerLogic fileManagerLogic,
@@ -36,7 +40,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
                               IQuorumServicioRepository quorumServicioRepository,
                               IIncumplimientoRepository incumplimientoRepository,
                               IQuorumServicioRepository quorumRepository,
-                              ITareaHandler tareaHandler)
+                              ITareaHandler tareaHandler,
+                              ISolicitudesRepository solicitudesRepository)
         {
             this.fileManagerLogic = fileManagerLogic;
             this.archivosRepository = archivosRepository;
@@ -47,6 +52,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
             this.incumplimientoRepository = incumplimientoRepository;
             this.quorumRepository = quorumRepository;
             this.tareaHandler = tareaHandler;
+            this.solicitudesRepository = solicitudesRepository;
         }
 
 
@@ -76,6 +82,23 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
 
                 if(archivoDTO.idComisariaTraslado.HasValue && archivoDTO.idComisariaTraslado > 0){
                     await archivosRepository.ActualizarComisariaTrasladoRemision(archivoDTO.idComisariaTraslado.Value, archivoDTO.idSolicitudServicio, archivoDTO.idUsuario);
+                }
+
+
+                if (archivoDTO.idEntidadTraslado.HasValue && archivoDTO.idEntidadTraslado > 0)
+                {
+                    RequestRemisionSolicitud data = new RequestRemisionSolicitud();
+                    data.id_solicitud_servicio = archivoDTO.idSolicitudServicio;
+                    data.justificacion = ""; // Justificacion traslado
+                    
+                    data.id_comisaria_origen = archivoDTO.idComisaria;
+                    data.id_comisaria_destino = null;
+                    data.id_entidad_externa = archivoDTO.idEntidadTraslado;
+                    data.idUsuarioSistema = archivoDTO.idUsuario;
+
+                    data.tipo_remision = false;
+
+                    solicitudesRepository.RegistroRemisionSolicitud(data);
                 }
 
                 var preview = await archivosRepository.ValidarActualizacion(archivoDTO.idSolicitudServicio, archivoDTO.tipoDocumento, idTarea);

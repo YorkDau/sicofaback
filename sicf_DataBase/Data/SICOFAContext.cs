@@ -1824,6 +1824,13 @@ namespace sicf_DataBase.Data
                     .IsUnicode(false)
                     .HasColumnName("observacion");
 
+
+                entity.Property(e => e.cierre).HasColumnName("cierre");
+
+                entity.Property(e => e.observacionCierre)
+                    .IsUnicode(false)
+                    .HasColumnName("observacion_cierre");
+
                 entity.Property(e => e.afectaMedidas).HasColumnName("afecta_medidas");
 
                 entity.HasOne(d => d.IdPlantillaNavigation)
