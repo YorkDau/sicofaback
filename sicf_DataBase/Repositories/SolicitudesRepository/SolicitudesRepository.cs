@@ -2118,6 +2118,22 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
         }
 
         #endregion Diana Ariza
+
+        public bool ActualizarSolicitudServicio(long idSolicitudServicio, string estado, string subestado)
+        {
+            bool response = true;
+            SicofaSolicitudServicio sicofaSolicitudServicio = _context.SicofaSolicitudServicio.Where(s => s.IdSolicitudServicio == idSolicitudServicio).FirstOrDefault();
+
+            if (sicofaSolicitudServicio != null)
+            {
+                sicofaSolicitudServicio.EstadoSolicitud = estado;
+                sicofaSolicitudServicio.SubestadoSolicitud = subestado;
+
+                _context.SaveChanges();
+            }
+
+            return response;
+        }
     }
 }
 #endregion

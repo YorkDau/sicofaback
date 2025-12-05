@@ -227,5 +227,6 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
 
 
         public List<RemisionSolicitudServicioComisariaAnteriorDTO> ObtenerRemisionSolicitudServicio(int idSolicitudServicio);
+        public bool ActualizarSolicitudServicio(long idSolicitudServicio, string estado, string subestado);
     }
 }

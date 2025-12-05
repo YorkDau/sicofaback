@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using sicf_BusinessHandlers.AzureBlogStorage.AzureBlogStorage;
 using sicf_BusinessHandlers.BusinessHandlers.Tarea;
+using sicf_BusinessHandlers.Filters;
 using sicf_DataBase.Repositories.AbogadoRepository;
 using sicf_DataBase.Repositories.Archivo;
 using sicf_DataBase.Repositories.Incumplimiento;
@@ -8,13 +9,14 @@ using sicf_DataBase.Repositories.Notificaciones;
 using sicf_DataBase.Repositories.PruebaSolicitud;
 using sicf_DataBase.Repositories.Quorum;
 using sicf_DataBase.Repositories.ReporteSolicitud;
+using sicf_DataBase.Repositories.SolicitudesRepository;
+using sicf_Models.Constants;
 using sicf_Models.Core;
 using sicf_Models.Dto.Archivos;
 using sicf_Models.Dto.Incumplimiento;
 using sicf_Models.Dto.Quorum;
 using sicf_Models.Dto.Solicitudes;
 using static sicf_Models.Constants.Constants;
-using sicf_DataBase.Repositories.SolicitudesRepository;
 
 namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
 {
@@ -84,13 +86,12 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
                     await archivosRepository.ActualizarComisariaTrasladoRemision(archivoDTO.idComisariaTraslado.Value, archivoDTO.idSolicitudServicio, archivoDTO.idUsuario);
                 }
 
-
+                // Validar si funcion interfiere con traslado ICBF de menor de edad
                 if (archivoDTO.idEntidadTraslado.HasValue && archivoDTO.idEntidadTraslado > 0)
                 {
                     RequestRemisionSolicitud data = new RequestRemisionSolicitud();
                     data.id_solicitud_servicio = archivoDTO.idSolicitudServicio;
-                    data.justificacion = ""; // Justificacion traslado
-                    
+                    data.justificacion = "TRASLADO POR NO COMPETENCIA"; // Justificacion traslado
                     data.id_comisaria_origen = archivoDTO.idComisaria;
                     data.id_comisaria_destino = null;
                     data.id_entidad_externa = archivoDTO.idEntidadTraslado;
@@ -98,7 +99,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
 
                     data.tipo_remision = false;
 
-                    solicitudesRepository.RegistroRemisionSolicitud(data);
+                    solicitudesRepository.ActualizarSolicitudServicio(archivoDTO.idSolicitudServicio, Constants.SolicitudServicioEstados.cerrado, Constants.SolicitudServicioSubEstados.no_competencia);
+
                 }
 
                 var preview = await archivosRepository.ValidarActualizacion(archivoDTO.idSolicitudServicio, archivoDTO.tipoDocumento, idTarea);

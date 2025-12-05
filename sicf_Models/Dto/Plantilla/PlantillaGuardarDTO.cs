@@ -14,7 +14,6 @@ namespace sicf_Models.Dto.Plantilla
 
 
         public bool? cierre { get; set; }
-        public string? observacionCierre { get; set; }
         public string? adjuntoAutoCierre { get; set; }
         public long? idAdjunto { get; set; }
         

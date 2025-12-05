@@ -17,7 +17,6 @@ namespace sicf_DataBase.Data
         public string? EstadoPlantilla { get; set; }
         public string? observacion { get; set; }
         public bool? cierre { get; set; }
-        public string? observacionCierre { get; set; }
         public bool? esNecesarioRemitir { get; set; }
         public bool? aprobado { get; set; }
         public bool? apelacion { get; set; }

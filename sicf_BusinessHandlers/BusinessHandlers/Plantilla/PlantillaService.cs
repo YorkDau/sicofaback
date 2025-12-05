@@ -90,17 +90,24 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Plantilla
 
                 var idServicio = secciones.secciones[0]?.idSolicitudServicio??null;
                 secciones.idAdjunto = null;
-                if (secciones.adjuntoAutoCierre != null && secciones.adjuntoAutoCierre.Length > 0 && idServicio.HasValue)
+                
+                // Seccion agregada para Cierre por falta de vulneración DDFF
+                if (secciones.cierre.HasValue && secciones.cierre.Value)
                 {
-                    string tipoDocumento = "Auto Cierre";
-                    sicf_Models.Dto.Archivos.CargaArchivoDTO cargaArchivo = new sicf_Models.Dto.Archivos.CargaArchivoDTO();
-                    cargaArchivo.entrada = secciones.adjuntoAutoCierre;
-                    cargaArchivo.idSolicitudServicio = idServicio.Value;
-                    cargaArchivo.tipoDocumento = tipoDocumento;
-
-
-                    long idAnexo = await _archivoService.Carga(cargaArchivo);
-                    secciones.idAdjunto = idAnexo;
+                    if (secciones.adjuntoAutoCierre != null && secciones.adjuntoAutoCierre.Length > 0 && idServicio.HasValue)
+                    {
+                        string tipoDocumento = "Auto Cierre";
+                        sicf_Models.Dto.Archivos.CargaArchivoDTO cargaArchivo = new sicf_Models.Dto.Archivos.CargaArchivoDTO();
+                        cargaArchivo.entrada = secciones.adjuntoAutoCierre;
+                        cargaArchivo.idSolicitudServicio = idServicio.Value;
+                        cargaArchivo.tipoDocumento = tipoDocumento;
+                        long idAnexo = await _archivoService.Carga(cargaArchivo);
+                        secciones.idAdjunto = idAnexo;
+                    }
+                    if (idServicio.HasValue)
+                    {
+                        plantillaRepository.ActualizarSolicitudServicio(idServicio.Value, Constants.SolicitudServicioEstados.cerrado, Constants.SolicitudServicioSubEstados.sin_vulneracion);
+                    }
                 }
 
                 response = plantillaRepository.ActualizarSecciones(secciones).Result;
