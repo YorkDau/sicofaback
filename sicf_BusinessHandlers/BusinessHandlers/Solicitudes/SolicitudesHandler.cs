@@ -497,7 +497,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			try
 			{
 
-				ResponseListaPaginada responseListaPaginada = new ResponseListaPaginada();
+                ResponseListaPaginada responseListaPaginada = new ResponseListaPaginada();
 
 				foreach (var involucrado in data)
 				{
@@ -506,7 +506,14 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 				}
 
 				/*Se genera la tarea*/
-				long idtask = await this._tareaHandler.IniciarProceso(id, Constants.CodigoProceso.GeneracionCaso);
+				bool esAdultoMayor = false;
+
+                var solicitud = _solicitudesRepository.ObtenerDatosSolicitud(int.Parse(id.ToString()));
+                if (solicitud != null && solicitud.idtipoTramite == "92")
+				{
+					esAdultoMayor = true;
+                }
+				long idtask = await this._tareaHandler.IniciarProceso(id, esAdultoMayor ? Constants.CodigoProceso.GeneracionCasoAdultoMayor : Constants.CodigoProceso.GeneracionCaso);
 
 				responseListaPaginada.DatosPaginados = Constants.Message.registroExito;
 

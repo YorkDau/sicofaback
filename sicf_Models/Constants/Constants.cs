@@ -116,6 +116,7 @@ namespace sicf_Models.Constants
         public struct CodigoProceso
         {
             public const string GeneracionCaso = "GCASO";
+            public const string GeneracionCasoAdultoMayor = "GCASOAM";
             public const string Seguimiento = "SEG";
             public const string LevantamientoMedidas = "LEVMED";
             public const string RestablecimientoDerechos = "PARD";
