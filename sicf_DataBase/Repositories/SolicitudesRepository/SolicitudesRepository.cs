@@ -1347,10 +1347,18 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                             solicitud.fecha_hecho_violento = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_hecho_violento"]);
                         }
 
+
+                        var nombreCompleto = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_completo"]);
+                        var numeroDocumento = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento"]);
+
+                        if (string.IsNullOrWhiteSpace(nombreCompleto) && string.IsNullOrWhiteSpace(numeroDocumento))
+                        {
+                            continue;  
+                        }
                         var involucrado = new InvolucradoDetalleDTO
                         {
-                            nombre_completo = ConvertFDBVal.ConvertFromDBVal<string>(reader["nombre_completo"]),
-                            numero_documento = ConvertFDBVal.ConvertFromDBVal<string>(reader["numero_documento"]),
+                            nombre_completo = nombreCompleto,
+                            numero_documento = numeroDocumento,
                             parentesco = ConvertFDBVal.ConvertFromDBVal<string>(reader["parentesco"]) ?? "NO TIENE ASIGNADO"
                         };
 
@@ -1599,6 +1607,32 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                     throw new Exception("no existen datos");
                 }
             }
+        }
+
+
+        public long ObtenerRemisionesPorDia()
+        {
+            long totalRemisionesHoy = 0;
+
+            using (_connectionDb = new SqlConnection(this.builder.ConnectionString))
+            {
+                string query = "PR_SICOFA_OBTENER_REMISIONES_HOY";
+                using (_command = new SqlCommand(query, _connectionDb))
+                {
+                    _command.CommandType = CommandType.StoredProcedure;
+
+                    _connectionDb.Open();
+
+                    object result = _command.ExecuteScalar();
+
+                    if (result != null && result != DBNull.Value)
+                        totalRemisionesHoy = Convert.ToInt64(result);
+
+                    _connectionDb.Close();
+                }
+            }
+
+            return totalRemisionesHoy;
         }
 
         public List<SexoGeneroOrientacionDTO> SexoOrientacionGenero(string tipo)
@@ -1930,7 +1964,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 involucrado.tieneEducacion = ConvertFDBVal.ConvertFromDBVal<bool>(reader["tiene_educacion"]);
                                 involucrado.lugarEstudio = ConvertFDBVal.ConvertFromDBVal<string>(reader["lugar_estudio"]);
                                 involucrado.vacunacionComplete = ConvertFDBVal.ConvertFromDBVal<bool>(reader["vacunacion_completa"]);
-                                    
+                                involucrado.id_tipo_tramite = ConvertFDBVal.ConvertFromDBVal<int>(reader["id_tipo_tramite"]);
+
                                 involucrado.id_tipo_discapacidad = 1;
                                 involucrado.estado_embarazo = ConvertFDBVal.ConvertFromDBVal<string>(reader["estado_embarazo"]);
                                 involucrado.afiliado_seguridad_social = ConvertFDBVal.ConvertFromDBVal<string>(reader["afiliado_seguridad_social"]);

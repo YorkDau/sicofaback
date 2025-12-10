@@ -597,6 +597,28 @@ namespace sicfServicesApi.Controllers
             }
         }
 
+        [HttpGet("ObtenerRemisionesPorDia")]
+
+        public IActionResult ObtenerRemisionesPorDia()
+        {
+            try
+            {
+
+                var response = _solicitudesHandler.ObtenerRemisionesPorDia();
+
+                return CustomResult(Message.Ok, response, HttpStatusCode.OK);
+            }
+            catch (ControledException ex)
+            {
+                return CustomResult(Message.ErrorInterno, Message.ErrorGenerico, HttpStatusCode.InternalServerError);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorInterno, Message.ErrorGenerico, HttpStatusCode.InternalServerError);
+            }
+        }
+
+
 
         [HttpGet("ObtenerQuestionarioTipoViolencia/{id?}")]
 

@@ -158,6 +158,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         /// <returns></returns>
 
         List<EntidadExterna> ObtenerEntidadExterna();
+        public long ObtenerRemisionesPorDia();
 
         /// <summary>
         /// 
@@ -191,6 +192,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
         /// </summary>
         /// <returns></returns>
         public ResponseListaPaginada ObtenerTIpoRelacion();
+
 
 
         /// <summary>

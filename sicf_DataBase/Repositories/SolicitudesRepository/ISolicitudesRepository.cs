@@ -167,6 +167,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
         /// <returns></returns>
         public List<EntidadExterna> ObtenerEntidadExterna();
 
+        public long ObtenerRemisionesPorDia();
+
 
         /// <summary>
         /// 

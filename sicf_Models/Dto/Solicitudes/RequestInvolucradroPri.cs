@@ -53,6 +53,8 @@ namespace sicf_Models.Dto.Solicitudes
         public string lugarEstudio { get; set; } = string.Empty;
         
         public bool vacunacionComplete { get; set; }
+        public int id_tipo_tramite { get; set; }
+
     }
 
     public class RequestDatosInvolucradoPrincipal1 : RequestDatosInvolucrado1
