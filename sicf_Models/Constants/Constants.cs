@@ -96,7 +96,8 @@ namespace sicf_Models.Constants
             public const string seguimiento = "SEGUIMIENTO";
             public const string levantada = "LEVANTADA";
             public const string icbf = "COMPETENCIA ICBF";
-            public const string adulto_mayor = "COMPETENCIA PSI";
+            public const string sin_vulneracion = "SIN VULNERACION";
+            public const string no_competencia = "NO COMPETENCIA";
         }
 
         public struct FlujoEstados
@@ -115,6 +116,7 @@ namespace sicf_Models.Constants
         public struct CodigoProceso
         {
             public const string GeneracionCaso = "GCASO";
+            public const string GeneracionCasoAdultoMayor = "GCASOAM";
             public const string Seguimiento = "SEG";
             public const string LevantamientoMedidas = "LEVMED";
             public const string RestablecimientoDerechos = "PARD";

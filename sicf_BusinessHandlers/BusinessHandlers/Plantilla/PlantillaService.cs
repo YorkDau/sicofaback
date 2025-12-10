@@ -1,4 +1,5 @@
-﻿using sicf_DataBase.Repositories.Apelacion;
+﻿using sicf_BusinessHandlers.BusinessHandlers.Archivos;
+using sicf_DataBase.Repositories.Apelacion;
 using sicf_DataBase.Repositories.Plantilla;
 using sicf_Models.Constants;
 using sicf_Models.Core;
@@ -16,10 +17,12 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Plantilla
     public class PlantillaService : IPlantillaService
     {
         private readonly IPlantillaRepository plantillaRepository;
+        private readonly IArchivoService _archivoService;
 
-        public PlantillaService(IPlantillaRepository plantillaRepository)
+        public PlantillaService(IPlantillaRepository plantillaRepository, IArchivoService archivoService)
         { 
             this.plantillaRepository = plantillaRepository;
+            _archivoService = archivoService;
         }
 
         public async Task<PlantillaResponse> ObtenerSecciones(long idSolicitudServicio)
@@ -79,15 +82,37 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Plantilla
             }
         }
 
-        public Task<bool> ActualizarSecciones(PlantillaGuardarDTO secciones) 
+        public async Task<bool> ActualizarSecciones(PlantillaGuardarDTO secciones) 
         {
             try
             {
                 bool response = true;
 
+                var idServicio = secciones.secciones[0]?.idSolicitudServicio??null;
+                secciones.idAdjunto = null;
+                
+                // Seccion agregada para Cierre por falta de vulneración DDFF
+                if (secciones.cierre.HasValue && secciones.cierre.Value)
+                {
+                    if (secciones.adjuntoAutoCierre != null && secciones.adjuntoAutoCierre.Length > 0 && idServicio.HasValue)
+                    {
+                        string tipoDocumento = "Auto Cierre";
+                        sicf_Models.Dto.Archivos.CargaArchivoDTO cargaArchivo = new sicf_Models.Dto.Archivos.CargaArchivoDTO();
+                        cargaArchivo.entrada = secciones.adjuntoAutoCierre;
+                        cargaArchivo.idSolicitudServicio = idServicio.Value;
+                        cargaArchivo.tipoDocumento = tipoDocumento;
+                        long idAnexo = await _archivoService.Carga(cargaArchivo);
+                        secciones.idAdjunto = idAnexo;
+                    }
+                    if (idServicio.HasValue)
+                    {
+                        plantillaRepository.ActualizarSolicitudServicio(idServicio.Value, Constants.SolicitudServicioEstados.cerrado, Constants.SolicitudServicioSubEstados.sin_vulneracion);
+                    }
+                }
+
                 response = plantillaRepository.ActualizarSecciones(secciones).Result;
 
-                return Task.FromResult(response);
+                return response;
             }
             catch (Exception ex)
             {

@@ -329,7 +329,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Tarea
 
                 string? nombreEtiqueta = ObtenerEtiquetaSiguienteFlujo((long)request.idtarea);
 
-                SicofaSolicitudEtiqueta etiqueta = new SicofaSolicitudEtiqueta();
+                SicofaSolicitudEtiqueta etiqueta =  new SicofaSolicitudEtiqueta();
 
                 if (nombreEtiqueta != null)
                 {

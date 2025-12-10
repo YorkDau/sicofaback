@@ -11,6 +11,12 @@ namespace sicf_Models.Dto.Plantilla
         public string? observacion { get; set; }
         public bool? aprobado { get; set; }
         public bool? esNecesarioRemitir { get; set; }
+
+
+        public bool? cierre { get; set; }
+        public string? adjuntoAutoCierre { get; set; }
+        public long? idAdjunto { get; set; }
+        
         public List<PlantillaSeccionesDTO> secciones { get; set; }
 
         public PlantillaGuardarDTO()
