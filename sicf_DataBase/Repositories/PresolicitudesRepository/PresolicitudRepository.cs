@@ -268,7 +268,7 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
 
                 if (solicitudServicio == null)
                     return false;
-
+                
                 solicitudServicio.EsCompetenciaComisaria = presolicitudABO.esCompetenciaComisaria;
 
                 switch (presolicitudABO.hechosExistentes)
@@ -285,6 +285,16 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                         break;
 
                     default:
+                        var solicitudServicioComplementario = await _context.SicofaSolicitudServicioComplementaria
+                    .FirstOrDefaultAsync(c => c.IdSolicitudServicio == presolicitudABO.idSolicitudServicio);
+                        if (solicitudServicioComplementario != null)
+                        {
+                            if (solicitudServicioComplementario.TipoPresolicitud == "DENAM" && presolicitudABO.esCompetenciaComisaria == false)
+                            {
+                                solicitudServicio.EstadoSolicitud = Constants.SolicitudServicioEstados.cerrado;
+                                solicitudServicio.SubestadoSolicitud = Constants.SolicitudServicioSubEstados.no_competencia;
+                            }
+                        }
                         break;
                 }
 
