@@ -497,13 +497,16 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			try
 			{
 
-                ResponseListaPaginada responseListaPaginada = new ResponseListaPaginada();
+
+				ResponseListaPaginada responseListaPaginada = new ResponseListaPaginada();
 
 				foreach (var involucrado in data)
 				{
 					var tuple = _solicitudesRepository.RegistroInvolucrado(involucrado);
 					_solicitudesRepository.RegistroServicioInvolucrado(id, tuple.Item2);
 				}
+				
+
 
 				/*Se genera la tarea*/
 				bool esAdultoMayor = false;
@@ -725,9 +728,23 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Solicitudes
 			}
 		
 		}
+        public long ObtenerRemisionesPorDia()
+        {
+            try
+            {
+
+                long response = _solicitudesRepository.ObtenerRemisionesPorDia();
+                return response;
+
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
 
 
-		public ResponseListaPaginada ObtenerQuestionarioViolencia(int id_tipo_violencia) 
+        public ResponseListaPaginada ObtenerQuestionarioViolencia(int id_tipo_violencia) 
 		{
 			var response=_solicitudesRepository.ObtenerQuestionarioViolencia(id_tipo_violencia);
 

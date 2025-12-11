@@ -89,6 +89,7 @@ namespace sicf_Models.Dto.Solicitudes
 
         // 0 o 1
         public int EsNecesarioRemitir { get; set; }
+        public int TotalRemisionesHoy { get; set; }
     }
 
 
