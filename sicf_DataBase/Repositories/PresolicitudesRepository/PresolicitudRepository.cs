@@ -353,6 +353,17 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                     solicitudServicioComplementario.ObservacionVerificacion = presolicitudVERDE.observacionesVerificacion;
                     solicitudServicioComplementario.IdCita = presolicitudVERDE.idCita;
                     solicitudServicioComplementario.IdAdjuntoInstrumento = presolicitudVERDE.idAdjuntoInstrumento;
+
+                    if (presolicitudVERDE != null && presolicitudVERDE.continuaDenuncia.Value == false)
+                    {
+                        // await _tareaRepository.CerrarActuacion(presolicitudCEA.idTarea, null);
+                        SicofaSolicitudServicio solicitud = await _context.SicofaSolicitudServicio.Where(s => s.IdSolicitudServicio == presolicitudVERDE.idSolicitudServicio).FirstOrDefaultAsync();
+                        if (solicitud != null)
+                        {
+                            solicitud.EstadoSolicitud = Constants.SolicitudServicioEstados.cerrado;
+                            solicitud.SubestadoSolicitud = Constants.SolicitudServicioSubEstados.sinDenuncia;
+                        }
+                    }
                 }
 
                 await _context.SaveChangesAsync();
@@ -393,7 +404,7 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                     if (solicitud != null)
                     {
                         solicitud.EstadoSolicitud = Constants.SolicitudServicioEstados.cerrado;
-                        solicitud.EstadoSolicitud = Constants.SolicitudServicioSubEstados.sinDenuncia;
+                        solicitud.SubestadoSolicitud = Constants.SolicitudServicioSubEstados.sinDenuncia;
                     }
                     await _context.SaveChangesAsync();
                 }
