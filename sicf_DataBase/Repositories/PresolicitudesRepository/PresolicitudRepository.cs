@@ -268,7 +268,7 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
 
                 if (solicitudServicio == null)
                     return false;
-
+                
                 solicitudServicio.EsCompetenciaComisaria = presolicitudABO.esCompetenciaComisaria;
 
                 switch (presolicitudABO.hechosExistentes)
@@ -285,6 +285,16 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                         break;
 
                     default:
+                        var solicitudServicioComplementario = await _context.SicofaSolicitudServicioComplementaria
+                    .FirstOrDefaultAsync(c => c.IdSolicitudServicio == presolicitudABO.idSolicitudServicio);
+                        if (solicitudServicioComplementario != null)
+                        {
+                            if (solicitudServicioComplementario.TipoPresolicitud == "DENAM" && presolicitudABO.esCompetenciaComisaria == false)
+                            {
+                                solicitudServicio.EstadoSolicitud = Constants.SolicitudServicioEstados.cerrado;
+                                solicitudServicio.SubestadoSolicitud = Constants.SolicitudServicioSubEstados.no_competencia;
+                            }
+                        }
                         break;
                 }
 
@@ -343,6 +353,17 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                     solicitudServicioComplementario.ObservacionVerificacion = presolicitudVERDE.observacionesVerificacion;
                     solicitudServicioComplementario.IdCita = presolicitudVERDE.idCita;
                     solicitudServicioComplementario.IdAdjuntoInstrumento = presolicitudVERDE.idAdjuntoInstrumento;
+
+                    if (presolicitudVERDE != null && presolicitudVERDE.continuaDenuncia.Value == false)
+                    {
+                        // await _tareaRepository.CerrarActuacion(presolicitudCEA.idTarea, null);
+                        SicofaSolicitudServicio solicitud = await _context.SicofaSolicitudServicio.Where(s => s.IdSolicitudServicio == presolicitudVERDE.idSolicitudServicio).FirstOrDefaultAsync();
+                        if (solicitud != null)
+                        {
+                            solicitud.EstadoSolicitud = Constants.SolicitudServicioEstados.cerrado;
+                            solicitud.SubestadoSolicitud = Constants.SolicitudServicioSubEstados.sinDenuncia;
+                        }
+                    }
                 }
 
                 await _context.SaveChangesAsync();
@@ -383,7 +404,7 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                     if (solicitud != null)
                     {
                         solicitud.EstadoSolicitud = Constants.SolicitudServicioEstados.cerrado;
-                        solicitud.EstadoSolicitud = Constants.SolicitudServicioSubEstados.sinDenuncia;
+                        solicitud.SubestadoSolicitud = Constants.SolicitudServicioSubEstados.sinDenuncia;
                     }
                     await _context.SaveChangesAsync();
                 }
