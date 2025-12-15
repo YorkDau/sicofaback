@@ -78,6 +78,8 @@ using sicf_DataBase.Repositories.ReporteSolicitud;
 using sicf_BusinessHandlers.BusinessHandlers.PruebasPARD;
 using sicf_BusinessHandlers.BusinessHandlers.AzureBlogStorage;
 using sicf_BusinessHandlers;
+using sicf_DataBase.Repositories.Comisario;
+using sicf_BusinessHandlers.BusinessHandlers.Comisario;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -173,6 +175,9 @@ builder.Services.AddTransient<ITareaRepository, TareaRepository>();
 
 builder.Services.AddTransient<IAbogadoRepository, AbogadoRepository>();
 builder.Services.AddTransient<IAbogadoService, AbogadoService>();
+
+builder.Services.AddTransient<IComisarioRepository, ComisarioRepository>();
+builder.Services.AddTransient<IComisarioService, ComisarioService>();
 
 builder.Services.AddTransient<IAudienciaRepository, AudienciaRepository>();
 builder.Services.AddTransient<IAudienciaService, AudienciaService>();

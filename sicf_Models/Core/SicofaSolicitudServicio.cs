@@ -41,6 +41,8 @@ namespace sicf_Models.Core
         public string? EstadoSolicitud { get; set; }
         public string? SubestadoSolicitud { get; set; }
         public string SexoAfectado { get; set; }
+        public bool? Conciliacion { get; set; }
+        public bool? CumpleConciliacion { get; set; }
 
         public virtual SicofaCiudadano? IdCiudadanoNavigation { get; set; }
         public virtual SicofaComisaria IdComisariaNavigation { get; set; } = null!;
