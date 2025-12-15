@@ -16,8 +16,11 @@ namespace sicf_Models.Dto.Plantilla
         public bool? cierre { get; set; }
         public string? adjuntoAutoCierre { get; set; }
         public long? idAdjunto { get; set; }
-        
-        public List<PlantillaSeccionesDTO> secciones { get; set; }
+
+
+        public long? idSolicitudServicio { get; set; }
+
+        public List<PlantillaSeccionesDTO>? secciones { get; set; } // Para permitir guardar el cierre sin plantilla, ajuste adulto mayor
 
         public PlantillaGuardarDTO()
         {

@@ -88,7 +88,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Plantilla
             {
                 bool response = true;
 
-                var idServicio = secciones.secciones[0]?.idSolicitudServicio??null;
+                var idServicio = secciones.idSolicitudServicio??null;
                 secciones.idAdjunto = null;
                 
                 // Seccion agregada para Cierre por falta de vulneración DDFF
