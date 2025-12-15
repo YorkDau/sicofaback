@@ -2504,6 +2504,12 @@ namespace sicf_DataBase.Data
                     .HasColumnName("SexoAfectado")
                     .HasDefaultValueSql("('NA')");
 
+                entity.Property(e => e.Conciliacion).HasColumnName("conciliacion");
+
+                entity.Property(e => e.CumpleConciliacion).HasColumnName("cumple_conciliacion");
+
+                
+
                 entity.HasOne(d => d.IdCiudadanoNavigation)
                     .WithMany(p => p.SicofaSolicitudServicio)
                     .HasForeignKey(d => d.IdCiudadano)

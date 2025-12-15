@@ -160,8 +160,6 @@ namespace sicfServicesApi.Controllers
         }
 
         [HttpGet("InformacionComisaria/{id}")]
-       
-
         public IActionResult InformacionComisaria(long id)
         {
             try {

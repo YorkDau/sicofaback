@@ -340,7 +340,6 @@ namespace sicfServicesApi.Controllers
 
 
         [HttpGet("ObtenerCiudadano/{id?}")]
-
         public IActionResult ObtenerCiudadano([FromRoute] int id)
         {
             try {
@@ -374,7 +373,6 @@ namespace sicfServicesApi.Controllers
         }
 
         [HttpGet("ObtenerSolicitudes/{id?}/{idComisaria?}")]
-
         public IActionResult ObtenerSolicitudServiciosCiudadano([FromRoute] int id, int idComisaria) 
         {
             try {
@@ -391,7 +389,6 @@ namespace sicfServicesApi.Controllers
         }
         
         [HttpGet("ObtenerSolicitudesInvolucrado/{id?}/{idComisaria?}")]
-
         public IActionResult ObtenerSolicitudServiciosInvolucrado([FromRoute] int id, int idComisaria) 
         {
             try {
@@ -423,6 +420,7 @@ namespace sicfServicesApi.Controllers
                 return StatusCode(500, new { mensaje = "Error interno del servidor", detalle = ex.Message });
             }
         }
+        
         [HttpPost("ConsultarSolicitudesTrasladoFiltro")]
         public IActionResult ConsultarSolicitudesTrasladoFiltros([FromBody] ConsultaGeneralSolicitudRequestDTO solicitud)
         {
@@ -462,7 +460,6 @@ namespace sicfServicesApi.Controllers
 
 
         [HttpGet("ObtenerSolicitudes/{idComisaria?}")]
-
         public IActionResult ObtenerSolicitudServiciosCiudadano([FromRoute] int idComisaria)
         {
             try
@@ -480,7 +477,6 @@ namespace sicfServicesApi.Controllers
         }
 
         [HttpGet("ObtenerSolicitudDetalle/{id?}")]
-
         public IActionResult ObtenerSolicitudServicioDetalle([FromRoute] int id) {
 
             try
@@ -500,7 +496,6 @@ namespace sicfServicesApi.Controllers
 
 
         [HttpGet("ObtenerDatosSolicitud/{idSolicitud?}")]
-
         public IActionResult ObtenerDatosSolicitud([FromRoute] int idSolicitud)
         {
             try
@@ -556,7 +551,6 @@ namespace sicfServicesApi.Controllers
         }
 
         [HttpPost("CrearRemisionSolicitud")]
-
         public IActionResult CrearRemisionSolicitud([FromBody] RequestRemisionSolicitud data)
         {
 
@@ -577,7 +571,6 @@ namespace sicfServicesApi.Controllers
 
 
         [HttpGet("ObtenerEntidadesExternas")]
-
         public IActionResult ObtenerEntidadesExternas() 
         {
             try
@@ -598,7 +591,6 @@ namespace sicfServicesApi.Controllers
         }
 
         [HttpGet("ObtenerRemisionesPorDia")]
-
         public IActionResult ObtenerRemisionesPorDia()
         {
             try
@@ -621,7 +613,6 @@ namespace sicfServicesApi.Controllers
 
 
         [HttpGet("ObtenerQuestionarioTipoViolencia/{id?}")]
-
         public IActionResult ObtenerQuestionarioViolencia([FromRoute] int id)
         {
             try
@@ -641,7 +632,6 @@ namespace sicfServicesApi.Controllers
 
 
         [HttpPost("RegistrarRespuestaQuestionario")]
-
         public IActionResult RegistrarRespuestaQuestionario([FromBody] RespuestaQuestionarioDTO data)
         {
             try {
@@ -659,6 +649,7 @@ namespace sicfServicesApi.Controllers
                 return CustomResult(Message.ErrorInterno, Message.ErrorGenerico, HttpStatusCode.InternalServerError);
             }
         }
+        
         [HttpGet("ConsultaInvolucradoPrincipal/{id?}")]
         public IActionResult ConsultaInvolucradoPrincipal(int id) 
         {
@@ -698,7 +689,6 @@ namespace sicfServicesApi.Controllers
         }
 
         #region Diana Ariza
-
         [HttpGet("ObtenerRemisionSolicitudServicio/{idSolicitudServicio?}")]
         public IActionResult ObtenerRemisionSolicitudServicio([FromRoute] int idSolicitudServicio)
         {
