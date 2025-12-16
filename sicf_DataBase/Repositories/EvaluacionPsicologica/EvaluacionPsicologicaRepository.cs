@@ -40,6 +40,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             salida.codigoSolicitudServicio = solicitud.CodigoSolicitud;
             salida.estadoCaso = solicitud.EstadoSolicitud!;
             salida.esNecesarioRemitir = esNecesarioRemitir;
+            salida.conciliacion = solicitud.Conciliacion;
             salida.nombreAccionante = involucrados.IdInvolucrado.Where(s => s.EsPrincipal == true && s.EsVictima == true).Select(s => $"{s.PrimerNombre} {s.SegundoNombre} {s.PrimerApellido} {s.SegundoApellido}").First();
 
 ;           foreach (var victima in involucrados.IdInvolucrado) {
