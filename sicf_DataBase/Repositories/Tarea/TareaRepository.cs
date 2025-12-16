@@ -211,7 +211,7 @@ namespace sicf_DataBase.Repositories.Tarea
                     response1.sexoAfectado = caso.sexoAfectado;
                     response1.tipo_presolicitud = caso.tipo_presolicitud;
                     response1.id_comisaria = caso.id_comisaria;
-
+                    response1.es_necesario_remitir = caso.es_necesario_remitir;
                     listRestono.Add(response1);
 
                 }

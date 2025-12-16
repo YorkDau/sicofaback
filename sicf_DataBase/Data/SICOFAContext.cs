@@ -2664,6 +2664,10 @@ namespace sicf_DataBase.Data
 
                 entity.Property(e => e.ObservacionesCompetenciaIcbf).HasColumnName("observaciones_competencia_icbf");
 
+                entity.Property(e => e.ObservacionesComisario).HasColumnName("observaciones_comisario");
+
+                
+
                 entity.Property(e => e.NombresDenunciante)
                     .HasMaxLength(200)
                     .HasColumnName("nombres_denunciante");

@@ -47,7 +47,22 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Comisario
             }
         
         }
+        public async Task RegistrarTomaDecisionInformacion(RequestTomaDecisionInformacionDTO data)
+        {
+            try
+            {
+                if (data.cierre)
+                {
+                    await GuardarArchivoAsync(data.autoCierre, data.idSolicitudServicio, "Auto_Cierre");
+                }
+                await comisarioRepository.RegistrarTomaDecisionInformacion(data);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
 
+        }
         private async Task GuardarArchivoAsync(string? archivoBase64, long idSolicitud, string tipoDocumento, long? idEntidadTraslado = null)
         {
             if (archivoBase64 is { Length: > 0 })

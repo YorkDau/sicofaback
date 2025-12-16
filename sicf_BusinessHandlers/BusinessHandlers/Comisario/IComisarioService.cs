@@ -12,6 +12,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Comisario
     public interface IComisarioService
     {
         public  Task RegistrarTomaDecision(RequestTomaDecisionDTO data);
+        public Task RegistrarTomaDecisionInformacion(RequestTomaDecisionInformacionDTO data);
 
     }
 }

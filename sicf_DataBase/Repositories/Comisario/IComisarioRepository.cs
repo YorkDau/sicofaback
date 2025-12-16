@@ -7,6 +7,6 @@ namespace sicf_DataBase.Repositories.Comisario
     {
 
         public Task RegistrarTomaDecision(RequestTomaDecisionDTO data);
-
+        public Task RegistrarTomaDecisionInformacion(RequestTomaDecisionInformacionDTO data);
     }
 }

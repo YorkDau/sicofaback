@@ -27,6 +27,7 @@ namespace sicf_Models.Core
         public bool? CompetenciaIcbf { get; set; }
 
         public string? ObservacionesCompetenciaIcbf { get; set; }
+        public string? ObservacionesComisario { get; set; }
 
         public virtual SicofaSolicitudServicio IdSolicitudServicioNavigation { get; set; } = null!;
 

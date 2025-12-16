@@ -45,17 +45,44 @@ namespace sicf_DataBase.Repositories.Comisario
                 complementaria = new SicofaSolicitudServicioComplementaria();
                 complementaria.IdSolicitudServicio = data.idSolicitudServicio;
                 complementaria.IdEntidadTraslado = data.idEntidadTraslado;
-                complementaria.ObservacionesCompetenciaIcbf = data.observaciones;
+                complementaria.ObservacionesComisario = data.observaciones;
                 context.SicofaSolicitudServicioComplementaria.Add(complementaria);
             } 
             else
             {
                 complementaria.IdEntidadTraslado = data.idEntidadTraslado;
-                complementaria.ObservacionesCompetenciaIcbf = data.observaciones;
+                complementaria.ObservacionesComisario = data.observaciones;
 
             }
             await context.SaveChangesAsync();
+        }
 
+        public async Task RegistrarTomaDecisionInformacion(RequestTomaDecisionInformacionDTO data)
+        {
+            SicofaSolicitudServicio solicitud = context.SicofaSolicitudServicio.Where(s => s.IdSolicitudServicio == data.idSolicitudServicio).FirstOrDefault();
+            SicofaSolicitudServicioComplementaria complementaria = context.SicofaSolicitudServicioComplementaria.Where(s => s.IdSolicitudServicio == data.idSolicitudServicio).FirstOrDefault();
+            if (solicitud == null)
+            {
+                throw new Exception(ErrorRespuestaEvaluacionRiesgo.errorEvaluacionPsicologica);
+            }
+            solicitud.EsNecesarioRemitir = data.esNecesarioRemitir;
+            if (data.cierre)
+            {
+                solicitud.EstadoSolicitud = Constants.SolicitudServicioEstados.cerrado;
+                solicitud.SubestadoSolicitud = Constants.SolicitudServicioSubEstados.sin_vulneracion;
+            }
+            if (complementaria == null)
+            {
+                complementaria = new SicofaSolicitudServicioComplementaria();
+                complementaria.IdSolicitudServicio = data.idSolicitudServicio;
+                complementaria.ObservacionesComisario = data.observaciones;
+                context.SicofaSolicitudServicioComplementaria.Add(complementaria);
+            }
+            else
+            {
+                complementaria.ObservacionesComisario = data.observaciones;
+            }
+            await context.SaveChangesAsync();
         }
 
     }

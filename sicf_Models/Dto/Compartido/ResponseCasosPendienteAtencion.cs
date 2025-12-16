@@ -25,6 +25,8 @@
         public string sexoAfectado { get; set; }
         public string? tipo_presolicitud { get; set; }
         public long id_comisaria { get; set; }
-        
+        public bool? es_necesario_remitir { get; set; }
+
+
     }
 }

@@ -27,7 +27,6 @@ namespace sicfServicesApi.Controllers
         
 
         [HttpPost("RegistrarTomaDecision")]
-
         public async Task<IActionResult> RegistrarTomaDecision([FromBody] RequestTomaDecisionDTO data)
         {
             try
@@ -42,6 +41,21 @@ namespace sicfServicesApi.Controllers
         
         }
 
-        
+        [HttpPost("RegistrarTomaDecisionInformacion")]
+        public async Task<IActionResult> RegistrarTomaDecisionInformacion([FromBody] RequestTomaDecisionInformacionDTO data)
+        {
+            try
+            {
+                await service.RegistrarTomaDecisionInformacion(data);
+                return CustomResult(Message.Ok, "creado", HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                return CustomResult(Message.ErrorGenerico, ex.Message, HttpStatusCode.BadRequest);
+            }
+
+        }
+
+
     }
 }

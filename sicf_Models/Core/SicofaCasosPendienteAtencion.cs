@@ -23,6 +23,7 @@ namespace sicf_Models.Core
         public string sexoAfectado { get; set; } = string.Empty;
         public string? tipo_presolicitud { get; set; } = string.Empty;
         public long id_comisaria { get; set; }
-        
+        public bool? es_necesario_remitir { get; set; }
+
     }
 }
