@@ -985,26 +985,36 @@ namespace sicf_DataBase.Repositories.AbogadoRepository
 
         }
 
-        public async Task<List<RemisionDisponiblesDTO>> RemisionesDisponiblesPorInvolucrado(long idInvolucrado, string? estado)
+        public async Task<List<RemisionDisponiblesDTO>> RemisionesDisponiblesPorInvolucrado(long idInvolucrado, string? estado, long? idSolicitud = null)
         {
             try
             {
+
+
                 RemisionDisponiblesDTO remision = new RemisionDisponiblesDTO();
                 List<RemisionDisponiblesDTO> salida = new List<RemisionDisponiblesDTO>();
 
                 var involucrado = await context.SicofaInvolucrado.Where(s => s.IdInvolucrado == idInvolucrado).FirstOrDefaultAsync();
+                var solicitud = await context.SicofaSolicitudServicio.Where(s => s.IdSolicitudServicio == idSolicitud).FirstOrDefaultAsync();
+                var codigo = EliminacionAnexo.remision;
+
+                if (solicitud != null && solicitud.Conciliacion == false && involucrado.EsVictima)
+                {
+                    codigo = EliminacionAnexo.remisionAdultoMayor;
+                }
+
 
                 if (involucrado.EsVictima)
                 {
 
-                    salida = await context.SicofaDocumento.Where(s => (s.EsVictima == true || s.EsVictima == false) && s.Codigo == EliminacionAnexo.remision &&
+                    salida = await context.SicofaDocumento.Where(s => (s.EsVictima == true || s.EsVictima == false) && s.Codigo == codigo &&
                          s.Estado == estado)
                         .Select(s => new RemisionDisponiblesDTO { idRemision = s.IdDocumento, nombre = s.NombreDocumento }).ToListAsync();
                 }
                 else
                 {
 
-                    salida = await context.SicofaDocumento.Where(s => s.EsVictima == false && s.Codigo == EliminacionAnexo.remision &&
+                    salida = await context.SicofaDocumento.Where(s => s.EsVictima == false && s.Codigo == codigo &&
                          (s.Estado == estado))
                         .Select(s => new RemisionDisponiblesDTO { idRemision = s.IdDocumento, nombre = s.NombreDocumento }).ToListAsync();
 
@@ -1029,7 +1039,17 @@ namespace sicf_DataBase.Repositories.AbogadoRepository
          
             try
             {
-               
+                var solicitud = await context.SicofaSolicitudServicio.Where(s => s.IdSolicitudServicio == idSolicitud)
+                    .Select(s => new { s.Conciliacion })
+                    .FirstOrDefaultAsync();
+
+                var codigo = EliminacionAnexo.remision;
+
+                if (solicitud != null && solicitud.Conciliacion == false)
+                {
+                    codigo = EliminacionAnexo.remisionAdultoMayor;
+                }
+
 
                 List<RemisionesAsociada> salida = await (from docu in context.SicofaDocumentoServicioSolicitud
                                                          join documen in context.SicofaDocumento on docu.IdDocumento equals documen.IdDocumento
@@ -1038,7 +1058,7 @@ namespace sicf_DataBase.Repositories.AbogadoRepository
                                                          join usu in context.SicofaUsuarioSistema on solianexo.IdUsuario equals usu.IdUsuarioSistema
                                                          where docu.IdSolicitudServicio == idSolicitud 
                                                          && (solianexo.IdTarea == idTarea)
-                                                         && documen.Codigo == EliminacionAnexo.remision
+                                                         && documen.Codigo == codigo
 
                                                          select
                                                    new RemisionesAsociada

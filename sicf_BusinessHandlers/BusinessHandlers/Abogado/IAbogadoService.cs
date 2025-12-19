@@ -24,7 +24,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Abogado
 
         public  Task<List<InvolucradoSelectDTO>> ObtenerListaInvolucrados(long idSolicitudServicio);
 
-        public  Task<List<RemisionDisponiblesDTO>> RemisionesDisponiblesPorInvolucrado(long idInvolucrado);
+        public  Task<List<RemisionDisponiblesDTO>> RemisionesDisponiblesPorInvolucrado(long idInvolucrado,long? idSolicitud = null);
 
         public  Task<List<RemisionesAsociada>> RemisionesAsociadasPorSolicitud(long idSolicitud);
 

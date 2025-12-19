@@ -48,7 +48,7 @@ namespace sicf_DataBase.Repositories.AbogadoRepository
         public Task<int> ObtenerRemision(string data);
         public Task<long> RegistrarSolicitudRemision(long idInvolucrado, int idRemision, long idSolicitudServicio, long? idAnexo);
         public Task<List<InvolucradoSelectDTO>> ObtenerListaInvolucrado(long idSolicitudServicio);
-        public Task<List<RemisionDisponiblesDTO>> RemisionesDisponiblesPorInvolucrado(long idInvolucrado, string estado);
+        public Task<List<RemisionDisponiblesDTO>> RemisionesDisponiblesPorInvolucrado(long idInvolucrado, string estado,long ? idSolicitud = null);
 
         public Task<List<RemisionesAsociada>> RemisionesAsociadasPorSolicitud(long idSolicitud, long idTarea);
 

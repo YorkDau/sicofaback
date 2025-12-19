@@ -132,11 +132,11 @@ namespace sicfServicesApi.Controllers
         }
 
         [HttpGet("RemisionesDisponiblesPorInvolucrado/{idInvolucrado}")]
-        public async Task<IActionResult> RemisionesDisponiblesPorInvolucrado([FromRoute] long idInvolucrado)
+        public async Task<IActionResult> RemisionesDisponiblesPorInvolucrado([FromRoute] long idInvolucrado, long? idSolicitud = null)
         {
             try
             {
-                var response = await service.RemisionesDisponiblesPorInvolucrado(idInvolucrado);
+                var response = await service.RemisionesDisponiblesPorInvolucrado(idInvolucrado,idSolicitud);
 
                 return CustomResult(Message.Ok, response, HttpStatusCode.OK);
             }

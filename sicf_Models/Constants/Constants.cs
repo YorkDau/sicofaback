@@ -483,6 +483,7 @@ namespace sicf_Models.Constants
         public struct EliminacionAnexo
         {
             public const string remision = "REMI";
+            public const string remisionAdultoMayor = "ADULMY";
 
             public const string notiticacion = "NOTI";
 

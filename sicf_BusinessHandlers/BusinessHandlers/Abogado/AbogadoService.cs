@@ -119,12 +119,12 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Abogado
             }
         }
 
-        public async Task<List<RemisionDisponiblesDTO>> RemisionesDisponiblesPorInvolucrado(long idInvolucrado)
+        public async Task<List<RemisionDisponiblesDTO>> RemisionesDisponiblesPorInvolucrado(long idInvolucrado, long? idSolicitud = null)
         {
             try
             {
                 return await abogadoRepository.RemisionesDisponiblesPorInvolucrado(idInvolucrado, 
-                                                                                   Constants.ReportesRemision.estadoActivo);
+                                                                                   Constants.ReportesRemision.estadoActivo, idSolicitud);
             }
             catch (Exception ex) {
 
