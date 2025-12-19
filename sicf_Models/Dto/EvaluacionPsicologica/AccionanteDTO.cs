@@ -17,6 +17,7 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
 
         public string estadoCaso { get; set; }
         public bool? esNecesarioRemitir { get; set; }
+        public bool ? conciliacion { get; set; }
 
 
     }
