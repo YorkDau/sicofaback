@@ -140,6 +140,67 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
 
         }
 
+        public async Task<long> Carga(long idSolicitudServicio, ArchivoTraslado archivoDTO,int idUsuario)
+        {
+            try
+            {
+                bool solicitud = await archivosRepository.getSolicitudServicio(idSolicitudServicio);
+                Tuple<bool, bool, int> tipoDocumento = await archivosRepository.ObtenerTipoDocumentoAnexo(archivoDTO.tipoDocumento);
+
+                var idTarea = await tareaHandler.UltimaTarea(idSolicitudServicio);
+
+                long idAnexo = 0;
+
+                if (!solicitud)
+                {
+                    throw new Exception(CargaDocumento.noSolicitud);
+                }
+                if (!tipoDocumento.Item1)
+                {
+                    throw new Exception(CargaDocumento.noTipoDocumento);
+                }
+
+                string comisariaCarpeta = await archivosRepository.ComisariaAsociada(idSolicitudServicio);
+                string codigoSolicitud = await archivosRepository.ObtenerCodigoSolicitud(idSolicitudServicio);
+
+
+                var preview = await archivosRepository.ValidarActualizacion(idSolicitudServicio, archivoDTO.tipoDocumento, idTarea);
+
+                FileModel file = Conversion64(archivoDTO);
+
+
+                if (!preview.Item1)
+                {
+                    archivoDTO.Nombrearchivo = archivoDTO.Nombrearchivo == null ? codigoSolicitud + archivoDTO.tipoDocumento + CargaDocumento.extensionPDf : codigoSolicitud + archivoDTO.Nombrearchivo + CargaDocumento.extensionPDf;
+                    FileModel file1 = Conversion64(archivoDTO);
+                    await fileManagerLogic.Upload(file1, comisariaCarpeta);
+                    idAnexo = await archivosRepository.RegistarArchivoSolicitud(tipoDocumento.Item3, idSolicitudServicio, archivoDTO.Nombrearchivo, idUsuario, idTarea);
+
+                }
+                else if (preview.Item1 & preview.Item2)
+                {
+
+                    var contador = await archivosRepository.ContadorArchivosMultiples(idSolicitudServicio, archivoDTO.tipoDocumento);
+                    var nombreActualizado = archivoDTO.Nombrearchivo == null ? codigoSolicitud + archivoDTO.tipoDocumento + contador + CargaDocumento.extensionPDf : codigoSolicitud + archivoDTO.Nombrearchivo + contador + CargaDocumento.extensionPDf;
+
+                    archivoDTO.Nombrearchivo = nombreActualizado;
+                    FileModel file2 = Conversion64(archivoDTO);
+                    await fileManagerLogic.Upload(file2, comisariaCarpeta);
+
+                    idAnexo = await archivosRepository.RegistarArchivoSolicitud(tipoDocumento.Item3, idSolicitudServicio, nombreActualizado, idUsuario, idTarea);
+
+                }
+
+                return idAnexo;
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+
+        }
+
 
         public async Task<List<SolicitudDocumentoDTO>> ObtenerArchivos(ConsultaArchivo archivoDTO)
         {
@@ -413,7 +474,7 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
             return await fileManagerLogic.Consultarfile(carpeta, nombre);
         }
 
-        private FileModel Conversion64(CargaArchivoDTO archivoDTO)
+        private FileModel Conversion64(ICargaArchivoDTO archivoDTO)
         {
             if (archivoDTO == null)
             {

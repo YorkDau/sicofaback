@@ -669,7 +669,7 @@ namespace sicf_DataBase.Repositories.Tarea
 
                 string contains = $"#{_flujo.ToString()}#";
 
-                string? _etiqueta = (this._context.SicofaFlujoV2.Where(x => x.IdFlujoAnterior!.Contains(contains)).FirstOrDefault())!.Etiqueta;
+                string? _etiqueta = (this._context.SicofaFlujoV2.Where(x => x.IdFlujoAnterior != null && x.IdFlujoAnterior.Contains(contains)).FirstOrDefault())?.Etiqueta??null;
 
                 return _etiqueta;
             }

@@ -109,6 +109,14 @@ namespace sicfServicesApi.Controllers
             try
             {
                 var idAnexo = await _archivoService.Carga(archivoDTO);
+                if (archivoDTO.archivosTraslados != null && archivoDTO.archivosTraslados.Any())
+                {
+                    foreach (var item in archivoDTO.archivosTraslados)
+                    {
+                        await _archivoService.Carga(archivoDTO.idSolicitudServicio, item, archivoDTO.idUsuario);
+                    }
+                }
+
                 return CustomResult(Message.Ok, idAnexo, HttpStatusCode.OK);
             }
             catch (Exception ex)

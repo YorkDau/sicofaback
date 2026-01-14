@@ -12,8 +12,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Archivos
     public interface IArchivoService
     {
 
-        public  Task<long> Carga(CargaArchivoDTO archivoDTO, long? idInvolucrado = null);
-
+        public Task<long> Carga(CargaArchivoDTO archivoDTO, long? idInvolucrado = null);
+        public Task<long> Carga(long idSolicitudServicio, ArchivoTraslado archivoDTO, int idUsuario);
         public  Task Eliminar(EliminarArchivo eliminarArchivo);
         public  Task<string> ConsultaArchivo(string nombre,long idSolicitud);
 

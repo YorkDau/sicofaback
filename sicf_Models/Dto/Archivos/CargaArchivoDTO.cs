@@ -7,7 +7,14 @@ using System.Threading.Tasks;
 
 namespace sicf_Models.Dto.Archivos
 {
-    public class CargaArchivoDTO
+    public interface ICargaArchivoDTO
+    {
+        public string entrada { get; set; }
+        public string tipoDocumento { get; set; }
+        public string Nombrearchivo { get; set; }
+
+    }
+    public class CargaArchivoDTO:ICargaArchivoDTO
     {
         public string entrada { get; set; }
         public string? Nombrearchivo { get; set; }
@@ -18,7 +25,7 @@ namespace sicf_Models.Dto.Archivos
         public long? idComisariaTraslado { get; set; }
         public long? idEntidadTraslado { get; set; }
         public int ? idPruebaPericial { get; set; }
-
+        public List<ArchivoTraslado>? archivosTraslados { get; set; }
     }
     public class EliminarArchivo
     {
@@ -29,6 +36,13 @@ namespace sicf_Models.Dto.Archivos
     {
         public string tipoDocumento { get; set; } = string.Empty;
         public long idSolicitudServicio { get; set; }
+    }
+
+    public class ArchivoTraslado : ICargaArchivoDTO
+    {
+        public string tipoDocumento { get; set; } = string.Empty;
+        public string entrada { get; set; }
+        public string Nombrearchivo { get; set; }
     }
 
     public class CargaArchivosRemisionDTO : CargaArchivoDTO 
