@@ -10,12 +10,10 @@ namespace sicf_Models.Dto.EvaluacionPsicologica
     {
 
         public string nombreAccionante { get; set; }
-
-        public List<string> victimas { get; set; } = new List<string>();    
-
+        public List<string> victimas { get; set; } = new List<string>(); 
         public string codigoSolicitudServicio { get; set; }
-
         public string estadoCaso { get; set; }
+        public long? idTipoTramite { get; set; }
         public bool? esNecesarioRemitir { get; set; }
         public bool ? conciliacion { get; set; }
 
