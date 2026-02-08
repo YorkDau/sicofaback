@@ -815,6 +815,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                         _command.Parameters.AddWithValue("@tieneEducacion", data.tieneEducacion);
                         _command.Parameters.AddWithValue("@lugarEstudio", data.lugarEstudio);
                         _command.Parameters.AddWithValue("@vacunacionCompleta", data.vacunacionCompleta);
+                        
 
                         // cambio añadido para idenficiar agresor y victima principal
                         _command.Connection = _connectionDb;
@@ -1232,7 +1233,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 EntidadExterna = reader["entidad_externa"].ToString(),
 
                                 JustificacionTraslado = reader["justificacion_traslado"].ToString(),
-                                EsNecesarioRemitir = Convert.ToInt32(reader["es_necesario_remitir"])
+                                EsNecesarioRemitir = Convert.ToInt32(reader["es_necesario_remitir"]),
+                                idTipoTramite = Convert.ToInt32(reader["id_tipo_tramite"])
                             };
 
                             resultados.Add(item);
@@ -1345,6 +1347,8 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                             solicitud.hora_solicitud = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["hora_solicitud"]);
                             solicitud.descripcion_de_hechos = ConvertFDBVal.ConvertFromDBVal<string>(reader["descripcion_de_hechos"]);
                             solicitud.fecha_hecho_violento = ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_hecho_violento"]);
+                            solicitud.id_tipo_entidad = ConvertFDBVal.ConvertFromDBVal<string>(reader["id_tipo_entidad"]);
+                            solicitud.parentesco_agresor = ConvertFDBVal.ConvertFromDBVal<string>(reader["parentesco_agresor"]);
                         }
 
 
@@ -1361,7 +1365,10 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                             numero_documento = numeroDocumento,
                             parentesco = ConvertFDBVal.ConvertFromDBVal<string>(reader["parentesco"]) ?? "NO TIENE ASIGNADO"
                         };
-
+                        if (!solicitud.involucrados.Any() && involucrado.parentesco == "NO TIENE ASIGNADO")
+                        {
+                            involucrado.parentesco = solicitud.parentesco_agresor;
+                        }
                         solicitud.involucrados.Add(involucrado);
                     }
 

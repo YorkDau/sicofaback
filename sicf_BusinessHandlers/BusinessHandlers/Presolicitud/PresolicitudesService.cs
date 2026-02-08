@@ -432,13 +432,40 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Presolicitud
 
                     await _presolicitudRepository.CrearSolicitudComplentaria(data.idSolicitudServicio , solicitud , data.cierre , data.observacion);
                     await _presolicitudRepository.CambioTareaPresolAsolicitud(data.idSolicitudServicio, solicitud);
-
                     await _presolicitudRepository.CambioEstadoPresolicitud(data, Constants.SolicitudServicioSubEstados.levantada);
                 }
                 else
                 {
                     await _presolicitudRepository.CambioEstadoPresolicitud(data, Constants.SolicitudServicioSubEstados.icbf);
                 }
+
+                if (data.adjuntoConstanciaTraslado != null && data.adjuntoConstanciaTraslado.Length > 0)
+                {
+                    sicf_Models.Dto.Archivos.CargaArchivoDTO cargaArchivo = new sicf_Models.Dto.Archivos.CargaArchivoDTO();
+                    cargaArchivo.entrada = data.adjuntoConstanciaTraslado;
+                    cargaArchivo.idSolicitudServicio = data.idSolicitudServicio;
+                    cargaArchivo.tipoDocumento = "Constancia traslado ICBF";
+                    await _archivoService.Carga(cargaArchivo);
+                }
+
+                if (data.adjuntoActaVerificacion != null && data.adjuntoActaVerificacion.Length > 0)
+                {
+                    sicf_Models.Dto.Archivos.CargaArchivoDTO cargaArchivo = new sicf_Models.Dto.Archivos.CargaArchivoDTO();
+                    cargaArchivo.entrada = data.adjuntoActaVerificacion;
+                    cargaArchivo.idSolicitudServicio = data.idSolicitudServicio;
+                    cargaArchivo.tipoDocumento = "Acta de Verificacion";
+                    await _archivoService.Carga(cargaArchivo);
+                }
+
+                if (data.adjuntoAutoTramite != null && data.adjuntoAutoTramite.Length > 0)
+                {
+                    sicf_Models.Dto.Archivos.CargaArchivoDTO cargaArchivo = new sicf_Models.Dto.Archivos.CargaArchivoDTO();
+                    cargaArchivo.entrada = data.adjuntoAutoTramite;
+                    cargaArchivo.idSolicitudServicio = data.idSolicitudServicio;
+                    cargaArchivo.tipoDocumento = "Auto Tramite";
+                    await _archivoService.Carga(cargaArchivo);
+                }
+
 
                 await _tareaHandler.CerrarActuacionV2(data.idtarea, data.cierre ? "1" : "0" );
             }

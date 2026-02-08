@@ -10,6 +10,8 @@
         public string descripcion_de_hechos { get; set; }
         public bool es_victima { get; set; }
         public string? id_tipo_entidad { get; set; }
+        public string? parentesco_agresor { get; set; }
+        
         public int numero_victimas { get; set; }
         public List<InvolucradoDetalleDTO> involucrados { get; set; } = new();
 

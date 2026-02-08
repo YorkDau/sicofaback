@@ -712,6 +712,7 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
                 nueva.ConviveConAgresor = data.ConviveConAgresor;
                 nueva.IdContextoFamiliar = data.IdContextoFamiliar;
                 nueva.IdRelacionParentescoAgresor = data.IdRelacionParentescoAgresor;
+
                 
                 
 
@@ -762,6 +763,7 @@ namespace sicf_DataBase.Repositories.PresolicitudesRepository
             nuevaComplementaria.ObservacionVerificacion = complementario.ObservacionVerificacion;
             nuevaComplementaria.IdAnexo = complementario.IdAnexo;
             nuevaComplementaria.IdSolicitudRelacionado = complementario.IdSolicitudRelacionado;
+            
 
 
             _context.SicofaSolicitudServicioComplementaria.Add(nuevaComplementaria);

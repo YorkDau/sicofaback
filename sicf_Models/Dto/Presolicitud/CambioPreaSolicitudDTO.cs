@@ -16,5 +16,8 @@ namespace sicf_Models.Dto.Presolicitud
         public int idtarea { get; set; }
 
         public string observacion { get; set; } = string.Empty;
+        public string adjuntoConstanciaTraslado { get; set; } = string.Empty;
+        public string adjuntoActaVerificacion { get; set; } = string.Empty;
+        public string adjuntoAutoTramite { get; set; } = string.Empty;
     }
 }
