@@ -909,6 +909,9 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                                 ciudadano.persona_habitalidad_calle = reader["persona_habitalidad_calle"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["persona_habitalidad_calle"]);
                                 ciudadano.pueblo_indigena = reader["pueblo_indigena"].ToString() == String.Empty ? "No" : ConvertFDBVal.ConvertFromDBVal<string>(reader["pueblo_indigena"]);
                                 ciudadano.migrante = reader["migrante"].ToString() == string.Empty ? false : ConvertFDBVal.ConvertFromDBVal<bool>(reader["migrante"]);
+
+                                ciudadano.fecha_creacion = reader["fecha_creacion"].ToString() == string.Empty ? null : ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_creacion"]);
+                                ciudadano.fecha_actualizacion = reader["fecha_actualizacion"].ToString() == string.Empty ? null : ConvertFDBVal.ConvertFromDBVal<DateTime>(reader["fecha_actualizacion"]);
                             }
 
                         }

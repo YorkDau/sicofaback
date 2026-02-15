@@ -435,6 +435,16 @@ namespace sicf_DataBase.Data
                     .IsUnicode(false)
                     .HasColumnName("telefono_fijo");
 
+                entity.Property(e => e.FechaCreacion)
+                    .HasColumnType("datetime")
+                    .HasColumnName("fecha_creacion");
+
+                entity.Property(e => e.FechaActualizacion)
+                    .HasColumnType("datetime")
+                    .HasColumnName("fecha_actualizacion");
+
+                
+
                 entity.Property(e => e.VictimaConflictoArmado).HasColumnName("victima_conflicto_armado");
 
                 entity.HasOne(d => d.IdCiudMunNacimientoNavigation)

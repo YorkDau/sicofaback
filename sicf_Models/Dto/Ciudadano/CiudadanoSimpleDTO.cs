@@ -47,6 +47,9 @@ namespace sicf_Models.Dto.Ciudadano
         public bool persona_lider_defensor_DH { get; set; }
         public bool persona_habitalidad_calle { get; set; }
         public bool migrante { get; set; }
+        public DateTime? fecha_creacion { get; set; }
+        public DateTime? fecha_actualizacion { get; set; }
+        
 
     }
 }

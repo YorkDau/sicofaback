@@ -73,5 +73,7 @@ namespace sicf_Models.Core
         public virtual ICollection<SicofaCiudadanoPobEspcProte> SicofaCiudadanoPobEspcProte { get; set; }
         public virtual ICollection<SicofaCiudadanoSexoGeneroOrientacionSexual> SicofaCiudadanoSexoGeneroOrientacionSexual { get; set; }
         public virtual ICollection<SicofaSolicitudServicio> SicofaSolicitudServicio { get; set; }
+        public DateTime? FechaCreacion { get; set; }
+        public DateTime? FechaActualizacion { get; set; }
     }
 }
