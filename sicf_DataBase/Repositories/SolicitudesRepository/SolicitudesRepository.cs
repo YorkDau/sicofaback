@@ -1237,7 +1237,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
 
                                 JustificacionTraslado = reader["justificacion_traslado"].ToString(),
                                 EsNecesarioRemitir = Convert.ToInt32(reader["es_necesario_remitir"]),
-                                idTipoTramite = Convert.ToInt32(reader["id_tipo_tramite"])
+                                //idTipoTramite = Convert.ToInt32(reader["id_tipo_tramite"])
                             };
 
                             resultados.Add(item);
