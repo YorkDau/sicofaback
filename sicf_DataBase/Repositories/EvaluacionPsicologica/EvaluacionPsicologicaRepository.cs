@@ -646,6 +646,7 @@ namespace sicf_DataBase.Repositories.EvaluacionPsicologica
             {
 
                 var contador = repuestas.Sum(s => s.Puntuacion);
+                contador = contador * 10;
 
 
 

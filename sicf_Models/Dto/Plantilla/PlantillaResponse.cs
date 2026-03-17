@@ -10,6 +10,8 @@ namespace sicf_Models.Dto.Plantilla
     {
         public long? idSolPlantilla { get; set; }
         public string nombrePlantilla { get; set; }
+        public string nombreEtiqueta { get; set; }
+        
         public string observacion { get; set; }
         public int? tieneApelacion { get; set; }
         public bool? aprobado { get; set; }

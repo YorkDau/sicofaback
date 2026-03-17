@@ -50,6 +50,8 @@ namespace sicf_BusinessHandlers.BusinessHandlers.Plantilla
 
                     response.idSolPlantilla = seccion.idSolPlantilla;
                     response.nombrePlantilla = secciones.First().nombrePlantilla;
+                    response.nombreEtiqueta = secciones.First().nombreEtiqueta;
+                    
                     response.observacion = secciones.First().observacion;
                     response.tieneApelacion = seccion.tieneApelacion;
                     response.aprobado = seccion.aprobado;

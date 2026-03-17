@@ -193,9 +193,9 @@ namespace sicf_Models.Constants
 
             public const string riesgoNoCalculado = "Riesgo no calculado";
 
-            public const int bajo = 20;
+            public const int bajo = 150;//20
 
-            public const int medio = 40;
+            public const int medio = 400; //40
 
             public const int totalPreguntas = 52;
 

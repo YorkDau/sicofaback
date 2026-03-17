@@ -22,6 +22,8 @@ namespace sicf_DataBase.Data
         public string? TextoInvolucrado { get; set; }
         public int? Orden { get; set; }
         public bool? EstadoSeccion { get; set; }
+        public bool? MostrarEncabezado { get; set; }
+        
         public bool? AplicaSeguimiento { get; set; }
         public string? EstadoSeguimiento { get; set; }
 

@@ -48,6 +48,7 @@ namespace sicf_DataBase.Data
             {
                 entity.HasNoKey();
                 entity.Property(e => e.nombrePlantilla).HasColumnName("nombre_plantilla");
+                entity.Property(e => e.nombreEtiqueta).HasColumnName("nombre_etiqueta");
                 entity.Property(e => e.idSolPlantilla).HasColumnName("id_sol_plantilla");
                 entity.Property(e => e.tieneApelacion).HasColumnName("tiene_apelacion");
                 entity.Property(e => e.apelacion).HasColumnName("apelacion");
@@ -64,6 +65,8 @@ namespace sicf_DataBase.Data
                 entity.Property(e => e.textoInvolucrado).HasColumnName("texto_involucrado");
                 entity.Property(e => e.orden).HasColumnName("orden");
                 entity.Property(e => e.estadoSeccion).HasColumnName("estadoSeccion");
+                entity.Property(e => e.mostrarEncabezado).HasColumnName("mostrar_encabezado");
+                
             });
 
             modelBuilder.Entity<UsuarioSPDTO>(entity =>

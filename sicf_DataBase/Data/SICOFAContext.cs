@@ -1894,6 +1894,9 @@ namespace sicf_DataBase.Data
 
                 entity.Property(e => e.EstadoSeccion).HasColumnName("estadoSeccion");
 
+                entity.Property(e => e.MostrarEncabezado).HasColumnName("mostrar_encabezado");
+                
+
                 entity.Property(e => e.HayInvolucrado).HasColumnName("hay_involucrado");
 
                 entity.Property(e => e.IdMedida).HasColumnName("id_medida");

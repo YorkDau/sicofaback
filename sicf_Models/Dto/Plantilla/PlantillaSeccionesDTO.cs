@@ -17,6 +17,7 @@ namespace sicf_Models.Dto.Plantilla
         public string? textoInvolucrado { get; set; }
         public int? orden { get; set; }
         public bool? estadoSeccion { get; set; }
+        public bool? mostrarEncabezado { get; set; }
         public List<PlantillaInvolucradoDTO>? involucrados { get; set; }
         public PlantillaSeccionesDTO()
         {

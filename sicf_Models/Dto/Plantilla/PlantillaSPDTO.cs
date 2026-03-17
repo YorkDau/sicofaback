@@ -10,6 +10,7 @@ namespace sicf_Models.Dto.Plantilla
     public class PlantillaSPDTO
     {
         public string? nombrePlantilla { get; set; }
+        public string? nombreEtiqueta { get; set; }
         public long? idSolPlantilla { get; set; }
         public int? tieneApelacion { get; set; }
         public bool? apelacion { get; set; }
@@ -26,6 +27,8 @@ namespace sicf_Models.Dto.Plantilla
         public string? textoInvolucrado { get; set; }
         public int? orden { get; set; }
         public bool? estadoSeccion { get; set; }
+        public bool? mostrarEncabezado { get; set; }
+        
         [NotMapped]
         public bool? esNecesarioRemitir { get; set; }
         public bool? aplicaRevision { get; set; }

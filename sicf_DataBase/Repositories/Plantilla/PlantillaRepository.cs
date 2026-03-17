@@ -117,6 +117,7 @@ namespace sicf_DataBase.Repositories.Plantilla
                     seccion.textoInvolucrado = secc.textoInvolucrado;
                     seccion.orden = secc.orden;
                     seccion.estadoSeccion = secc.estadoSeccion;
+                    seccion.mostrarEncabezado = secc.mostrarEncabezado;
 
                     var involuc = (from sec in secciones
                                    join inv in involucrados on sec.idSolPSeccion equals inv.idSolPSeccion
@@ -154,7 +155,8 @@ namespace sicf_DataBase.Repositories.Plantilla
                                   idSeccionPlantilla = secc.idSeccionPlantilla,
                                   idSeccionPadre = pSeccionPadre,
                                   nombreSeccion = secc.nombreSeccion,
-                                  estado = secc.estadoSeccion
+                                  estado = secc.estadoSeccion,
+                                  mostrarEncabezado = secc.mostrarEncabezado,
                               }).ToList();
 
             List<PlantillaResponseTree> grandpa = new List<PlantillaResponseTree>();
@@ -174,7 +176,8 @@ namespace sicf_DataBase.Repositories.Plantilla
                                          idSolPSeccion = l.idSolPSeccion,
                                          idSeccionPadre = ind.idSolPSeccion,
                                          nombreSeccion = l.nombreSeccion,
-                                         estado = l.estadoSeccion
+                                         estado = l.estadoSeccion,
+                                         mostrarEncabezado = l.mostrarEncabezado
                                      }).ToList();
 
                     if (leafchild.Count > 0)
@@ -228,6 +231,8 @@ namespace sicf_DataBase.Repositories.Plantilla
                     //}
                     a.TextoSeccion = textoSeccion;
                     a.EstadoSeccion = secciones.secciones.Where(s => s.idSolPSeccion == a.IdSolPlantillaSeccion).Select(s => s.estadoSeccion).First();
+                    a.MostrarEncabezado = secciones.secciones.Where(s => s.idSolPSeccion == a.IdSolPlantillaSeccion).Select(s => s.mostrarEncabezado).First();
+                    
 
                     var seccion = secciones.secciones.Where(s => s.idSolPSeccion == a.IdSolPlantillaSeccion).First();
 
