@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sicf_Models.Dto.Usuario;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,6 @@ namespace sicf_Models.Dto.Solicitudes
         public List<SolicitudGeneralInvolucradoDTO> involucrados { get; set; }
         public List<SolicitudGeneralTareasDTO> tareas { get; set; }
         public List<SolicitudGeneralAnexoDTO>? anexos { get; set; }
+        public UsuarioSistemaDTO UsuarioCreacion { get; set; }
     }
 }

@@ -69,6 +69,16 @@ namespace sicf_Models.Dto.Usuario
     public class UsuarioPerfilesDTO : UsuarioSPDTO
     {
         public List<PerfilDTO> perfiles { get; set; }
-    
+
+    }
+
+    public class UsuarioSistemaDTO
+    {
+
+        public int IdUsuarioSistema { get; set; }
+
+        public string nombres { get; set; } = string.Empty;
+
+        public string apellidos { get; set; } = string.Empty;
     }
 }

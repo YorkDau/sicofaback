@@ -2031,7 +2031,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
             try
             {
                 SolicitudGeneralDTO result = new SolicitudGeneralDTO();
-                SicofaSolicitudServicio solicitud = _context.SicofaSolicitudServicio.Include(s => s.IdInvolucrado)
+                SicofaSolicitudServicio solicitud = _context.SicofaSolicitudServicio.Include(s => s.IdInvolucrado).Include(s => s.IdUsuarioSistemaNavigation)
                     .Where(s => s.IdSolicitudServicio == idSolicitudServicio).SingleOrDefault()!;
 
                 if (solicitud != null)
@@ -2041,6 +2041,7 @@ namespace sicf_DataBase.Repositories.SolicitudesRepository
                     result.relatoHechos = solicitud.DescripcionDeHechos;
                     result.estadoSolicitud = solicitud.EstadoSolicitud;
                     result.subestadoSolicitud = solicitud.SubestadoSolicitud;
+                    result.UsuarioCreacion = new sicf_Models.Dto.Usuario.UsuarioSistemaDTO() { IdUsuarioSistema = solicitud.IdUsuarioSistemaNavigation?.IdUsuarioSistema??0, nombres = solicitud.IdUsuarioSistemaNavigation?.Nombres??"", apellidos = solicitud.IdUsuarioSistemaNavigation?.Apellidos };
 
                     if (solicitud.IdInvolucrado.Count > 0)
                     {
